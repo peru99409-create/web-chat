@@ -475,4 +475,395 @@ $('#sideSel').addEventListener('click',e=>{const b=e.target.closest('[data-side]
 $('#icFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;const msg=$('#icMsg');msg.textContent='読み込み中…';
  try{const ic=await makeIcon(f);MYAV=ic.s;store.s('wc2.icon',MYAV);await IDB.put('me',ic.big);drawIcon();if(S.room){postAv(S.room,true);upBig(S.room,true)}msg.textContent='アイコンを設定しました。'}
  catch(er){msg.textContent=er==='decode'?'この形式の画像は読み込めませんでした。JPEGかPNGの画像を選んでください。':'画像を設定できませんでした。別の画像でためしてください。'}});
-$('#icDel').onclick=()=>{MYAV='';store.s('wc2.icon','');IDB.put('me',null
+$('#icDel').onclick=()=>{MYAV='';store.s('wc2.icon','');IDB.put('me',null);drawIcon()};
+$('#cReset').onclick=()=>{STY.bg='';STY.tx='';STY.side='auto';styChanged()};
+const UN={};            /* 部屋ごとの未読数（入っていない部屋） */
+const W=new Map();      /* 入口にいる間、最近の部屋を見張る接続 */
+const topicOf=norm=>'wcr-'+hex(sha256('topic:'+norm)).slice(0,40);
+/* 音 */
+let AC=null;
+function ac(){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}catch(e){return null}}
+['pointerdown','keydown','touchstart'].forEach(t=>addEventListener(t,()=>{if(AC){if(AC.state==='suspended')AC.resume()}else if(SET.sound)ac()},{passive:true}));
+function tone(c,f,t0,d,type='sine',g=.12){const o=c.createOscillator(),v=c.createGain();o.type=type;o.frequency.value=f;o.connect(v);v.connect(c.destination);const t=c.currentTime+t0;v.gain.setValueAtTime(.0001,t);v.gain.exponentialRampToValueAtTime(g,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.02)}
+const SNDS={pon:c=>tone(c,660,0,.18),chime:c=>{tone(c,988,0,.16);tone(c,1319,.12,.28)},tick:c=>tone(c,520,0,.07,'triangle',.18)};
+function playSnd(force){if(!force&&!SET.sound)return;const c=ac();if(!c)return;try{(SNDS[SET.snd]||SNDS.pon)(c)}catch(e){}}
+/* ポップアップ */
+const sysState=()=>('Notification' in window)?Notification.permission:'unsupported';
+let popT;
+function showPop(room,m){const p=$('#pop');const who=m.n?esc(m.n)+'<span class="idc">#'+esc(m.u)+'</span>':esc(m.u);
+ p.innerHTML=`${avHtml(m.u,m.n,'',true)}<span class="pcol"><span class="xs mute ell1">${who} ・ ${esc(room.name)}</span><span class="ell1">${esc(m.x)}</span></span>`;
+ p.dataset.name=room.name;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),4500)}
+$('#pop').onclick=()=>{const p=$('#pop');p.classList.remove('show');const n=p.dataset.name;if(n&&n!=='テスト部屋'&&!T.on&&S.id&&!(S.room&&S.room.name===n))openRoom(n)};
+function webNotify(room,m){const title=(m.n?m.n+' #'+m.u:m.u)+' ・ '+room.name,opt={body:m.x.slice(0,100),tag:room.topic,icon:ICON,badge:ICON,renotify:true};
+ try{const n=new Notification(title,opt);n.onclick=()=>{window.focus();n.close();if(room.name!=='テスト部屋'&&!(S.room&&S.room.topic===room.topic))openRoom(room.name)};return true}catch(e){}
+ try{if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.ready.then(r=>r.showNotification(title,opt));return true}}catch(e){}
+ return false}
+/* 画面を見ていない間（別のタブ・別のアプリ）は端末のWeb通知で知らせる。見ている間は音だけ */
+function notifyMsg(room,m,soundOnly){
+ if(typeof T!=='undefined'&&T.on)return;
+ if(SET.popup&&!soundOnly){if(!(sysState()==='granted'&&webNotify(room,m))&&!document.hidden)showPop(room,m)}
+ playSnd()}
+/* サーバー負荷を減らすため、入っていない部屋の見張りは行わない（接続は今いる部屋の1本だけ） */
+async function syncWatch(){for(const [t,w] of W){try{w.es.close()}catch(e){}W.delete(t)}}
+/* ホーム画面に追加 */
+function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz;const x=c.getContext('2d');x.fillStyle='#4cc09a';x.fillRect(0,0,sz,sz);x.fillStyle='#0c1f18';
+ const a=sz*.2,b=sz*.26,w=sz*.6,h=sz*.38,r=sz*.09;x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();x.fill();
+ x.beginPath();x.moveTo(sz*.3,sz*.6);x.lineTo(sz*.3,sz*.76);x.lineTo(sz*.46,sz*.6);x.closePath();x.fill();
+ x.fillStyle='#4cc09a';[.36,.5,.64].forEach(f=>{x.beginPath();x.arc(sz*f,sz*.45,sz*.035,0,7);x.fill()});return c}
+let ICON='';
+try{const l=document.createElement('link');l.rel='apple-touch-icon';l.href=mkIcon(180).toDataURL('image/png');document.head.appendChild(l);ICON=mkIcon(192).toDataURL('image/png');
+ const man={name:'ウェブチャット',short_name:'ウェブチャット',start_url:location.href.split('#')[0],display:'standalone',background_color:'#111413',theme_color:'#111413',icons:[{src:ICON,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:mkIcon(512).toDataURL('image/png'),sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+ const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));document.head.appendChild(ml)}catch(e){}
+let DIP=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();DIP=e;drawSet()});
+addEventListener('appinstalled',()=>{DIP=null;drawSet()});
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const embedded=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function drawSet(){
+ drawColors();drawIcon();frDraw();
+ const sw=(id,on)=>{const e=$(id);e.classList.toggle('on',on);e.setAttribute('aria-checked',on)};
+ sw('#swPop',SET.popup);sw('#swSnd',SET.sound);
+ $$s('#sndtype .chip').forEach(b=>b.classList.toggle('on',b.dataset.s===SET.snd));
+ $('#sndtype').style.opacity=SET.sound?1:.45;
+ const st=sysState(),sr=$('#sysrow');
+ sr.innerHTML=st==='granted'?'端末の通知：許可済み。このページを開いたまま別のタブや別のアプリを見ている間も、端末の通知で届きます。':st==='denied'?'端末の通知：ブロックされています。ブラウザの設定で許可すると使えます。':st==='default'?'端末の通知：まだ許可していません。<button class="chip" id="sysReq" style="margin-left:8px">許可する</button>':'この環境では端末の通知を使えません。画面内のポップアップだけ表示されます。';
+ if($('#sysReq'))$('#sysReq').onclick=async()=>{try{await Notification.requestPermission()}catch(e){}drawSet()};
+ $('#instBtn').hidden=!DIP;
+ $('#instxt').textContent=standalone()?'ホーム画面から開いています。':embedded?'この画面の中からは追加できません。このページを単体で開いてから追加してください。':DIP?'下のボタンで、ホーム画面に追加できます。':isIOS?'Safariの共有ボタン（□に↑）から「ホーム画面に追加」を選んでください。アプリ内ブラウザでは追加できないことがあります。':'ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。アプリ内ブラウザでは追加できないことがあります。'}
+const $$s=s=>[...document.querySelectorAll(s)];
+function openSet(){drawSet();$('#setDlg').hidden=false}
+$('#setBtn').onclick=openSet;$('#setBtn2').onclick=openSet;$('#setBtn3').onclick=openSet;
+$('#setClose').onclick=()=>{$('#setDlg').hidden=true};
+$('#setDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#swPop').onclick=async()=>{SET.popup=!SET.popup;saveSet();drawSet();if(SET.popup&&sysState()==='default'){try{await Notification.requestPermission()}catch(e){}drawSet()}};
+$('#swSnd').onclick=()=>{SET.sound=!SET.sound;saveSet();drawSet();if(SET.sound)playSnd(true);syncWatch()};
+$('#sndtype').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;SET.snd=b.dataset.s;saveSet();drawSet();playSnd(true)});
+$('#tstSnd').onclick=()=>playSnd(true);
+$('#tstPop').onclick=async()=>{if(!SET.popup){toast('Web通知がオフです');return}
+ if(sysState()==='default'){try{await Notification.requestPermission()}catch(e){}drawSet()}
+ const room={name:'テスト部屋',topic:'test'},m={u:S.id||'TEST01',n:S.nick,x:'これは通知のテストです。'};
+ if(!(sysState()==='granted'&&webNotify(room,m)))showPop(room,m);playSnd()};
+$('#instBtn').onclick=async()=>{if(!DIP)return;try{DIP.prompt();await DIP.userChoice}catch(e){}DIP=null;drawSet()};
+
+/* ---------- 入口 ---------- */
+const S={seed:store.g('wc2.seed',''),nick:store.g('wc2.nick',''),id:null,hue:0,room:null,es:null};
+const screens=['home','entry','notice','chat'];
+function show(name,back){screens.forEach(s=>{const e=$('#'+s);e.hidden=s!==name;e.classList.toggle('back',!!back)});}
+function drawId(){
+ const el=$('#eid'),av=$('#eav');$('#eBack').hidden=!S.id;
+ if(!S.id){el.className='idtxt none';el.innerHTML='<span style="--i:0">——————</span>';av.hidden=true;return}
+ el.className='idtxt';el.innerHTML=[...S.id].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
+ av.hidden=false;av.style.setProperty('--h',S.hue);av.textContent=S.id.slice(0,2)}
+function setSeed(v){S.seed=v;if(v.trim()){const r=idOf(v);S.id=r.id;S.hue=r.hue}else S.id=null;drawId();store.s('wc2.seed',v);upd()}
+function upd(){let tut=false;try{tut=T.on}catch(e){}$('#go').disabled=!(normRoom($('#room').value)&&(S.id||!tut))}
+const normRoom=s=>String(s||'').normalize('NFKC').trim().toLowerCase().replace(/\s+/g,' ');
+const LASTM={};
+function drawRecent(){drawHome()}
+function drawHome(){
+ const hp=$('#hprof'),hr=$('#hrooms');if(!hp||!hr)return;
+ if(S.id){hp.innerHTML=`<div class="row2">${avHtml(S.id,S.nick,' big')}<span class="pcol"><b style="font-size:16px" class="ell1">${S.nick?esc(S.nick):'表示名なし'}</b><span class="xs mute mono">ID: ${S.id}</span></span><button class="chip" id="hEdit">変更</button></div>`;
+  $('#hEdit').onclick=()=>{show('entry');if(!coarse)setTimeout(()=>$('#seed').focus(),350)}}
+ const r=store.g('wc2.recent',[]);
+ hr.innerHTML=r.length?r.map(n=>{const t=topicOf(normRoom(n)),m=null,u=0;
+  const prev=m?esc((m.n?m.n+'：':'')+m.x):'<span class="faint">タップして入る</span>';
+  const tm=m?(dayK(m.t)===new Date().toDateString()?fmtT(m.t):fmtD(m.t)):'';
+  return `<div class="hrow" role="button" tabindex="0" data-n="${esc(n)}"><span class="av" style="--h:${hueOf(t)}">${esc([...n][0])}</span><span class="pcol"><b class="ell1">${esc(n)}</b><span class="xs mute ell1">${prev}</span></span><span class="xs faint">${tm}</span>${u?`<span class="new">${u}</span>`:''}<button class="ib" data-del="${esc(n)}" aria-label="一覧から外す"><svg class="ic"><use href="#i-x"/></svg></button></div>`}).join('')
+  :`<div class="hint" style="padding:24px 16px"><b style="color:var(--text)">まだ部屋に入っていません</b><br>「部屋に入る」から、部屋名を入れて始めましょう。</div>`;
+ drawBadge()}
+$('#hrooms').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){const n=d.dataset.del;store.s('wc2.recent',store.g('wc2.recent',[]).filter(x=>x!==n));delete UN[topicOf(normRoom(n))];syncWatch();drawHome();return}const r=e.target.closest('.hrow');if(r)openRoom(r.dataset.n)});
+$('#hrooms').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('hrow'))openRoom(e.target.dataset.n)});
+$('#goJoin').onclick=()=>{show('entry');if(!coarse)setTimeout(()=>$('#room').focus(),350)};
+$('#eBack').onclick=()=>{show('home',true);drawHome()};
+$('#seed').addEventListener('input',e=>setSeed(e.target.value));
+$('#room').addEventListener('input',upd);
+$('#room').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&!$('#go').disabled)$('#go').click()});
+$('#seed').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#room').focus()});
+$('#go').onclick=()=>{
+ if($('#go').disabled){const c=$('.card:nth-of-type(2)');return}
+ openRoom($('#room').value.trim())};
+
+/* ---------- お知らせ ---------- */
+const maxNotice=Math.max(...NOTICES.map(n=>n.id));
+function drawBadge(){$('#newBadge').hidden=!(store.g('wc2.noticeSeen',0)<maxNotice)}
+$('#offBtn').onclick=()=>{
+ const seen=store.g('wc2.noticeSeen',0);
+ $('#nin').innerHTML=[...NOTICES].sort((a,b)=>b.id-a.id).map((n,i)=>`<article class="ncard ${n.id>seen?'fresh':''}" style="--d:${i}"><div class="ntop"><span class="xs faint">${esc(n.date)}</span>${n.id>seen?'<span class="new">NEW</span>':''}</div><h3>${esc(n.title)}</h3><p>${esc(n.body)}</p></article>`).join('');
+ store.s('wc2.noticeSeen',maxNotice);show('notice');pushH('notice')};
+$('#nBack').onclick=()=>goBackUI();
+
+/* ---------- 暗号 ---------- */
+const b64=u=>btoa(String.fromCharCode(...u)),unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function getKey(norm){try{if(!(window.crypto&&crypto.subtle))return null;return await crypto.subtle.importKey('raw',sha256('key:'+norm),'AES-GCM',false,['encrypt','decrypt'])}catch(e){return null}}
+async function enc(obj,key){const data=new TextEncoder().encode(JSON.stringify(obj));
+ if(key){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,data));const o=new Uint8Array(12+ct.length);o.set(iv);o.set(ct,12);return 'e1.'+b64(o)}
+ return 'p1.'+b64(data)}
+async function dec(str,key){try{const t=str.slice(0,3),body=unb64(str.slice(3));let data;
+ if(t==='e1.'){if(!key)return null;data=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:body.slice(0,12)},key,body.slice(12)))}
+ else if(t==='p1.')data=body;else return null;
+ return JSON.parse(new TextDecoder().decode(data))}catch(e){return null}}
+
+/* ---------- 部屋 ---------- */
+const NTFY='https://ntfy.sh/';
+const topicUrl=room=>NTFY+room.topic;
+const envelope=(room,b,blob,n)=>JSON.stringify({u:S.id,n:n||'',b});
+const relayRaw=(room,b,blob,n)=>fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:envelope(room,b,blob,n)});
+const relay=async(room,obj)=>relayRaw(room,await enc(obj,room.key),false,nickFor(room));
+const vfHtml=v=>v==='ok'?'<i class="vf" title="お友達に登録した人です">✓</i>':v==='ng'?'<i class="vf ng" title="登録したお友達と同じ名前ですが、IDが違います">✕</i>':'';
+const myVf=()=>'';
+function setMid(room){$('#mid').textContent=nickFor(room)||S.id}
+function drawReg(){if(S.room){setMid(S.room);render();drawPbar()}}
+/* お友達の登録（この端末にだけ保存）。登録した名前とIDが両方一致する人に ✓、同じ名前で別のIDの人に ✕ を付ける */
+const FR=store.g('wc2.friends',{});
+const saveFr=()=>store.s('wc2.friends',FR);
+function fvf(u,n){if(!u||u===S.id)return '';const f=FR[u],nk=normRoom(n);
+ if(f)return(!f.name||normRoom(f.name)===nk)?'ok':'';
+ if(nk&&!SEASONS.includes(n))for(const k in FR){const g=FR[k];if(g.name&&normRoom(g.name)===nk)return 'ng'}
+ return ''}
+function nameOf(u){const r=S.room;if(!r)return '';const p=r.pres.get(u);if(p&&p.n)return p.n;const m=[...r.msgs.values()].reverse().find(x=>x.u===u&&x.n&&!x.sys);return m?m.n:''}
+function frDraw(){const el=$('#frList');if(!el)return;const ids=Object.keys(FR);
+ el.innerHTML=ids.length?ids.map(id=>`<div class="mrow">${avHtml(id,FR[id].name,'',true)}<span class="pcol"><b class="ell1">${esc(FR[id].name||id)}</b><span class="xs mute mono">ID: ${esc(id)}</span></span><button class="chip" data-frdel="${esc(id)}">削除</button></div>`).join(''):'<p class="xs mute">まだ登録していません。</p>'}
+const PER={u:''};
+function openPerson(u){const r=S.room;if(!r||u===S.id||!idOk(u))return;PER.u=u;const n=nameOf(u),f=FR[u],big=!!iconOf(u);
+ $('#perBody').innerHTML=`<div class="row2">${avHtml(u,n,' big',true)}<span class="pcol"><b class="ell1" style="font-size:16px">${esc(n||u)}${vfHtml(fvf(u,n))}</b><span class="xs mute mono">ID: ${esc(u)}</span></span></div><p class="mute" style="white-space:pre-wrap">${f?'お友達に登録しています。登録名：'+esc(f.name||'なし'):'この人をお友達に登録しますか？\n登録すると、同じ名前とIDの人に ✓、同じ名前で別のIDの人に ✕ が付きます。'}</p>`;
+ $('#perReg').textContent=f?'登録を解除する':'登録する';$('#perReg').classList.toggle('pri',!f);$('#perBig').hidden=!big;$('#perDlg').hidden=false}
+$('#perReg').onclick=()=>{const u=PER.u;if(!u)return;if(FR[u]){delete FR[u];toast('登録を解除しました')}else{FR[u]={name:nameOf(u)};toast('お友達に登録しました')}saveFr();frDraw();$('#perDlg').hidden=true;if(S.room){render();drawPbar()}};
+$('#perBig').onclick=()=>{$('#perDlg').hidden=true;showBig(PER.u)};
+$('#perClose').onclick=()=>{$('#perDlg').hidden=true};
+$('#perDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+const linkify=t=>esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+async function openRoom(name,fromPop){
+ const norm=normRoom(name);if(!norm)return;
+ closeRoom();if(!S.id){S.id=rndId();S.hue=hueOf(S.id);S.guest=true}
+ const practice=T.on;
+ const topic=practice?'practice':topicOf(norm);
+ const key=practice?null:await getKey(norm);
+ const room=S.room={name,norm,topic,key,msgs:new Map(),ready:practice,unseen:0,practice,openT:Date.now(),season:SEASONS[Math.floor(Math.random()*4)],pres:new Map(),to:null};UN[topic]=0;
+ if(!practice){const rec=[name,...store.g('wc2.recent',[]).filter(n=>normRoom(n)!==norm)].slice(0,6);store.s('wc2.recent',rec)}
+ $('#rname').textContent=name;setMid(room);applyAv($('#mav'),S.id,'',S.hue);
+ $('#ta').value='';autosize();setStatus(practice?'on':'wait',practice?'れんしゅう中（送信されません）':'接続中…');
+ show('chat');if(!fromPop)pushH('chat');
+ render(true);room.pres.set(S.id,{n:nickFor(room),t:Date.now()});drawPbar();drawTo();
+ if(practice){setTimeout(()=>botSay(room,'ようこそ。ここは練習用の部屋です。何か送ってみてください。'),800);tutHook('enter')}
+ else{connect(room);prepLeave(room);setTimeout(()=>{if(S.room===room&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(S.room===room)room.ready=true},1200);setTimeout(()=>{if(S.room!==room)return;postAv(room,true);upBig(room);prepLeave(room);sendEv(room,'join');room.hbT=setInterval(()=>{if(S.room===room&&!document.hidden&&S.es)sendEv(room,'hb')},300000)},1500);room.pbT=setInterval(()=>{if(S.room===room){prunePres(room);drawPbar()}},60000);syncWatch()}
+ if(!coarse)setTimeout(()=>$('#ta').focus(),340)}
+/* ---- 入退室・いる人・ささやき・ミュート ---- */
+const SEASONS=['春','夏','秋','冬'];
+const rndId=()=>[...crypto.getRandomValues(new Uint8Array(6))].map(v=>AL[v%32]).join('');
+const nickFor=room=>S.nick||(room&&room.season)||'';
+const idOk=u=>typeof u==='string'&&/^[A-Z0-9]{1,6}$/.test(u);
+const MUTE=store.g('wc2.mute',[]);const saveMute=()=>store.s('wc2.mute',MUTE.slice(-100));
+async function sendEv(room,k,extra){if(room.practice||room.left)return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid()},extra||{}))}catch(e){}}
+async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid()},room.key),false,nickFor(room))}catch(e){}}
+function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true})}catch(e){}}
+addEventListener('pagehide',()=>{const r=S.room;if(!r||r.practice||r.left||!r.leaveBody)return;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}});
+function addSys(room,id,text,u){addMsg(room,{id:'ev'+String(id).slice(0,24),u:'',su:u,sys:true,t:Date.now(),x:text})}
+const presList=room=>[...room.pres].slice(0,40).map(([u,v])=>[u,v.n||'',u===S.id?0:Math.max(0,Date.now()-v.t)]);
+function schedReply(room){clearTimeout(room.repT);room.repT=setTimeout(()=>{if(S.room===room)sendEv(room,'pres',{list:presList(room)})},300+Math.random()*1700)}
+/* 途中から入った人にアイコンを届ける：いる人が、自分のアイコンをもう一度送る（20秒に1回まで） */
+function schedAv(room){if(!MYAV||Date.now()-(room.avForce||0)<20000)return;clearTimeout(room.avRT);room.avRT=setTimeout(()=>{if(S.room!==room)return;room.avForce=Date.now();postAv(room,true)},700+Math.random()*2500)}
+function handleEv(room,m){if(!idOk(m.u)||m.u===S.id)return;const n=cleanNick(m.n),vf=m.vf||'',now=Date.now(),nm=n||m.u,id=typeof m.id==='string'?m.id:uid();
+ room.gone=room.gone||new Map();
+ if(m.k==='leave'){room.pres.delete(m.u);room.gone.set(m.u,now);addSys(room,id,nm+'が退室しました',m.u)}
+ else if(m.k==='join'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});addSys(room,id,nm+'が入室しました',m.u);schedReply(room);schedAv(room)}
+ else if(m.k==='ask'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});schedReply(room);schedAv(room)}
+ else if(m.k==='hb'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf})}
+ else if(m.k==='pres'){clearTimeout(room.repT);room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});
+  /* 一覧の人は「最後に確認した時刻」付き。退室した人や古い情報では復活させない */
+  (Array.isArray(m.list)?m.list:[]).slice(0,40).forEach(x=>{if(!Array.isArray(x)||!idOk(x[0])||x[0]===S.id||room.pres.has(x[0]))return;
+   const age=Math.max(0,+x[2]||0);if(age>=600000)return;const seen=now-age;if((room.gone.get(x[0])||0)>=seen)return;
+   room.pres.set(x[0],{n:cleanNick(x[1]),t:seen})})}
+ drawPbar()}
+function prunePres(room){const now=Date.now();for(const [u,v] of [...room.pres]){if(u===S.id||now-v.t<=720000)continue;room.pres.delete(u);addSys(room,'x'+u+now,(v.n||u)+'が退室しました',u)}}
+function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<720000).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||''))}))}
+function drawPbar(){const r=S.room,b=$('#pbar');if(!r||r.practice){b.hidden=true;return}b.hidden=false;const l=memList();
+ $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc">${x.u===S.id?'あなた':esc(x.n||x.u)+(MUTE.includes(x.u)?'（ミュート）':'')}${vfHtml(x.vf)}</span>`).join('')}
+function drawTo(){const r=S.room;$('#toBar').hidden=!(r&&r.to);if(r&&r.to)$('#toTx').textContent=(r.to.n||r.to.u)+'さんだけに送ります'}
+function openMem(){const r=S.room;if(!r||r.practice)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
+ $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(x.n||x.u)}${vfHtml(x.vf)}${me?'（あなた）':''}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
+ $('#memDlg').hidden=false}
+$('#pbar').onclick=openMem;
+$('#memClose').onclick=()=>{$('#memDlg').hidden=true};
+$('#memAll').onclick=()=>{if(S.room){S.room.to=null;drawTo()}$('#memDlg').hidden=true};
+$('#memDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#memList').addEventListener('click',e=>{const r=S.room;if(!r)return;const t=e.target.closest('[data-to]'),mu=e.target.closest('[data-mu]'),pr=e.target.closest('[data-pr]');
+ if(pr){$('#memDlg').hidden=true;openPerson(pr.dataset.pr);return}
+ if(t){const u=t.dataset.to,x=memList().find(y=>y.u===u);r.to=(r.to&&r.to.u===u)?null:{u,n:x?x.n:''};drawTo();$('#memDlg').hidden=true;if(r.to)toast((r.to.n||u)+'さんだけに送ります')}
+ else if(mu){const u=mu.dataset.mu,i=MUTE.indexOf(u);i<0?MUTE.push(u):MUTE.splice(i,1);saveMute();openMem();drawPbar();render()}});
+$('#toX').onclick=()=>{if(S.room){S.room.to=null;drawTo()}};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#perDlg').hidden){$('#perDlg').hidden=true;e.stopImmediatePropagation();return}if(e.key==='Escape'&&!$('#memDlg').hidden){$('#memDlg').hidden=true;e.stopImmediatePropagation()}},true);
+function closeRoom(){const r=S.room;if(r)leaveRoom(r);if(S.es){S.es.close();S.es=null}S.room=null;$('#memDlg').hidden=true;if(S.guest){S.guest=false;S.id=null;S.hue=0;drawId();upd()}}
+function setStatus(k,t){const d=$('#dot');d.className='dot '+(k==='on'?'on':'wait');$('#stxt').textContent=t+(S.room&&S.room.key?' 暗号化':'')}
+/* 受け取った1件を処理する。srv: サーバーが付けた vf（ok=登録と一致 / ng=同じ名前で別ID / 空=未登録）を使う。ntfy: 認証なし(vf空) */
+async function onIncoming(room,d){
+ if(S.room!==room||!d||typeof d.b!=='string'||!idOk(d.u))return;
+ room.lastAct=Date.now();if(typeof d.seq==='number')room.seq=Math.max(room.seq||0,d.seq);
+ const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'',nm=cleanNick(d.n);
+ if(!m||m.u!==d.u||S.room!==room)return;
+ if(m.v==='av'&&b64ok(m.a)){setAvc(d.u,m.a);schedule();return}
+ if(m.v==='ev'){handleEv(room,Object.assign({},m,{u:d.u,n:nm,vf}));return}
+ if(typeof m.id!=='string'||typeof m.x!=='string'||typeof m.t!=='number')return;
+ addMsg(room,{id:m.id.slice(0,24),u:d.u,t:m.t,x:m.x.slice(0,500),n:nm,vf,c:hexOk(m.c)?m.c:'',k:hexOk(m.k)?m.k:'',s:(m.s==='r'||m.s==='l')?m.s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn)})}
+function connect(room){
+ if(S.es){S.es.close();S.es=null}
+ clearTimeout(room.rt);room.paused=false;room.lastAct=room.lastAct||Date.now();
+ /* 初回は「今から」の分だけ受け取る。再接続時は、途切れていた間の分だけ取りにいく */
+ const gap=room.again?Math.min(43000,Math.ceil((Date.now()-room.lastAct)/1000)+5):0;
+ const es=S.es=new EventSource(NTFY+room.topic+'/sse'+(gap?'?since='+gap+'s':''));room.again=true;
+ es.onopen=()=>{room.lastAct=Date.now();if(S.room===room)setStatus('on','接続済み')};
+ es.onerror=()=>{if(S.room!==room||S.es!==es)return;es.close();S.es=null;setStatus('wait',navigator.onLine?'再接続中…':'オフライン');
+  clearTimeout(room.rt);room.rt=setTimeout(()=>{if(S.room===room&&!S.es&&!room.paused)connect(room)},navigator.onLine?3000:8000)};
+ es.onmessage=ev=>{let d;try{d=JSON.parse(ev.data)}catch(e){return}
+  if(d.event!=='message'||typeof d.message!=='string')return;room.lastAct=Date.now();
+  if(d.attachment){gotBigNtfy(room,d);return}
+  let e;try{e=JSON.parse(d.message)}catch(x){return}
+  if(e&&typeof e.b==='string')onIncoming(room,{u:e.u,n:e.n,b:e.b})}}
+/* 長く画面を離れている間は接続を止め、戻ったら続きを取りにいく */
+document.addEventListener('visibilitychange',()=>{const r=S.room;if(!r||r.practice)return;clearTimeout(r.hideT);
+ if(document.hidden)r.hideT=setTimeout(()=>{if(!document.hidden||S.room!==r)return;r.paused=true;clearTimeout(r.rt);if(S.es){S.es.close();S.es=null}setStatus('wait','休止中')},600000);
+ else if(r.paused||!S.es)connect(r)});
+function addMsg(room,m){const old=room.msgs.get(m.id);
+ if(m.w&&m.w!==S.id&&m.u!==S.id)return;
+ if(old){if(m.u===S.id&&old.vf!==m.vf){old.vf=m.vf;schedule()}if(old.pending||old.failed){old.pending=false;old.failed=false;schedule()}return}
+ m.fresh=room.ready;room.msgs.set(m.id,m);
+ if(m.u!==S.id&&room.ready&&!room.practice&&!m.sys&&!MUTE.includes(m.u)){if(document.hidden)document.title='● ウェブチャット';if(m.t>room.openT-5000)notifyMsg(room,m,document.hasFocus()&&!document.hidden)}
+ trim30(room);schedule()}
+function save(){}
+/* 部屋のメッセージは30件まで。超えたら古い順に消す */
+function trim30(room){if(room.msgs.size<=30)return;const a=[...room.msgs.values()].sort((x,y)=>x.t-y.t);for(let i=0;i<a.length-30;i++)room.msgs.delete(a[i].id)}
+try{Object.keys(localStorage).filter(k=>k.startsWith('wc2.h.')).forEach(k=>localStorage.removeItem(k))}catch(e){}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)document.title='ウェブチャット'});
+addEventListener('online',()=>{if(S.room)setStatus('wait','再接続中…')});
+let rq=0;function schedule(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;render()})}
+
+const kf=x=>x.sys?'':x.u+'|'+(x.n||'');   /* 同じ人（IDと名前が同じ）が続くあいだは、アイコンを省略する */
+function render(first){
+ const room=S.room,box=$('#msgs');if(!room)return;
+ const near=first||box.scrollHeight-box.scrollTop-box.clientHeight<96;
+ let list=[...room.msgs.values()].sort((a,b)=>a.t-b.t);if(list.length>300)list=list.slice(-300);
+ let h='',prev=null,fresh=0,mineNew=false;
+ if(!list.length)h=`<div class="hint"><div class="ring"><svg class="ic"><use href="#i-chat"/></svg></div><b style="color:var(--text)">まだ誰もいません</b><br>この部屋名を伝えると、相手も同じ部屋に入れます。</div>`;
+ for(const m of list){
+  if(m.sys?MUTE.includes(m.su):(m.u!==S.id&&MUTE.includes(m.u)))continue;
+  const newDay=!prev||dayK(prev.t)!==dayK(m.t);
+  if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
+  if(m.sys){h+=`<div class="sysl">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
+  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m);
+  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
+  if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
+  const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
+  h+=`<div class="row ${sy.right?'r':''} ${me?'mine':''} ${first2?'first':''} ${m.fresh?'in':''}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${m.n?esc(m.n)+'<span class="idc">#'+esc(m.u)+'</span>':esc(m.u)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div class="bub${m.w?' wh':''}${bubAttr(sy)}">${linkify(m.x)}</div>${meta}</div></div>`;
+  if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
+  prev=m}
+ box.innerHTML=h;
+ if(near||mineNew){box.scrollTop=box.scrollHeight;room.unseen=0;$('#jump').hidden=true}
+ else{box.scrollTop=room.lastTop||0;if(fresh){room.unseen+=fresh;$('#jump').hidden=false;$('#jump').textContent='↓ 新着 '+room.unseen}}}
+$('#msgs').addEventListener('scroll',()=>{const b=$('#msgs');if(S.room)S.room.lastTop=b.scrollTop;if(b.scrollHeight-b.scrollTop-b.clientHeight<96){$('#jump').hidden=true;if(S.room)S.room.unseen=0}},{passive:true});
+$('#jump').onclick=()=>{const b=$('#msgs');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})};
+$('#msgs').addEventListener('click',e=>{const r=e.target.closest('[data-retry]');if(!r||!S.room)return;const m=S.room.msgs.get(r.dataset.retry);if(m)post(m)});
+
+/* ---------- 送信 ---------- */
+const ta=$('#ta');
+function autosize(){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,136)+'px';const n=[...ta.value].length;$('#send').classList.toggle('rdy',!!ta.value.trim());const c=$('#cnt');c.hidden=n<450;c.textContent=n+'/500'}
+ta.addEventListener('input',autosize);
+ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!coarse){e.preventDefault();send()}});
+$('#send').onclick=send;
+function send(){const room=S.room,x=ta.value.trim();if(!room||!x)return;if(Date.now()-(room.lastSend||0)<500)return;room.lastSend=Date.now();
+ const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:myVf(),w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side,pending:true,fresh:true};
+ room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();render();post(m);ta.focus()}
+/* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
+async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&Date.now()-(room.avT||0)<300000)return;room.avT=Date.now();
+ try{const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}catch(e){room.avT=0}}
+async function post(m){const room=S.room;if(!room)return;
+ if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
+ m.failed=false;m.pending=true;
+ try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||''},room.key);
+  const r=await relayRaw(room,body,false,m.n||'');if(!r.ok)throw 0;
+  try{const j=await r.json();m.vf=j.vf==='ok'||j.vf==='ng'?j.vf:''}catch(e){}
+  postAv(room);setTimeout(()=>{if(m.pending&&S.room===room){m.pending=false;schedule()}},4000)}
+ catch(e){m.pending=false;m.failed=true;toast('送信できませんでした')}
+ if(S.room===room)schedule()}
+
+/* ---------- 戻る・リンク ---------- */
+function backToEntry(){closeRoom();show(S.id?'home':'entry',true);drawHome();tutHook('back');syncWatch()}
+$('#cBack').onclick=()=>goBackUI();
+/* 戻る: 埋め込み(iframe)ではブラウザ履歴を使わない、画面を直接切り替える */
+const useHist=(()=>{try{return window.self===window.top}catch(e){return false}})();
+let hDepth=0;
+function pushH(v){if(!useHist)return;try{history.pushState({v},'');hDepth++}catch(e){}}
+function goBackUI(){if(hDepth>0)history.back();else backToEntry()}
+addEventListener('popstate',()=>{hDepth=Math.max(0,hDepth-1);if(!$('#home').hidden)return;backToEntry()});
+$('#link').onclick=async()=>{if(!S.room)return;const u=location.href.split('#')[0]+'#r='+encodeURIComponent(S.room.name);
+ try{await navigator.clipboard.writeText(u);toast('この部屋のリンクをコピーしました')}catch(e){toast('コピーできませんでした')}};
+
+/* ---------- 起動 ---------- */
+$('#seed').value=S.seed;if(S.seed.trim()){const r=idOf(S.seed);S.id=r.id;S.hue=r.hue}drawId();drawRecent();drawBadge();
+let invite=false;const m0=location.hash.match(/^#r=(.+)$/);if(m0){invite=true;try{$('#room').value=decodeURIComponent(m0[1]).slice(0,30)}catch(e){}try{history.replaceState(null,'',location.href.split('#')[0])}catch(e){}}
+upd();
+/* ---------- 表示名 ---------- */
+function cleanNick(s){return String(s||'').replace(/[\u0000-\u001f\u007f]/g,'').replace(/\s+/g,' ').trim().slice(0,12)}
+function setNick(v){S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room){setMid(S.room);if(!S.room.practice){S.room.pres.set(S.id,{n:nickFor(S.room),t:Date.now()});drawPbar();prepLeave(S.room);sendEv(S.room,'hb')}}}
+$('#nick').value=S.nick;
+$('#nick').addEventListener('input',e=>{S.nick=cleanNick(e.target.value);store.s('wc2.nick',S.nick);drawReg()});
+$('#seed').addEventListener('input',()=>drawReg());
+$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#room').focus()});
+function saveNn(){setNick($('#nn').value);$('#nick').value=S.nick;$('#nameDlg').hidden=true;toast(S.nick?'表示名を変更しました':'表示名を外しました')}
+$('#meChip').onclick=()=>{$('#nn').value=S.nick;$('#nameDlg').hidden=false;setTimeout(()=>$('#nn').focus(),60)};
+$('#nnCancel').onclick=()=>{$('#nameDlg').hidden=true};
+$('#nnSave').onclick=saveNn;
+$('#nn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)saveNn()});
+$('#nameDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+
+/* ---------- 使い方（一緒に進める） ---------- */
+const T={on:false,i:0,cur:null,nameOpened:false,raf:0};
+const BOTLINES=['届きました。メッセージはこのように表示されます。','何度でも送れます。本番では、同じ部屋名の人にも届きます。','その調子です。'];
+const STEPS=[
+ {tg:'#seed',hook:'seed',tx:()=>S.id?'すでにIDが決まっています。文字を書き換えると、別のIDになります。試してみてください。':'まず、適当な文字を入れてみましょう。ひらがなでも英数字でもかまいません。'},
+ {tg:'#eid',next:'次へ',tx:()=>S.id?`これがあなたのIDです（${S.id}）。同じ文字を入れれば、いつでも同じIDになります。`:'IDがまだ決まっていません。上の欄に文字を入れてみてください。'},
+ {tg:'#nick',hook:'nick',next:'あとで',tx:()=>'表示名も付けてみましょう。IDの横に表示されます。なくても大丈夫です。'},
+ {tg:'#room',hook:'room',tx:()=>'次は部屋名です。同じ部屋名を知っている人と、同じ部屋で話せます。',act:()=>({label:'「れんしゅう」と入れる',fn(){$('#room').value='れんしゅう';upd();setTimeout(tutNext,350)}})},
+ {tg:'#go',hook:'enter',noskip:true,tx:()=>S.id?'「入る」を押してみましょう。練習なので、外には送られません。':'IDがないと入れません。上の欄に文字を入れてください。',act:()=>S.id?null:{label:'最初に戻る',fn(){T.i=0;drawStep()}}},
+ {tg:'.compbox',hook:'sent',tx:()=>'メッセージを書いて、送ってみましょう。'},
+ {tg:'#msgs',next:'次へ',tx:()=>'ミオから返事が来ました。何も変えなければ、自分は右・相手は左に出ます。'},
+ {tg:'#meChip',hook:'name',tx:()=>'右上のあなたのIDをタップすると、部屋の中でも表示名を変えられます。'},
+ {tg:'#link',hook:'link',tx:()=>'このボタンで、この部屋に入るURLをコピーできます。相手に送ってみてください。'},
+ {tg:'#cBack',hook:'back',noskip:true,tx:()=>'戻るボタンで入口に戻れます。押してみましょう。'},
+ {tg:null,next:'はじめる',end:true,tx:()=>'おしまいです。本番は、部屋名を入れて入るだけ。入口の「使い方」から、いつでもやり直せます。通知や音は、右上の設定から変えられます。'}
+];
+function drawStep(){const s=T.cur=STEPS[T.i],act=s.act&&s.act(),fwd=s.next||(s.hook&&!s.noskip?'とばす':'');
+ $('#coachb').innerHTML=`<div class="cin"><div class="chd"><span class="cn">${T.i+1} / ${STEPS.length}</span>${s.end?'':'<button class="cbtn" id="cx">スキップ</button>'}</div><div>${esc(s.tx())}</div><div class="cb"><span style="flex:1"></span>${act?`<button class="cbtn" id="cact">${esc(act.label)}</button>`:''}${fwd?`<button class="cbtn ${s.next?'pri':''}" id="cnext">${esc(fwd)}</button>`:''}</div></div>`;
+ $('#cscrim').hidden=!!s.tg;
+ if(act)$('#cact').onclick=act.fn;if(fwd)$('#cnext').onclick=tutNext;if(!s.end)$('#cx').onclick=endTut}
+function tutNext(){if(!T.on)return;T.i++;if(T.i>=STEPS.length)return endTut();drawStep()}
+function tutHook(n){if(!T.on||!T.cur||T.cur.hook!==n)return;const i=T.i;setTimeout(()=>{if(T.on&&T.i===i)tutNext()},n==='enter'?500:250)}
+function placeCoach(){const b=$('#coachb'),sp=$('#spot'),vh=window.visualViewport?visualViewport.height:innerHeight;
+ const el=T.cur.tg&&$(T.cur.tg),r=el&&el.getClientRects().length?el.getBoundingClientRect():null,bh=b.offsetHeight,bw=b.offsetWidth;let top,left;
+ if(!r||!r.width){sp.style.opacity=0;top=(vh-bh)/2;left=(innerWidth-bw)/2}
+ else{const pd=6;sp.style.opacity=1;sp.style.left=r.left-pd+'px';sp.style.top=r.top-pd+'px';sp.style.width=r.width+pd*2+'px';sp.style.height=r.height+pd*2+'px';
+  if(r.height>vh*.45)top=r.top+12;else if(vh-r.bottom>=bh+20)top=r.bottom+14;else top=r.top-bh-14;
+  left=Math.max(16,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-16))}
+ b.style.top=Math.max(8,Math.min(top,vh-bh-8))+'px';b.style.left=left+'px'}
+function tutLoop(){if(!T.on)return;const dlg=!$('#nameDlg').hidden;$('#coach').style.visibility=dlg?'hidden':'visible';
+ if(T.cur.hook==='name'&&T.nameOpened&&!dlg){T.nameOpened=false;tutNext()}
+ if(T.on){placeCoach();T.raf=requestAnimationFrame(tutLoop)}}
+function startTut(){if(T.on)return;if($('#entry').hidden){if(S.room||!$('#notice').hidden)return;show('entry')}T.on=true;T.i=0;T.nameOpened=false;$('#coach').hidden=false;drawStep();T.raf=requestAnimationFrame(tutLoop)}
+function endTut(){if(!T.on)return;T.on=false;cancelAnimationFrame(T.raf);$('#coach').hidden=true;store.s('wc2.tut2',true);
+ if($('#room').value==='れんしゅう'){$('#room').value='';upd()}
+ if(S.room&&S.room.practice)goBackUI()}
+const dbHook=(sel,hook,ok)=>{let t;$(sel).addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>{if(ok())tutHook(hook)},1000)})};
+dbHook('#seed','seed',()=>!!S.id);dbHook('#nick','nick',()=>!!S.nick);dbHook('#room','room',()=>!!normRoom($('#room').value));
+$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)tutHook('nick')});
+$('#meChip').addEventListener('click',()=>{T.nameOpened=true});
+$('#link').addEventListener('click',()=>tutHook('link'));
+$('#help').onclick=startTut;$('#help2').onclick=startTut;
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#setDlg').hidden){$('#setDlg').hidden=true;return}if(!$('#nameDlg').hidden){$('#nameDlg').hidden=true;return}if(T.on)endTut()});
+/* 使い方は最初の1回だけ自動で始める（始めた時点で済みにする。すでにIDがある人や旧版で見た人には出さない）。やり直しは「使い方」から */
+const tutSeen=store.g('wc2.tut2',false)||store.g('wc2.tut',false)||!!S.id;
+if(!tutSeen){store.s('wc2.tut2',true);setTimeout(startTut,700)}
+else if(!S.id)setTimeout(()=>$('#seed').focus(),500);
+else if($('#room').value&&!coarse)setTimeout(()=>$('#room').focus(),500);
+syncWatch();frDraw();
+if(S.id&&!invite){show('home');drawHome()}
+$('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
+</script>
+</body></html>
