@@ -1,0 +1,9 @@
+
+{
+  "name": "web-chat",
+  "compatibility_date": "2026-11-17",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "single-page-application"
+  }
+}
