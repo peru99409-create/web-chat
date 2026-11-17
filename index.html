@@ -909,7 +909,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="cprev" id="cprev"></div>
   <div class="setrow"><span class="xs faint" style="flex:1">あなたが送るメッセージの見た目として、相手の画面にも反映されます。</span><button class="chip" id="cReset">元に戻す</button></div>
 <b class="sh" id="sBv" style="font-size:16px">吹き出しの背景（相手にも見える）</b>
-<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。1,000文字まで。画像（url）は使えません（画像は、すぐ下のボタンから設定します）。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。背景をつけた吹き出しの文字は、全員に黒で表示されます。</p>
+<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。1,000文字まで。画像は、埋め込みの url(data:image/png;base64,…) だけ使えます（外部のURLは使えません）。大きな画像は、すぐ下のボタンから設定します。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。背景をつけた吹き出しの文字は、全員に黒で表示されます。</p>
 <textarea id="bgvTa" wrap="off" maxlength="1000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しの背景" placeholder="linear-gradient(135deg,#ff9a9e,#fad0c4)"></textarea>
 <div class="setrow"><span class="xs faint" id="bgvCnt" style="flex:1"></span><button class="chip" id="bgvEx">例を入れる</button><button class="chip" id="bgvClr">消す</button></div>
 <div id="bgiBox"><b class="sh" style="font-size:16px">背景画像（相手にも見える）</b>
@@ -1228,7 +1228,7 @@ async function upBig(room,force){if(!room||room.practice||!room.key)return;const
  try{const body=await encBytes(big,room.key);
   const r=await fetch(NTFY+room.topic,{method:'PUT',headers:{Filename:'a.bin',Message:await enc({v:'avb',u:S.id},room.key)},body});
   if(r.ok){up[room.topic]=Date.now();const k=Object.keys(up);if(k.length>30)delete up[k[0]];store.s('wc2.up',up)}}catch(e){}}
-async function gotBigNtfy(room,d){if(!bucket('big|'+room.topic,3,15000))return;try{const m=await dec(d.message,room.key);if(m&&m.v==='bgb'){await gotBgAtt(room,d,m);return}if(!m||m.v!=='avb'||!idOk(m.u)||m.u===S.id)return;
+async function gotBigNtfy(room,d){if(!bucket('big|'+room.topic,3,15000))return;try{const m=await dec(d.message,room.key);if(m&&m.v==='bgb'){bgSeedCancel(room,m.u,m.h);await gotBgAtt(room,d,m);return}if(!m||m.v!=='avb'||!idOk(m.u)||m.u===S.id)return;
   const url=d.attachment&&d.attachment.url;if(typeof url!=='string'||!url.startsWith(NTFY)||!room.key)return;
   if(await IDB.get('v:'+m.u)===d.id)return;
   const r=await fetch(url);if(!r.ok)return;const buf=await decBytes(new Uint8Array(await r.arrayBuffer()),room.key);if(!buf||buf.length>400000)return;
@@ -1515,7 +1515,7 @@ const TERMS=[
   'アイコン：小さな画像（最大96px四方）は暗号化して送ります。大きな画像（最大512px四方）は、暗号化した添付として、短い時間だけ預けます。',
   '伝言板の書き込みと削除の合図：暗号化して送ります。',
   '利用者数の集計：端末ごとのランダムな匿名の印を、2分おきに共通の部屋へ送ります（部屋名・ID・表示名は含みません）。ホームに、直近3分の印の数が、目安として表示されます。',
-  '吹き出しの背景画像（約120KBまで）：暗号化した添付として、数時間だけ預けます。見た人の端末には、画像が保存されます。']},
+  '吹き出しの背景画像（約120KBまで）：暗号化した添付として、数時間だけ預けます。見た人の端末には、画像が保存されます。画像が見つからないときは、同じ部屋の人に「この画像を持っていたら預け直して」という依頼（送り主のIDと画像の指紋）が届き、持っている人が代わりに預け直すことがあります。']},
   '部屋名そのものは送りません。部屋名から作った識別用の記号だけが、中継サービスに見えます。',
   'IPアドレスやブラウザの種類などの通信情報は、通信するだけで、中継サービス（ntfy.sh）に届きます。その扱いは、同サービスのルールによります。',
   '本ページには、広告や、利用者の行動を追いかけるためのしくみは入れていません。運営者が、利用者のメッセージや個人情報を集めて分析することはありません。',
@@ -1650,9 +1650,9 @@ function cleanBg(v){
  if(typeof v!=='string')return '';
  v=v.normalize('NFC').replace(INV,'').replace(/[\r\n]+/g,' ').trim();
  if(!v||v.length>1000)return '';
- if(/url\s*\(|image-set|@import|\\/i.test(v))return '';  /* 画像は使えない（IP漏れ防止）。グラデーションなどの値だけ */
+ if(/image-set|@import|\\/i.test(v))return '';  /* url() は、埋め込み画像（data:image の base64）だけ。外部URLは使えない（IP漏れ防止） */
  let bad=false;
- const rest=v.replace(/url\(\s*(?:"([^"\\]*)"|'([^'\\]*)'|([^)"'\s\\]*))\s*\)/gi,(m,a,b,c)=>{const u=String(a!=null?a:b!=null?b:c!=null?c:'').trim();if(!/^(https:\/\/\S+|data:image\/(png|jpe?g|gif|webp|svg\+xml)[;,]\S*)$/i.test(u)||u.length>950)bad=true;return 'url()'});
+ const rest=v.replace(/url\(\s*(?:"([^"\\]*)"|'([^'\\]*)'|([^)"'\s\\]*))\s*\)/gi,(m,a,b,c)=>{const u=String(a!=null?a:b!=null?b:c!=null?c:'').trim();if(!/^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+\/=]+$/i.test(u)||u.length>950)bad=true;return 'url()'});
  if(bad)return '';
  if(/image-set|element\(|paint\(|cross-fade|attr\(|expression|javascript/i.test(rest))return '';
  if(!/^[A-Za-z0-9\s#%.,()+\-\/*_]*$/.test(rest))return '';
@@ -1672,7 +1672,7 @@ function drop(room,u){const n=Date.now(),d=room.drops||(room.drops=new Map());le
 function tempMute(room,u){const n=Date.now(),o=TM.get(u)||{lv:0,until:0},dur=(room.official?[900,3600,21600]:[300,900,3600])[Math.min(o.lv,2)]*1000;TM.set(u,{lv:o.lv+1,until:n+dur});
  addMsg(room,{id:'tm'+uid(),u:'',su:'',sys:true,t:n,x:(nameOf(u)||u)+'が連投・荒らしの疑いで、'+(dur>=3600000?Math.round(dur/3600000)+'時間':Math.round(dur/60000)+'分間')+' 非表示になりました'});drawPbar();if(S.room===room){render();drawBoard()}}
 /* 受信側：鍵で復号できた(=部屋の人の)投稿にだけ、種類ごとの流量制限をかける */
-const KB={c:[6,1500],ev:[6,4000],av:[4,10000],bd:[2,8000],bdd:[4,4000],rx:[6,3000],ty:[4,2500],del:[4,4000]};
+const KB={c:[6,1500],bgq:[2,20000],ev:[6,4000],av:[4,10000],bd:[2,8000],bdd:[4,4000],rx:[6,3000],ty:[4,2500],del:[4,4000]};
 const KBO={c:[3,5000],ev:[4,6000],av:[2,15000],bd:[1,20000],bdd:[3,6000],rx:[2,8000],ty:[2,4000],del:[2,6000]};
 function guardIn(room,u,k,hist){
  if(u===S.id)return true;
@@ -1888,13 +1888,14 @@ async function onIncoming(room,d,hist){
  const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'';let nm=cleanNick(d.n);
  if(!m||m.u!==d.u||room.dead)return;
  if(room.official&&IMP.test(nm))nm='';
- const k=['av','ev','bd','bdd','rx','ty','del'].includes(m.v)?m.v:'c';
+ const k=['av','ev','bd','bdd','rx','ty','del','bgq'].includes(m.v)?m.v:'c';
  if(hist&&k!=='bd'&&k!=='bdd')return;
  if(!guardIn(room,d.u,k,hist))return;
  if(k==='bd'||k==='bdd'){gotBoard(room,d.u,nm,m,hist);return}
  if(k==='rx'){gotReact(room,d.u,m);return}
  if(k==='ty'){gotTy(room,d.u,nm);return}
  if(k==='del'){gotDel(room,d.u,m);return}
+ if(k==='bgq'){gotBgReq(room,d.u,m);return}
  if(k==='av'){if(b64ok(m.a)){setAvc(d.u,m.a);schedule();if(S.room===room)drawPbar()}return}
  if(m.v==='ev'){handleEv(room,Object.assign({},m,{u:d.u,n:nm,vf}));return}
  if(typeof m.id!=='string'||!idRe.test(m.id)||typeof m.x!=='string'||typeof m.t!=='number'||!isFinite(m.t))return;
@@ -2238,7 +2239,7 @@ function composeBg(v,img){return img?'linear-gradient(rgba(255,255,255,.55),rgba
 function bgUrl(room,u,h){if(!h||!/^[0-9a-f]{16}$/.test(h)||room.official||room.practice||!room.key)return '';if(u!==S.id&&!SET.peerUrl)return '';
  const k=bgKey(u,h),e=BGU.get(k);if(e&&e.url)return e.url;const now=Date.now();if(e&&(e.busy||now-e.t<300000))return '';
  BGU.set(k,{busy:true,t:now});bgLoad(room,u,h,k);return ''}
-async function bgLoad(room,u,h,k){try{let b=await IDB.get('bg:'+k);if(!b&&u!==S.id){await fetchBg(room,u,h);b=await IDB.get('bg:'+k)}if(b){BGU.delete(k);bgSet(k,b);return}}catch(e){}
+async function bgLoad(room,u,h,k){try{let b=await IDB.get('bg:'+k);if(!b&&u!==S.id){await fetchBg(room,u,h);b=await IDB.get('bg:'+k);if(!b)askBg(room,u,h)}if(b){BGU.delete(k);bgSet(k,b);return}}catch(e){}
  BGU.set(k,{t:Date.now()})}
 function ownBg(){if(!MYBGH)return '';const k='me:'+MYBGH,e=BGU.get(k);if(e&&e.url)return e.url;if(!e){BGU.set(k,{busy:true,t:Date.now()});IDB.get('bg:'+k).then(b=>{BGU.delete(k);if(b){bgSet(k,b);drawColors()}else BGU.set(k,{t:Date.now()})})}return ''}
 const jpegOk=b=>!!b&&b.length>=100&&b.length<=200000&&b[0]===0xFF&&b[1]===0xD8&&b[2]===0xFF;
@@ -2257,6 +2258,21 @@ async function upBg(room,force){if(!room||room.practice||room.official||!room.ke
  const up=store.g('wc2.upbg',{}),o=up[room.topic];if(!force&&o&&o.h===MYBGH&&Date.now()-o.t<9e6)return;if(!force&&nqBusy(20))return;
  try{nqUse();const body=await encBytes(bytes,room.key);const r=await fetch(NTFY+room.topic,{method:'PUT',headers:{Filename:'b.bin',Tags:'bg',Message:await enc({v:'bgb',u:S.id,h:MYBGH},room.key)},body});nqHit(r);
   if(r.ok){up[room.topic]={t:Date.now(),h:MYBGH};const ks=Object.keys(up);if(ks.length>30)delete up[ks[0]];store.s('wc2.upbg',up)}}catch(e){}}
+/* ---- 他の人が代わりに預け直す ---- */
+function askBg(room,u,h){if(room.dead||room.practice||room.official||!room.key||room.pres.size<=1||nqBusy(25))return;
+ const a=room.bgAsk||(room.bgAsk=new Map()),key=u+':'+h,t=a.get(key);if(t&&Date.now()-t<300000)return;
+ if(!bucket('bgq|'+room.topic,2,30000))return;a.set(key,Date.now());if(a.size>40)a.delete(a.keys().next().value);
+ relay(room,{v:'bgq',u:S.id,tu:u,h}).catch(()=>{})}
+function bgSeedCancel(room,tu,h){const r=room.bgSeed&&room.bgSeed.get(tu+':'+h);if(r&&r.timer){clearTimeout(r.timer);r.timer=0;r.t=Date.now()}}
+async function seedBg(room,tu,h,bytes){try{nqUse();const body=await encBytes(bytes,room.key);
+ const r=await fetch(NTFY+room.topic,{method:'PUT',headers:{Filename:'b.bin',Tags:'bg',Message:await enc({v:'bgb',u:tu,h},room.key)},body});nqHit(r)}catch(e){}}
+async function gotBgReq(room,u,m){if(u===S.id||room.dead||!room.key||room.official||!idOk(m.tu)||!/^[0-9a-f]{16}$/.test(m.h||''))return;
+ const key=m.tu+':'+m.h,S2=room.bgSeed||(room.bgSeed=new Map()),old=S2.get(key);if(old&&(old.timer||Date.now()-old.t<600000))return;
+ let bytes=null;try{bytes=m.tu===S.id?(MYBGH===m.h?await IDB.get('bgimg'):null):await IDB.get('bg:'+bgKey(m.tu,m.h))}catch(e){}
+ if(!jpegOk(bytes)||room.dead)return;
+ const rec={t:Date.now(),timer:0};S2.set(key,rec);if(S2.size>40)S2.delete(S2.keys().next().value);
+ /* 持っている人が何人もいるので、少しずらして1人だけが預ける（先に誰かが預けたら取りやめる）。元の投稿者がいれば、いちばん先に預ける */
+ rec.timer=setTimeout(()=>{rec.timer=0;if(room.dead||!bucket('bgr|'+room.topic,2,30000)||nqBusy(15))return;seedBg(room,m.tu,m.h,bytes)},(m.tu===S.id?200:800)+Math.random()*(m.tu===S.id?400:4000))}
 function makeBgImg(file){return new Promise((ok,ng)=>{const fr=new FileReader();fr.onerror=()=>ng('read');
  fr.onload=()=>{const im=new Image();im.onerror=()=>ng('decode');
   im.onload=()=>{try{const w0=im.naturalWidth||im.width,h0=im.naturalHeight||im.height;if(!w0||!h0)return ng('decode');let side=320;
