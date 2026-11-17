@@ -132,7 +132,6 @@ a{color:var(--accent)}
 .sysl{align-self:center;font-size:12px;color:var(--text3);margin:8px 0;padding:0 8px;text-align:center}
 .tobar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;padding:0 4px 0 16px;height:32px;border-radius:var(--r3);background:color-mix(in srgb,var(--accent) 16%,transparent);font-size:13px}
 .tobar .ib{width:28px;height:28px}
-.bub.wh{border-style:dashed}
 .mrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
 .mrow:first-child{border-top:0}
 .mrow .chip{height:28px;padding:0 12px;font-size:12px}
@@ -148,11 +147,7 @@ a{color:var(--accent)}
 .rbw .idc{color:transparent;-webkit-text-fill-color:transparent;opacity:1}
 @keyframes rbm{to{background-position:200% 0}}
 .who{font-size:12px;line-height:16px;color:var(--text2);margin:0 8px 4px;font-weight:700;letter-spacing:.06em}
-.bub{width:fit-content;max-width:100%;padding:8px 16px;border-radius:var(--r3);background:var(--bg3);border:1px solid var(--line);white-space:pre-wrap;word-break:break-word}
-.row:not(.r).first .bub{border-top-left-radius:4px}
-.row.mine .bub{background:var(--accent);border-color:var(--accent);color:var(--on)}
-.row.r.first .bub{border-top-right-radius:4px}
-.row.mine .bub a,.bub.cu a{color:inherit}
+.bub{width:fit-content;max-width:100%;white-space:pre-wrap;word-break:break-word}
 .meta{font-size:11px;line-height:16px;color:var(--text3);margin:2px 8px 0}
 .meta.fail{color:var(--danger);cursor:pointer}
 .sp{width:40px;flex:none}
@@ -239,7 +234,6 @@ a{color:var(--accent)}
 @keyframes msginr{from{opacity:0;transform:translate(24px,8px) scale(.96)}}
 @keyframes msginl{from{opacity:0;transform:translate(-24px,8px) scale(.96)}}
 .row.r.in{animation-name:msginr}.row:not(.r).in{animation-name:msginl}
-.bub{transition:opacity .3s}.row.pend .bub{opacity:.6}
 .sysl.in{animation:up .4s var(--ease) both}
 .send.fly .ic{animation:fly .45s var(--ease)}
 .card{transition:border-color .25s,box-shadow .25s}
@@ -275,8 +269,6 @@ input:focus-visible,textarea:focus-visible{outline:0}
 .btn.pri,.send.rdy{box-shadow:inset 0 1px 0 rgb(255 255 255/.22)}
 .compbox{box-shadow:0 6px 20px rgb(0 0 0/.1)}
 .sh{scroll-margin-top:72px}
-.snav{position:sticky;top:-24px;z-index:3;margin:-24px -24px 0;padding:16px 24px 12px;background:var(--bg2);border-bottom:1px solid var(--line);flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:none}
-.snav::-webkit-scrollbar{display:none}.snav .chip{flex:none}
 .swatches{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .swc{width:32px;height:32px;border-radius:50%;background:var(--c);border:2px solid var(--bg2);box-shadow:0 0 0 1px var(--line);position:relative;flex:none;transition:transform .25s var(--spring),box-shadow .2s}
 .swc:hover{transform:scale(1.12)}.swc:active{transform:scale(.92)}
@@ -292,7 +284,6 @@ input:focus-visible,textarea:focus-visible{outline:0}
 [data-theme=minimal] .card{background:transparent}
 [data-theme=minimal] .btn{background:transparent}
 [data-theme=minimal] .btn.pri{background:var(--accent);box-shadow:none}
-[data-theme=minimal] .bub{border-color:transparent;background:var(--bg2)}
 [data-theme=minimal] .brand b{font-weight:600;letter-spacing:.14em;font-size:16px}
 [data-theme=minimal] .logo{background:transparent;color:var(--accent);border:1px solid var(--accent)}
 [data-theme=minimal] #entry,[data-theme=minimal] #home{background:var(--bg)}
@@ -306,7 +297,6 @@ input:focus-visible,textarea:focus-visible{outline:0}
 [data-theme=pop] .btn{font-weight:700;border-width:2px}
 [data-theme=pop] .btn.pri{box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 55%,#000)}
 [data-theme=pop] .btn.pri:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 55%,#000)}
-[data-theme=pop] .bub{padding:10px 18px;box-shadow:0 3px 10px rgb(0 0 0/.08)}
 [data-theme=pop] .av{box-shadow:none}
 [data-theme=pop] .logo{transform:rotate(-6deg)}
 [data-theme=pop] .chip{font-weight:600}
@@ -317,9 +307,8 @@ input:focus-visible,textarea:focus-visible{outline:0}
 [data-theme=neon] .brand b,[data-theme=neon] .idtxt{font-family:ui-monospace,'SF Mono',Menlo,monospace;letter-spacing:.14em}
 [data-theme=neon] .brand b{text-shadow:0 0 14px color-mix(in srgb,var(--accent) 70%,transparent)}
 [data-theme=neon] .idtxt{color:var(--accent);text-shadow:0 0 14px color-mix(in srgb,var(--accent) 65%,transparent)}
-[data-theme=neon] .logo,[data-theme=neon] .btn.pri,[data-theme=neon] .send.rdy,[data-theme=neon] .row.mine .bub{box-shadow:var(--glow)}
+[data-theme=neon] .logo,[data-theme=neon] .btn.pri,[data-theme=neon] .send.rdy{box-shadow:var(--glow)}
 [data-theme=neon] .card,[data-theme=neon] .tcard,[data-theme=neon] .compbox,[data-theme=neon] .pbar{border-color:color-mix(in srgb,var(--accent) 32%,var(--bg3));box-shadow:inset 0 0 24px color-mix(in srgb,var(--accent) 6%,transparent)}
-[data-theme=neon] .bub{border-color:color-mix(in srgb,var(--accent) 38%,var(--bg3))}
 [data-theme=neon] input:focus,[data-theme=neon] textarea:focus,[data-theme=neon] .compbox:focus-within{box-shadow:0 0 0 1px var(--accent),var(--glow)}
 [data-theme=neon] .dot.on{box-shadow:0 0 8px var(--accent)}
 [data-theme=neon] .av{box-shadow:0 0 0 2px var(--bg),0 0 10px hsl(var(--h) 70% 55%/.55)}
@@ -329,9 +318,7 @@ input:focus-visible,textarea:focus-visible{outline:0}
 .tab{position:relative;flex:1 1 0;min-width:0;height:52px;padding:0 10px;border-radius:var(--r3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--bg3);color:var(--text2);border:1px solid transparent;cursor:pointer;animation:up .3s var(--ease) both;transition:background .2s,color .2s,border-color .2s,transform .15s var(--spring)}
 .tab:active{transform:scale(.95)}
 .tab .tn{max-width:100%;font-size:13px;font-weight:600;line-height:18px}
-.tab .ts{font-size:10px;line-height:12px;color:var(--text3);letter-spacing:.04em}
 .tab.on{background:color-mix(in srgb,var(--accent) 14%,var(--bg2));border-color:var(--accent);color:var(--text)}
-.tab.on .ts{color:var(--accent)}
 .tab .new{position:absolute;top:-6px;right:-4px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:var(--on);font-size:11px;line-height:20px;text-align:center;box-shadow:0 0 0 2px var(--bg2);animation:pop .35s var(--spring)}
 .tab.add{flex:0 0 52px;padding:0;font-size:22px;background:transparent;border:1px dashed var(--line);color:var(--text2)}
 .tab.add:hover{border-color:var(--accent);color:var(--accent)}
@@ -375,7 +362,6 @@ input:focus-visible,textarea:focus-visible{outline:0}
 #setDlg .swc{width:44px;height:44px}
 #setDlg .crow{min-height:52px;font-size:15px}
 #setDlg .crow input{width:48px;height:36px}
-#setDlg .snav{padding-top:14px}
 #setX{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--on)!important;font-weight:700}
 #pop{transform:translate(var(--tx,-50%),var(--hy,-160%))}
 #pop.show{transform:translate(var(--tx,-50%),0)}
@@ -435,7 +421,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .off{background:var(--bg2);border-color:var(--line);border-radius:var(--r4);box-shadow:var(--sh1)}
 [data-theme=classic] .off:hover{background:var(--bg3);border-color:var(--line)}
 [data-theme=classic] .off .oi{border-radius:var(--r2)}
-[data-theme=classic] .hrow{border-radius:var(--r2)}
 [data-theme=classic] .hrow.offc{background:var(--bg3);border-color:var(--line)}
 /* 上部バー・時刻の帯 */
 [data-theme=classic] .top{background:color-mix(in srgb,var(--bg) 85%,transparent);border-bottom-color:var(--line)}
@@ -444,10 +429,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .pbar:hover,[data-theme=classic] .bdb:hover,[data-theme=classic] .me-chip:hover{background:var(--bg3)}
 [data-theme=classic] #pbt .pc{background:var(--bg3);border-radius:999px}
 /* 吹き出し：相手はニュートラル面、自分はメインの色。角は小さめに、背景に溶け込む細い枠 */
-[data-theme=classic] .bub{border-radius:var(--r4);padding:8px 14px;box-shadow:var(--sh1);line-height:22px}
-[data-theme=classic] .row:not(.r).first .bub{border-top-left-radius:4px}
-[data-theme=classic] .row.r.first .bub{border-top-right-radius:4px}
-[data-theme=classic] .row.mine .bub{border-color:transparent}
 [data-theme=classic] .who{font-weight:600;letter-spacing:0}
 [data-theme=classic] .rxc{border-radius:999px;background:var(--bg2)}
 [data-theme=classic] .rxc.me{background:var(--bg3)}
@@ -457,11 +438,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .compbox textarea{box-shadow:none!important;background:transparent}
 [data-theme=classic] .send{border-radius:999px;width:40px;height:40px}
 /* 下のタブ：セグメントコントロール風（枠の中に、選ばれたものだけ浮く） */
-[data-theme=classic] .tabs{gap:4px;padding:6px 12px calc(6px + env(safe-area-inset-bottom));background:var(--bg2)}
-[data-theme=classic] .tab{height:48px;border-radius:var(--r2);background:transparent;border:1px solid transparent}
 [data-theme=classic] .tab:hover{background:var(--bg3)}
-[data-theme=classic] .tab.on{background:var(--bg3);border-color:var(--line);box-shadow:var(--sh1)}
-[data-theme=classic] .tab.on .ts{color:var(--text2)}
 [data-theme=classic] .tab.add{background:transparent;border:1px dashed var(--line)}
 /* 通知ポップアップ・トースト・スイッチ */
 [data-theme=classic] #pop,[data-theme=classic] #toast{background:var(--bg2);border-radius:var(--r3);box-shadow:var(--sh2)}
@@ -470,7 +447,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .sw.on{background:var(--accent)}
 [data-theme=classic] .sw.on::after{background:#fff}
 [data-theme=classic] #setDlg .tcard>hr{background:transparent!important;border-top:1px solid var(--line)!important;height:0!important;margin:4px 0!important}
-[data-theme=classic] #setDlg .snav{border-radius:0}
 [data-theme=classic] #setX{background:var(--accent)!important}
 [data-theme=classic] .cprev,[data-theme=classic] .crow{background:var(--bg3);border-radius:var(--r2)}
 [data-theme=classic] .tut{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
@@ -499,7 +475,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .off{border:0;background:var(--bg3);border-radius:var(--r4);padding:16px 20px;box-shadow:none}
 [data-theme=classic] .off:hover{background:var(--bg4)}
 [data-theme=classic] .off .oi{background:var(--pri);color:var(--pri-on);border-radius:14px;width:44px;height:44px}
-[data-theme=classic] .off{border:0}
 [data-theme=classic] .new,[data-theme=classic] .tab .new,[data-theme=classic] .hrow .new{background:var(--accent);color:var(--on)}
 [data-theme=classic] .ofi{background:var(--pri);color:var(--pri-on)}
 [data-theme=classic] .hrow{padding:12px 14px;border-radius:var(--r3)}
@@ -535,13 +510,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .newline{color:var(--text);letter-spacing:.06em}
 [data-theme=classic] .newline::before,[data-theme=classic] .newline::after{background:var(--text);opacity:.25}
 /* --- 吹き出し：相手＝面の色、自分＝白黒反転（色指定がある人は、その色が優先）--- */
-[data-theme=classic] .bub{background:var(--bg3);border:0;border-radius:20px;padding:9px 16px;box-shadow:none;line-height:24px}
-[data-theme=classic] .row:not(.r).first .bub{border-top-left-radius:6px}
-[data-theme=classic] .row.r.first .bub{border-top-right-radius:6px}
-[data-theme=classic] .row.mine .bub{background:var(--pri);color:var(--pri-on)}
-[data-theme=classic] .row.mine .bub a{color:inherit}
-[data-theme=classic] .bub.wh{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
-[data-theme=classic] .row.mine .bub.wh{background:transparent;color:var(--text)}
 [data-theme=classic] .col{max-width:min(560px,80%)}
 [data-theme=classic] .who{font-size:12px;font-weight:600;letter-spacing:0;color:var(--text2);margin:0 10px 4px}
 [data-theme=classic] .meta{font-size:11px;margin:3px 10px 0}
@@ -562,7 +530,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .tab{height:46px;border-radius:14px;background:transparent;border:0;box-shadow:none}
 [data-theme=classic] .tab.on{background:var(--bg2);box-shadow:0 1px 3px rgb(0 0 0/.25),0 0 0 1px var(--line)}
 [data-theme=classic] .tab .tn{font-size:13px;font-weight:600}
-[data-theme=classic] .tab .ts{display:none}
 [data-theme=classic] .tab.on .tn{color:var(--text)}
 [data-theme=classic] .tab:not(.on) .tn{color:var(--text2)}
 [data-theme=classic] .tab.add{flex:0 0 46px;border:0;color:var(--text2);font-size:22px}
@@ -573,7 +540,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] .chip:hover{background:var(--bg4)}
 [data-theme=classic] .chip.on{background:var(--pri);color:var(--pri-on);box-shadow:none}
 [data-theme=classic] #setDlg .chip{height:44px}
-[data-theme=classic] #setDlg .snav{background:color-mix(in srgb,var(--bg2) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 [data-theme=classic] #setX{background:var(--pri)!important;border-color:var(--pri)!important;color:var(--pri-on)!important}
 [data-theme=classic] .swc.on{box-shadow:0 0 0 2px var(--bg2),0 0 0 4px var(--text)}
 [data-theme=classic] .sw.on{background:var(--accent)}
@@ -601,7 +567,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 @media(max-width:520px){#mid{display:none}.me-chip{padding:0 4px;max-width:none}.top{gap:4px}}
 .tab{flex-direction:row!important;justify-content:space-between;gap:4px;padding:0 6px 0 14px!important}
 .tab .tn{flex:1;text-align:left}
-.tab .ts{display:none!important}
 .tx{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:var(--text3);flex:none;transition:background .15s,color .15s}
 .tx:hover,.tx:focus-visible{background:color-mix(in srgb,var(--danger) 18%,transparent);color:var(--danger)}
 .hrow [data-lv]{color:var(--danger)}
@@ -640,8 +605,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 [data-theme=classic] #msgs{background-image:none}
 [data-theme=classic] body{background:var(--bg)}
 [data-theme=classic] .day,[data-theme=classic] .sysl{background:var(--bg)}
-#cssTa{display:block;width:100%;min-height:260px;padding:12px 14px;font:13px/1.55 ui-monospace,'SF Mono',Menlo,monospace;resize:vertical;border-radius:12px;white-space:pre;overflow:auto;tab-size:2;background:var(--bg2)}
-#cssCnt{font-variant-numeric:tabular-nums}
 .spane details summary{height:44px;display:flex;align-items:center;list-style:none}
 .spane details summary::-webkit-details-marker{display:none}
 .spane details summary::before{content:"▸";margin-right:8px;transition:transform .2s}
@@ -667,22 +630,14 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 #cId .idl{font-size:10px;line-height:16px;color:var(--text3);font-weight:500}
 #cNick .nl{font-size:14px;line-height:20px;color:var(--text);font-weight:600}
 #cNick .nl .faint{font-size:11px;font-weight:400}
-#cId .idtxt{font-size:20px;line-height:28px;letter-spacing:.14em}
-#cId .av.big{width:36px;height:36px;font-size:13px;border-radius:10px}
-#cId .idbox{min-height:36px;gap:12px}
-#cId input{height:38px;font-size:13px}
-#cId p.xs{font-size:11px;line-height:16px}
 #cRoom{padding:22px 20px;gap:14px}
-#cRoom>.lab:first-child{font-size:26px;line-height:34px;font-weight:800;color:var(--text);letter-spacing:-.02em}
 #cRoom>.lab .faint{display:block;font-size:12px;line-height:18px;font-weight:400;letter-spacing:0;margin-top:2px;color:var(--text2)}
-#cRoom #room{height:64px;font-size:22px;font-weight:700;padding:0 20px}
 #cRoom #go{height:52px;font-size:16px}
 /* 入口：上から 部屋名（細字・最大）→ 公式 → 名前 → ID（最小） */
-#cRoom>.lab:first-child{font-weight:700;font-size:22px;line-height:30px;letter-spacing:0}
-#cRoom #room{font-weight:700;font-size:17px;height:56px}
+#cRoom>.lab:first-child{font-weight:700;font-size:22px;line-height:30px;letter-spacing:0;color:var(--text)}
+#cRoom #room{font-weight:700;font-size:17px;height:56px;padding:0 20px}
 #cRoom #room::placeholder{font-weight:400}
 #cRoom #go{font-weight:600}
-#cRoom>.lab .faint{font-weight:400}
 
 #cId .idtxt{font-size:13px;line-height:18px;letter-spacing:.2em;font-weight:500}
 #cId .av.big{width:28px;height:28px;font-size:10px;border-radius:8px}
@@ -697,14 +652,21 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 #cRoom #goOff .ofi{margin:0}
 #cRoom #goOff .xs{font-weight:400}
 /* 入力中・メンション */
-@keyframes tyg{50%{box-shadow:0 0 0 2px var(--accent),0 0 16px var(--accent)}}
-[data-theme] #pbt .pc.ty{color:var(--accent);font-weight:700;box-shadow:0 0 0 2px var(--accent),0 0 10px var(--accent);animation:tyg 1.1s ease-in-out infinite}
+[data-theme] #pbt .pc.ty{color:var(--accent);font-weight:700}
+.tyb{position:absolute;left:16px;bottom:calc(100% + 2px);z-index:2;display:flex;align-items:center;gap:8px;max-width:calc(100% - 32px);height:32px;padding:0 14px 0 6px;border-radius:999px;background:color-mix(in srgb,var(--bg2) 90%,transparent);border:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:12px;line-height:16px;color:var(--text2);pointer-events:none;animation:tyin .25s var(--ease) both}
+.tyb .av.ty-av{width:22px;height:22px;font-size:9px;border-radius:50%;box-shadow:0 0 0 2px var(--bg2)}
+.tyb .av.ty-av+.av.ty-av{margin-left:-10px}
+.tyb .ell1{min-width:0}
+.tyd{display:inline-flex;align-items:center;gap:3px;flex:none}
+.tyd i{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:tydot 1.2s ease-in-out infinite}
+.tyd i:nth-child(2){animation-delay:.15s}.tyd i:nth-child(3){animation-delay:.3s}
+@keyframes tydot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
+@keyframes tyin{from{opacity:0;transform:translateY(6px)}}
 #mnList{margin:0 4px 8px;gap:6px}
 #mnList .chip{height:34px}
 #mnBtn{font-size:18px;font-weight:700;width:40px;height:40px;color:var(--accent)}
 .mt{color:var(--accent);font-weight:700;background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:6px;padding:0 3px}
 .row.mine .bub .mt{color:inherit;background:rgb(255 255 255/.25)}
-[data-theme] .bub.mnme{box-shadow:0 0 0 2px var(--accent)}
 /* 設定：横長・背の低い画面でも、下までスクロールできるように */
 #setDlg{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
 .setsheet{min-height:0;max-height:100%}
@@ -837,6 +799,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
  <div id="msgs"></div>
  <button class="jump" id="jump" hidden>↓ 新着</button>
  <div class="comp">
+  <div class="tyb" id="tyb" hidden role="status" aria-live="polite"></div>
   <div class="tobar" id="rpBar" hidden><span id="rpTx" class="ell1"></span><button class="ib" id="rpX" aria-label="返信をやめる"><svg class="ic"><use href="#i-x"/></svg></button></div>
   <div class="tobar" id="toBar" hidden><span id="toTx" class="ell1"></span><button class="ib" id="toX" aria-label="全員に戻す"><svg class="ic"><use href="#i-x"/></svg></button></div>
   <div class="chips" id="mnList" hidden></div>
@@ -886,9 +849,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="setbody">
 <section class="spane" data-pane="sTh"><div class="setrow" id="rtRow"><span class="pcol"><b>この部屋だけ別の見た目</b><span class="xs mute" id="rtName"></span></span><button class="sw" id="swRt" role="switch" aria-label="この部屋だけ別の見た目"></button></div>
   <div class="setrow"><span class="pcol"><b>部屋名を伏せる</b><span class="xs mute">画面の部屋名をぼかします。タップかマウスを乗せると見えます</span></span><button class="sw" id="swHn" role="switch" aria-label="部屋名を伏せる"></button></div>
-  <div class="setrow"><span class="pcol"><b>相手の吹き出しの背景を表示</b><span class="xs mute">相手が設定した背景を出します。オフなら標準の見た目です</span></span><button class="sw" id="swPb" role="switch" aria-label="相手の吹き出しの背景を表示"></button></div>
-<div class="setrow"><span class="pcol"><b>相手の吹き出しを表示</b><span class="xs mute">オフにすると、相手の発言は文字だけになります（相手が決めた色・背景・枠は出ません）。自分の吹き出しは変わりません</span></span><button class="sw" id="swPbu" role="switch" aria-label="相手の吹き出しを表示"></button></div>
-<div class="setrow"><span class="pcol"><b>相手の背景画像を表示する</b><span class="xs mute">オフにすると、相手の背景画像を取りにいかず、表示もしません。公式部屋では、背景画像は使えません</span></span><button class="sw" id="swPu" role="switch" aria-label="相手の背景の画像を読み込む"></button></div>
 <div class="lab">雰囲気</div>
   <div class="chips" id="styleSel"><button class="chip" data-st="classic">標準</button><button class="chip" data-st="minimal">ミニマル</button><button class="chip" data-st="pop">ポップ</button><button class="chip" data-st="neon">ネオン</button></div>
   <div class="lab">明るさ</div>
@@ -899,42 +859,17 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <p class="xs faint" style="margin-top:-8px">虹色の丸で、好きな色を選べます。「部屋ごとに自動」は、部屋名から色が決まります。</p>
   <div class="cprev"><div class="row first"><span class="av" style="--h:200">ミ</span><div class="col"><div class="who">ミオ<span class="idc">#MIO</span></div><div class="bub">こんにちは。この見た目になります</div></div></div><div class="row r mine"><div class="col"><div class="bub">いい感じ</div></div></div></div></section>
 <section class="spane" data-pane="sIc" hidden><div class="setrow"><span class="pcol"><b>表示名</b><span class="xs mute">部屋の中で、あなたの名前として出ます</span></span><button class="chip" id="setNick">変える</button></div>
-<div class="setrow"><span class="pcol"><b>入力中を相手に知らせる</b><span class="xs mute">書いている間、相手の画面であなたの名前が光ります</span></span><button class="sw" id="swTy" role="switch" aria-label="入力中を相手に知らせる"></button></div>
+<div class="setrow"><span class="pcol"><b>入力中を相手に知らせる</b><span class="xs mute">書いている間、相手の画面に「あなたが入力中」と表示されます</span></span><button class="sw" id="swTy" role="switch" aria-label="入力中を相手に知らせる"></button></div>
 <b class="sh" id="sIc" style="font-size:16px">アイコン</b>
   <div class="icrow"><span class="av big" id="icPrev"></span><div class="btns"><label class="chip" id="icPick" for="icFile" style="cursor:pointer">画像を選ぶ</label><button class="chip" id="icDel">外す</button></div><input type="file" id="icFile" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none" tabindex="-1"></div>
   <p class="xs faint" style="margin-top:-8px;margin-bottom:16px"><span id="icMsg">画像は小さく縮めて、相手へ届きます。</span></p>
-  <b class="sh" id="sBb" style="font-size:16px">自分の吹き出し</b>
-  <div class="colgrid">
-   <label class="crow"><span>吹き出しの色</span><input type="color" id="cBg" aria-label="吹き出しの色"></label>
-   <label class="crow"><span>文字の色</span><input type="color" id="cTx" aria-label="文字の色"></label>
-  </div>
-  <div class="lab">表示する側</div>
-  <div class="chips" id="sideSel"><button class="chip" data-side="auto">おまかせ</button><button class="chip" data-side="r">右</button><button class="chip" data-side="l">左</button></div>
-  <p class="xs faint" style="margin-top:-8px">おまかせは「自分は右・相手は左」です。</p>
-  <div class="cprev" id="cprev"></div>
-  <div class="setrow"><span class="xs faint" style="flex:1">あなたが送るメッセージの見た目として、相手の画面にも反映されます。</span><button class="chip" id="cReset">元に戻す</button></div>
 <b class="sh" id="sBv" style="font-size:16px">吹き出しの背景（相手にも見える）</b>
 <p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。5,000文字まで。画像は、埋め込みの url(data:image/webp;base64,…) などだけ使えます（外部のURLは使えません）。長い値は、メッセージとは別に、分けて暗号化して送られます。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。背景をつけた吹き出しの文字は、全員に黒で表示されます。</p>
 <textarea id="bgvTa" wrap="off" maxlength="5000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しの背景" placeholder="linear-gradient(135deg,#ff9a9e,#fad0c4)"></textarea>
 <div class="setrow"><span class="xs faint" id="bgvCnt" style="flex:1"></span><button class="chip" id="bgvEx">例を入れる</button><button class="chip" id="bgvClr">消す</button></div>
 <div class="setrow" id="bgoRow"><span class="pcol"><b>白を重ねる濃さ</b><span class="xs mute">背景の上に白を重ねて、文字を読みやすくします。0%なら画像そのままです（相手の画面にも反映されます）</span></span><input type="range" id="bgoR" min="0" max="90" step="5" style="width:140px;padding:0;height:32px;flex:none" aria-label="白を重ねる濃さ"><span id="bgoV" class="xs mute" style="width:36px;text-align:right;flex:none"></span></div>
-
-<b class="sh" id="sCs" style="font-size:16px">吹き出しのCSS（この端末だけ）</b>
-<p class="xs faint" style="margin-top:-8px">自分で書いたCSSで、見た目を自由に変えられます。<b>この端末の画面にだけ</b>効き、相手には送られません。5,000文字まで書けます。CSSを使っている間は、上の吹き出しの色の設定は使われません。</p>
-<div class="setrow"><span class="pcol"><b>CSSを使う</b><span class="xs mute">オフにすると、書いたCSSは残したまま元の見た目に戻ります</span></span><button class="sw" id="swCss" role="switch" aria-label="吹き出しのCSSを使う"></button></div>
-<textarea id="cssTa" wrap="off" maxlength="5000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しのCSS" placeholder=".row.mine .bub{ background:linear-gradient(135deg,#ff9a9e,#fad0c4); border-radius:24px }"></textarea>
-<div class="setrow"><span class="xs faint" id="cssCnt" style="flex:1"></span><button class="chip" id="cssEx">例を足す</button><button class="chip" id="cssClr">消す</button></div>
-<details class="xs mute"><summary style="cursor:pointer;font-weight:700;color:var(--text)">書き方のヒント</summary>
-<p style="white-space:pre-wrap;margin-top:8px">.bub　すべての吹き出し
-.row.mine .bub　自分の吹き出し
-.row:not(.mine) .bub　相手の吹き出し
-.row.first .bub　同じ人が続く最初の吹き出し
-.who　名前　　.meta　時刻　　.av　アイコン
-#msgs　メッセージ全体の背景
-.sysl　入退室の表示
-
-アニメーション（@keyframes）、背景画像（url(data:...) も可）、::before / ::after も使えます。
-うまく表示が崩れたら、アドレスの最後に #nocss を付けて開くと、CSSなしで開けます。</p></details></section>
+  <div class="cprev" id="cprev"></div>
+</section>
 <section class="spane" data-pane="sFr" hidden><div id="frList"></div>
   <p class="xs faint">部屋の中で、相手のアイコンか名前をタップすると登録できます。登録した名前とIDが同じ人に ✓、同じ名前で別のIDの人に ✕ が付きます。登録は、この端末にだけ保存されます。</p></section>
 <section class="spane" data-pane="sNt" hidden><div class="setrow"><span class="pcol"><b>Web通知</b><span class="xs mute">新着メッセージを、端末の通知で知らせます</span></span><button class="sw" id="swPop" role="switch" aria-label="Web通知"></button></div>
@@ -1027,6 +962,8 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:36,date:'2026-11-18',title:'入力中の表示を、分かりやすくしました',body:'誰かが書いている間、入力欄の上に「〇〇が入力中」と、アイコンと動く点で表示します（人が多いときは「ほか○人」）。メッセージが届くと消えます。上の帯の名前は、光らず、色だけが変わります。'},
+ {id:35,date:'2026-11-18',title:'通信が切れたときの自動退室を、5秒にしました',body:'通信が切れた状態が5秒ほど続くと、その部屋から自動で退室します（以前は30秒ほど）。放置しているだけでは退室しません。あわせて、使われていない古い機能の処理を整理しました。'},
  {id:34,date:'2026-11-17',title:'公式部屋でも吹き出しの背景が出ます。白を重ねる濃さを変えられます',body:'公式部屋で、吹き出しの背景が表示されない不具合を直しました（背景は画像を読み込まず、埋め込みの値だけなので、公式部屋でも使えます）。\n設定の「自分」の「吹き出しの背景」の下に、「白を重ねる濃さ」（0〜90%）を追加しました。初期値は0%で、画像そのままです。数字を上げるほど文字が読みやすくなります。相手の画面にも、同じ濃さで反映されます。値に白の重ねを入れていた場合は、重ねが二重になるので、重ねを外した値を使ってください。'},
  {id:33,date:'2026-11-17',title:'吹き出しの背景が、5,000文字まで使えるようになりました',body:'設定の「吹き出しの背景（相手にも見える）」に、5,000文字まで書けます（url(data:image/webp;base64,…) の埋め込み画像も入ります）。背景の値は長いので、メッセージとは別に、2,200文字ずつ分けて暗号化して送り、受け取った人の画面で組み立てて、全員に同じように表示します。メッセージには、指紋（16桁）だけを載せます。値を持っていない人が頼むと、持っている人が代わりに送ります。公式部屋では使えません。'},
  {id:32,date:'2026-11-17',title:'背景画像をなくしました。CSS欄は5,000文字までになりました',body:'吹き出しの「背景画像」の機能をなくしました。背景画像の預かり・取得も行いません（グラデーションなどの背景の値は、これまでどおり使えます）。\n吹き出しのCSS欄の上限を、50万文字から5,000文字にしました。'},
@@ -1115,48 +1052,6 @@ $('#setNav').addEventListener('click',e=>{const b=e.target.closest('[data-pane]'
 try{mqDark.addEventListener('change',()=>{if(THM.mode==='auto')applyTheme(S.room)})}catch(e){}
 applyTheme();
 
-/* ---------- 吹き出しのCSS（この端末だけに効く・50万文字まで） ---------- */
-const UCMAX=5000;
-const UC=Object.assign({on:true,css:''},store.g('wc2.ucss',{}));
-if(typeof UC.css!=='string')UC.css='';UC.css=UC.css.slice(0,UCMAX);
-let ucLast=null,ucAT=0,ucST=0,ucArm=0;
-const ucActive=()=>false; /* 吹き出しの見た目は全員共通の固定デザイン。端末ごとのCSSは使わない */
-const UC_EX=`/* 自分の吹き出し */
-.row.mine .bub{
-  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-  color:#3a1c1c;
-  border-radius:24px;
-  box-shadow:0 4px 14px rgba(255,120,140,.35);
-}
-/* 相手の吹き出し */
-.row:not(.mine) .bub{
-  background:#fff;
-  color:#111;
-  border:2px dashed #999;
-}
-/* 背景を動かす例 */
-@keyframes bubmove{to{background-position:200% 0}}
-.row.mine .bub{background-size:200% 100%;animation:bubmove 6s linear infinite}
-`;
-function ucEl(id){let e=document.getElementById(id);if(!e){e=document.createElement('style');e.id=id;document.head.appendChild(e)}return e}
-function ucApply(noRender){const on=ucActive();
- ucEl('ucss').textContent=on?UC.css:'';
- /* 書いたCSSが壊れても、大事なボタンは消えないように、別の<style>で守る */
- ucEl('ucss2').textContent=on?'#setBtn,#setBtn2,#setBtn3,#cBack,#exitBtn,#setX,#send,#ta{visibility:visible!important;opacity:1!important;pointer-events:auto!important}':'';
- if(on!==ucLast){ucLast=on;if(!noRender&&typeof render==='function'&&S.room)render()}}
-function ucSave(now){clearTimeout(ucST);const go=()=>{try{localStorage.setItem('wc2.ucss',JSON.stringify(UC))}catch(e){toast('保存できませんでした（端末の保存容量がいっぱいです）')}};if(now)go();else ucST=setTimeout(go,500)}
-function ucCount(){const t=$('#cssTa'),c=$('#cssCnt');if(!t||!c)return;const n=t.value.length;c.textContent=n.toLocaleString()+' / 5,000文字'+(n>=UCMAX?'（上限です）':'');c.style.color=n>=UCMAX?'var(--danger)':''}
-function ucDraw(){const t=$('#cssTa');if(t.value!==UC.css)t.value=UC.css;const sw=$('#swCss');sw.classList.toggle('on',UC.on);sw.setAttribute('aria-checked',UC.on);ucCount()}
-ucApply(true);
-addEventListener('pagehide',()=>ucSave(true));
-document.addEventListener('visibilitychange',()=>{if(document.hidden)ucSave(true)});
-$('#cssTa').addEventListener('input',e=>{UC.css=e.target.value;ucCount();clearTimeout(ucAT);ucAT=setTimeout(ucApply,150);ucSave()});
-$('#swCss').onclick=()=>{UC.on=!UC.on;ucDraw();ucApply();ucSave(true)};
-$('#cssEx').onclick=()=>{UC.css=((UC.css.trim()?UC.css.replace(/\s+$/,'')+'\n\n':'')+UC_EX).slice(0,UCMAX);UC.on=true;ucDraw();ucApply();ucSave(true);toast('例を足しました')};
-$('#cssClr').onclick=()=>{const b=$('#cssClr');if(!UC.css){return}
- if(!ucArm){ucArm=setTimeout(()=>{ucArm=0;b.textContent='消す'},3000);b.textContent='もう一度で消す';return}
- clearTimeout(ucArm);ucArm=0;b.textContent='消す';UC.css='';ucDraw();ucApply();ucSave(true);toast('CSSを消しました')};
-
 /* ---------- SHA-256（どの環境でも動くように自前） ---------- */
 const PR=[];for(let n=2;PR.length<64;n++)if(PR.every(p=>n%p))PR.push(n);
 const frac=x=>Math.floor((x-Math.floor(x))*4294967296);
@@ -1185,7 +1080,7 @@ const hueCache={};function hueOf(id){return hueCache[id]??(hueCache[id]=((v=>(v[
 const idOf=seed=>{const r=makeId(seed);r.hue=hueOf(r.id);return r};
 
 /* ---------- 通知・音・ホーム画面 ---------- */
-const SET=Object.assign({popup:true,sound:false,snd:'pon',onlyFr:false,pv:'t',ph:'r',peerBg:true,peerUrl:true,peerBub:true,hideName:false,qh:false,qf:'23:00',qt:'07:00',skipLeave:false,typ:true,nf:''},store.g('wc2.set',{}));
+const SET=Object.assign({popup:true,sound:false,snd:'pon',onlyFr:false,pv:'t',ph:'r',hideName:false,qh:false,qf:'23:00',qt:'07:00',skipLeave:false,typ:true,nf:''},store.g('wc2.set',{}));
 const saveSet=()=>store.s('wc2.set',SET);
 if(!['all','fr','mn','both'].includes(SET.nf))SET.nf=SET.onlyFr?'fr':'all';
 const dispRoom=r=>(SET.hideName&&!r.official)?'この部屋':r.name;
@@ -1249,40 +1144,15 @@ function hideBig(){$('#avBig').classList.remove('show');$('#avBig').setAttribute
 $('#avBig').addEventListener('click',hideBig);
 document.addEventListener('click',e=>{const pu=e.target.closest&&e.target.closest('[data-pu]');if(pu&&!$('#setDlg').contains(pu)){e.stopPropagation();openPerson(pu.dataset.pu);return}const t=e.target.closest&&e.target.closest('[data-av]');if(t&&!$('#setDlg').contains(t)||t&&t.id==='icPrev'){e.stopPropagation();showBig(t.dataset.av)}},true);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#avBig').classList.contains('show')){hideBig();e.stopImmediatePropagation()}},true);
-const hexOk=v=>/^#[0-9a-f]{6}$/i.test(v||'');
-const STY=Object.assign({bg:'',tx:'',side:'auto',bgv:'',bgo:0},(()=>{const o=store.g('wc2.style',null);if(o)return o;const t=store.g('wc2.theme',{});return {bg:hexOk(t.meBg)?t.meBg:'',tx:hexOk(t.meTx)?t.meTx:''}})());
+const STY=Object.assign({bgv:'',bgo:0},store.g('wc2.style',{}));
 const saveSty=()=>store.s('wc2.style',STY);
-const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function autoText(bg){const n=parseInt(bg.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#111111':'#ffffff'}
-/* 吹き出しの位置は送信者IDだけで決める。誰が見ても同じ。
-   既定では全員の吹き出しを同じ側（右）に出す。送信者ごとに分けたいときは、sideOf だけを変える。 */
-const BUB_SIDE_DEFAULT='r';
-function sideOf(senderId){return BUB_SIDE_DEFAULT!=='l'}
-function styleOf(m){return {right:sideOf(m.u),mine:false,bg:'',tx:''}}
-function styleOfOld(m){const mine=m.u===S.id,src=mine?{c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side}:{c:m.c,k:m.k,s:m.s};
- const right=src.s==='r'?true:src.s==='l'?false:mine;
- /* 相手の吹き出しは、送った人の設定（色・文字色・左右）がそのまま出る。こちらからは変えられない。
-    設定「相手の吹き出しを表示」をオフにすると、装飾を出さず文字だけになる */
- if(!mine&&SET.peerBub===false)return {right,mine,bg:'',tx:''};
- const bg=hexOk(src.c)?src.c:'',tx=hexOk(src.k)?src.k:(bg?autoText(bg):'');return {right,mine,bg,tx}}
-/* 自分の吹き出しの色は、端末のCSSを使っている間は使わない（これまでどおり）。
-   相手の吹き出しの色は、こちらのCSS設定に関係なく、送った人の設定をそのまま出す */
-const bubAttr=sy=>false?` cu" style="${sy.bg?`background:${sy.bg};border-color:${sy.bg};`:''}${sy.tx?`color:${sy.tx}`:''}`:'';
-function drawColors(skip){
- const eb=STY.bg||cssv('--accent'),et=STY.tx||(STY.bg?autoText(STY.bg):cssv('--on'));
- if(skip!=='cBg'&&hexOk(eb))$('#cBg').value=eb;if(skip!=='cTx'&&hexOk(et))$('#cTx').value=et;
- $$s('#sideSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.side===STY.side));
- const sb=hexOk(STY.bg)?STY.bg:'',sy={right:STY.side==='l'?false:true,bg:sb,tx:hexOk(STY.tx)?STY.tx:(sb?autoText(sb):'')};
- $('#cprev').innerHTML=`<div class="row mine ${sy.right?'r':''}"><div class="col"><div${(()=>{const v=cleanBg(STY.bgv);return v?` data-ubg="${esc(bgApply(v,myBo()))}"`:''})()} class="bub${bubAttr(sy)}">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
-function styChanged(skip){saveSty();drawColors(skip);if(S.room)render()}
-$('#cBg').addEventListener('input',e=>{STY.bg=e.target.value;styChanged('cBg')});
-$('#cTx').addEventListener('input',e=>{STY.tx=e.target.value;styChanged('cTx')});
-$('#sideSel').addEventListener('click',e=>{const b=e.target.closest('[data-side]');if(!b)return;STY.side=b.dataset.side;styChanged()});
+function drawColors(){const v=cleanBg(STY.bgv);
+ $('#cprev').innerHTML=`<div class="row mine r"><div class="col"><div${v?` data-ubg="${esc(bgApply(v,myBo()))}"`:''} class="bub">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
 $('#icFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;const msg=$('#icMsg');{const w=CDS.icon+15000-Date.now();if(w>0){msg.textContent='アイコンの変更は15秒に1回までです（あと'+secs(w)+'秒）';return}CDS.icon=Date.now();saveCd()}msg.textContent='読み込み中…';
  try{const ic=await makeIcon(f);MYAV=ic.s;store.s('wc2.icon',MYAV);await IDB.put('me',ic.big);drawIcon();S.rooms.forEach(r=>{postAv(r,true);upBig(r,true)});msg.textContent='アイコンを設定しました。'}
  catch(er){msg.textContent=er==='decode'?'この形式の画像は読み込めませんでした。JPEGかPNGの画像を選んでください。':'画像を設定できませんでした。別の画像でためしてください。'}});
 $('#icDel').onclick=()=>{MYAV='';store.s('wc2.icon','');IDB.put('me',null);drawIcon()};
-$('#cReset').onclick=()=>{STY.bg='';STY.tx='';STY.side='auto';STY.bgv='';styChanged();bgvDraw()};
 const topicOf=norm=>'wcr-'+hex(sha256('topic:'+norm)).slice(0,40);
 /* 音 */
 let AC=null;
@@ -1316,14 +1186,10 @@ function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz
  x.fillStyle='#4cc09a';[.36,.5,.64].forEach(f=>{x.beginPath();x.arc(sz*f,sz*.45,sz*.035,0,7);x.fill()});return c}
 let ICON='';
 try{ICON=mkIcon(192).toDataURL('image/png')}catch(e){}
-let DIP=null;
-const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const embedded=(()=>{try{return window.self!==window.top}catch(e){return true}})();
-const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 function drawSet(){
- drawColors();drawIcon();frDraw();drawTheme();ucDraw();
+ drawColors();drawIcon();frDraw();drawTheme();
  const sw=(id,on)=>{const e=$(id);e.classList.toggle('on',on);e.setAttribute('aria-checked',on)};
- sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);sw('#swPb',SET.peerBg);sw('#swPu',SET.peerUrl);sw('#swPbu',SET.peerBub!==false);$('#swPu').style.opacity=SET.peerBg&&SET.peerBub!==false?1:.4;bgvDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
+ sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);bgvDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
  $$s('#posV .chip').forEach(b=>b.classList.toggle('on',b.dataset.pv===SET.pv));$$s('#posH .chip').forEach(b=>b.classList.toggle('on',b.dataset.ph===SET.ph));
  $$s('#sndtype .chip').forEach(b=>b.classList.toggle('on',b.dataset.s===SET.snd));
  $('#sndtype').style.opacity=SET.sound?1:.45;
@@ -1343,9 +1209,6 @@ $('#tstSnd').onclick=()=>playSnd(true);
 $('#swSl').onclick=()=>{SET.skipLeave=!SET.skipLeave;saveSet();drawSet()};
 $('#swHn').onclick=()=>{SET.hideName=!SET.hideName;saveSet();drawSet();if(S.room){$('#rname').textContent=S.room.name}drawTabs()};
 $('#swQh').onclick=()=>{SET.qh=!SET.qh;saveSet();drawSet()};
-$('#swPb').onclick=()=>{SET.peerBg=!SET.peerBg;saveSet();drawSet();if(S.room)render()};
-$('#swPu').onclick=()=>{SET.peerUrl=!SET.peerUrl;saveSet();drawSet();if(S.room)render()};
-$('#swPbu').onclick=()=>{SET.peerBub=SET.peerBub===false;saveSet();drawSet();if(S.room)render()};
 function bgvDraw(){const t=$('#bgvTa');if(!t)return;if(t.value!==(STY.bgv||''))t.value=STY.bgv||'';{const r=$('#bgoR');if(r){r.value=myBo();$('#bgoV').textContent=myBo()+'%'}}const n=t.value.length,ok=!n||!!cleanBg(t.value),c=$('#bgvCnt');c.textContent=n+' / 5,000文字'+(ok?'':'　⚠ この値は使えません（送られません）');c.style.color=ok?'':'var(--danger)'}
 let bgvT=0,bgvEi=0;
 const BGV_EX=['linear-gradient(135deg,#ff9a9e,#fad0c4)','radial-gradient(circle at 20% 20%,rgba(255,255,255,.35) 2px,transparent 3px) 0 0/16px 16px,#6c5ce7','conic-gradient(from 45deg,#f6d365,#fda085,#f6d365)'];
@@ -1475,7 +1338,7 @@ const TERMS=[
   'メッセージを暗号化する鍵は、部屋名から作られます。部屋名は「合言葉」です。短い名前、よくある名前、推測しやすい名前は、知らない人が偶然または意図的に入ってくることがあります。',
   '見られたくない会話には、長くて推測されにくい部屋名を使い、部屋名やリンクは信頼できる人にだけ伝えてください。',
   '部屋に入る・出ることは、同じ部屋の人に伝わります。',
-  '自分の通信が切れた状態が30秒ほど続くと、自動で退室します。放置しているだけでは、退室になりません。',
+  '自分の通信が切れた状態が5秒ほど続くと、自動で退室します。放置しているだけでは、退室になりません。',
   '同時に入れる部屋は3つまでです。画面の下のバーで切り替えます。戻るボタンを押すと、横からホームが半分だけ出ます。部屋には入ったままです。退室するには、いまの部屋のボタンから「この部屋から退室する」を押すか、ホームの「退室」を押してください。入ったままの間は、その部屋の人に在室として見え、通知も届きます。',
   'IDを変えると、入っているすべての部屋から退室します。',
   '「公式」という名前の部屋は、公式部屋です。ホームの先頭に表示されます。公式部屋では、第7条の強めの制限が適用されます。運営者が常駐したり、投稿を確認したりするとは限りません。']]},
@@ -1665,7 +1528,6 @@ function cleanBg(v,mx){
  if(!/^[A-Za-z0-9\s#%.,()+\-\/*_]*$/.test(rest))return '';
  let d=0;for(const c of rest){if(c==='(')d++;else if(c===')'){d--;if(d<0)return ''}}
  return d?'':v}
-function peerBg(room,v){if(!SET.peerBg)return '';const b=cleanBg(v);if(!b)return '';return b}
 function applyUbg(root){root.querySelectorAll('[data-ubg]').forEach(el=>{const v=el.dataset.ubg;if(v)el.style.setProperty('background',v,'important')})}
 /* トークンバケット：cap個まで溜まり、perミリ秒に1個回復 */
 const RGB=new Map();
@@ -1707,7 +1569,7 @@ function gateBoard(x,off,key){const n=Date.now(),s=cdSt(key);
 /* ---------- 部屋 ---------- */
 const NTFY='https://ntfy.sh/';
 const topicUrl=room=>NTFY+room.topic;
-const envelope=(room,b,blob,n)=>JSON.stringify({u:S.id,n:n||'',b});
+const envelope=(room,b,n)=>JSON.stringify({u:S.id,n:n||'',b});
 /* 中継のntfy.sh（無料）は、1つのIPからの要求を「最初の60回、そのあとは5秒に1回ずつ回復」で数えます。
    入力中の合図・在室の合図・読み取り(ポーリング)で使い切ると、メッセージが送れなくなる(429)ので、
    ここで残りを見積もり、大事でない合図は余裕があるときだけ送ります。 */
@@ -1716,8 +1578,8 @@ const nq=()=>{const n=Date.now();NQ.v=Math.min(60,NQ.v+(n-NQ.t)/5000);NQ.t=n;ret
 const nqUse=()=>{nq();NQ.v=Math.max(0,NQ.v-1)};
 const nqBusy=need=>Date.now()<OUT.until||nq()<need;
 function nqHit(r){if(r&&r.status===429){let s=0;try{s=+r.headers.get('Retry-After')||0}catch(e){}NQ.v=0;OUT.until=Date.now()+Math.min(60,Math.max(s,8))*1000}}
-const relayRaw=async(room,b,blob,n,tags)=>{nqUse();const r=await fetch(topicUrl(room),{method:'POST',headers:Object.assign({'Content-Type':'text/plain'},tags?{Tags:tags}:{}),body:envelope(room,b,blob,n)});nqHit(r);return r};
-const relay=async(room,obj)=>relayRaw(room,await enc(obj,room.key),false,nickFor(room));
+const relayRaw=async(room,b,n,tags)=>{nqUse();const r=await fetch(topicUrl(room),{method:'POST',headers:Object.assign({'Content-Type':'text/plain'},tags?{Tags:tags}:{}),body:envelope(room,b,n)});nqHit(r);return r};
+const relay=async(room,obj)=>relayRaw(room,await enc(obj,room.key),nickFor(room));
 const vfHtml=v=>v==='ok'?'<i class="vf" title="お友達に登録した人です">✓</i>':v==='ng'?'<i class="vf ng" title="登録したお友達と同じ名前ですが、IDが違います">✕</i>':'';
 function setMid(room){$('#mid').textContent=nickFor(room)||S.id}
 function drawReg(){if(S.room){setMid(S.room);render();drawPbar()}}
@@ -1725,7 +1587,7 @@ function drawReg(){if(S.room){setMid(S.room);render();drawPbar()}}
 const FR=store.g('wc2.friends',{});
 const saveFr=()=>store.s('wc2.friends',FR);
 const aliasOf=u=>(FR[u]&&FR[u].alias)||'';
-const RB_ID='X49KBX';const whoHtml=(u,n)=>{const al=aliasOf(u);const h=al?esc(al)+'<span class="idc">（'+esc(n||u)+'）#'+esc(u)+'</span>':(n?esc(n)+'<span class="idc">#'+esc(u)+'</span>':esc(u));return(n==='mokyav'&&u===RB_ID)?'<span class="rbw">'+h+'</span>':h};
+const RB_ID='X49KBX',RB_IDS=['4S5QMZ','JUT8PN'];const whoHtml=(u,n)=>{const al=aliasOf(u);const h=al?esc(al)+'<span class="idc">（'+esc(n||u)+'）#'+esc(u)+'</span>':(n?esc(n)+'<span class="idc">#'+esc(u)+'</span>':esc(u));return((n==='mokyav'&&u===RB_ID)||RB_IDS.includes(u))?'<span class="rbw">'+h+'</span>':h};
 function fvf(u,n){if(!u||u===S.id)return '';const f=FR[u],nk=normRoom(n);
  if(f)return(!f.name||normRoom(f.name)===nk)?'ok':'';
  if(nk&&!SEASONS.includes(n))for(const k in FR){const g=FR[k];if(g.name&&normRoom(g.name)===nk)return 'ng'}
@@ -1823,9 +1685,9 @@ function leaveTab(r){const idx=S.rooms.indexOf(r),was=S.room===r;dropRoom(r);
 function lostRoom(r){if(r.dead||r.practice)return;const was=S.room===r,idx=S.rooms.indexOf(r),nm=dispRoom(r);dropRoom(r);
  if(was){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else backToEntry()}else drawTabs();
  if(!$('#home').hidden)drawHome(true);toast('通信が切れたので「'+nm+'」から退室しました')}
-setInterval(()=>{if(document.hidden)return;const n=Date.now();for(const r of S.rooms.slice()){if(r.dead||r.practice)continue;if(r.st[0]!=='on'&&r.badSince&&n-r.badSince>30000)lostRoom(r)}},5000);
+setInterval(()=>{if(document.hidden)return;const n=Date.now();for(const r of S.rooms.slice()){if(r.dead||r.practice)continue;if(r.st[0]!=='on'&&r.badSince&&n-r.badSince>5000)lostRoom(r)}},1000);
 /* ---- 入力中の合図 ---- */
-function sendTy(room){if(!room||room.practice||room.left||room.to||SET.typ===false||room.pres.size<=1||nqBusy(30))return;const n=Date.now();if(n-(room.tyT||0)<(room.official?8000:5000))return;room.tyT=n;relay(room,{v:'ty',u:S.id}).catch(()=>{})}
+function sendTy(room){if(!room||room.practice||room.left||room.to||SET.typ===false||room.pres.size<=1||nqBusy(30))return;const n=Date.now();if(n-(room.tyT||0)<(room.official?8000:4000))return;room.tyT=n;relay(room,{v:'ty',u:S.id}).catch(()=>{})}
 function gotTy(room,u,nm){if(u===S.id)return;const now=Date.now();let p=room.pres.get(u);if(p){p.t=now;p.ty=now;if(nm)p.n=nm}else if(room.pres.size<60)room.pres.set(u,{n:nm,t:now,ty:now});if(S.room===room)drawPbar()}
 setInterval(()=>{const r=S.room;if(!r||$('#chat').hidden)return;const sig=memList().filter(x=>x.ty).map(x=>x.u).join();if(sig!==(r.tySig||'')){r.tySig=sig;drawPbar()}},1000);
 /* ---- 入退室・いる人・ささやき・ミュート ---- */
@@ -1835,7 +1697,7 @@ const nickFor=room=>S.nick||(room&&room.season)||'';
 const idOk=u=>typeof u==='string'&&/^[A-Z0-9]{1,6}$/.test(u);
 const MUTE=store.g('wc2.mute',[]);const saveMute=()=>store.s('wc2.mute',MUTE.slice(-100));
 async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid()},extra||{}))}catch(e){}}
-async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid()},room.key),false,nickFor(room))}catch(e){}}
+async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid()},room.key),nickFor(room))}catch(e){}}
 function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true}).catch(()=>{})}catch(e){}}
 addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
 function addSys(room,id,text,u){addMsg(room,{id:'ev'+String(id).slice(0,24),u:'',su:u,sys:true,t:Date.now(),x:text})}
@@ -1863,8 +1725,15 @@ function handleEv(room,m){if(!idOk(m.u)||m.u===S.id)return;const n=cleanNick(m.n
   if(MYAV&&[...room.pres.keys()].some(u=>u!==S.id&&!AVC[u]))schedAv(room,true)}
  drawPbar();if(!$('#home').hidden)drawHome(true)}
 function prunePres(room){const now=Date.now();for(const [u,v] of [...room.pres]){if(u===S.id||now-v.t<=PTTL)continue;room.pres.delete(u);addSys(room,'x'+u+now,(v.n||u)+'が退室しました',u)}}
-function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<PTTL).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||'')),ty:u!==S.id&&!!v.ty&&now-v.ty<5000}))}
-function drawPbar(){const r=S.room,b=$('#prow');if(!r){b.hidden=true;return}b.hidden=false;bdBadge();const l=memList();
+function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<PTTL).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||'')),ty:u!==S.id&&!!v.ty&&now-v.ty<(r.official?10000:6000)}))}
+function drawTy(){const r=S.room,el=$('#tyb');if(!r||r.practice){el.hidden=true;el.dataset.k='';return}
+ const l=memList().filter(x=>x.ty&&!isMuted(x.u));
+ if(!l.length){el.hidden=true;el.dataset.k='';return}
+ const nm=x=>aliasOf(x.u)||x.n||x.u,k=l.map(x=>x.u+nm(x)).join('|');
+ if(!el.hidden&&el.dataset.k===k)return;el.dataset.k=k;
+ const names=l.length<=2?l.map(nm).join('、'):nm(l[0])+'、'+nm(l[1])+' ほか'+(l.length-2)+'人';
+ el.innerHTML=l.slice(0,3).map(x=>avHtml(x.u,x.n,' ty-av',true)).join('')+`<span class="ell1">${esc(names)}が入力中</span><span class="tyd"><i></i><i></i><i></i></span>`;el.hidden=false}
+function drawPbar(){const r=S.room,b=$('#prow');drawTy();if(!r){b.hidden=true;return}b.hidden=false;bdBadge();const l=memList();
  $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc${x.ty?' ty':''}">${x.u===S.id?'あなた':esc(aliasOf(x.u)||x.n||x.u)+(isMuted(x.u)?'（'+(MUTE.includes(x.u)?'ミュート':'一時非表示')+'）':'')}${vfHtml(x.vf)}</span>`).join('')}
 function drawTo(){const r=S.room;$('#toBar').hidden=!(r&&r.to);if(r&&r.to)$('#toTx').textContent=(r.to.n||r.to.u)+'さんだけに送ります'}
 function openMem(){const r=S.room;if(!r)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
@@ -1961,7 +1830,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){hidAt=Date
 function addMsg(room,m){if(room.del&&room.del.has(m.id))return;const old=room.msgs.get(m.id);
  if(m.w&&m.w!==S.id&&m.u!==S.id)return;
  if(old){if(m.u===S.id&&old.vf!==m.vf){old.vf=m.vf;schedule()}if(old.pending||old.failed){old.pending=false;old.failed=false;schedule()}return}
- m.fresh=room.ready;room.msgs.set(m.id,m);if(!m.sys&&m.u!==S.id){const pp=room.pres.get(m.u);if(pp)pp.ty=0}
+ m.fresh=room.ready;room.msgs.set(m.id,m);if(!m.sys&&m.u!==S.id){const pp=room.pres.get(m.u);if(pp){pp.ty=0;if(S.room===room)drawTy()}}
  if(m.u!==S.id&&room.ready&&!room.practice&&!m.sys&&!isMuted(m.u)){if(!room.firstUnread&&(S.room!==room||$('#chat').hidden||document.hidden))room.firstUnread=m.id;if(document.hidden)document.title='● ウェブチャット';if(S.room!==room){room.unread=(room.unread||0)+1;drawTabs()}if(m.t>room.openT-5000)notifyMsg(room,m,document.hasFocus()&&!document.hidden&&S.room===room&&!$('#chat').hidden)}
  trim30(room);schedule()}
 /* 部屋のメッセージは30件まで。超えたら古い順に消す */
@@ -1975,7 +1844,7 @@ const kf=x=>x.sys?'':x.u+'|'+(x.n||'');   /* 同じ人（IDと名前が同じ）
 function render(first){
  const room=S.room,box=$('#msgs');if(!room)return;
  const near=first||box.scrollHeight-box.scrollTop-box.clientHeight<96;
- let list=[...room.msgs.values()].sort((a,b)=>a.t-b.t);if(list.length>300)list=list.slice(-300);
+ let list=[...room.msgs.values()].sort((a,b)=>a.t-b.t);
  let h='',prev=null,fresh=0,mineNew=false,fuN=0;
  if(room.firstUnread){const ix=list.findIndex(x=>x.id===room.firstUnread);if(ix>=0)fuN=list.slice(ix).filter(x=>!x.sys&&x.u!==S.id&&!isMuted(x.u)).length}
  if(!list.length)h=`<div class="hint"><div class="ring"><svg class="ic"><use href="#i-chat"/></svg></div><b style="color:var(--text)">まだ誰もいません</b><br>この部屋名を伝えると、相手も同じ部屋に入れます。</div>`;
@@ -1985,11 +1854,11 @@ function render(first){
   if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
-  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m);
+  const me=m.u===S.id,first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m);
   let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row ${sy.right?'r':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
+  h+=`<div class="row r ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
   if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
   prev=m}
  box.innerHTML=h;applyUbg(box);
@@ -2032,7 +1901,7 @@ async function post(m){const room=S.room;if(!room)return;let st=0,er='';
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
-    r=await relayRaw(room,body,false,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;if(st===429){let t='';try{t=await r.text()}catch(x){}if(/42908|daily|quota|1日/i.test(t)){er='HTTP 429 今日の送信上限';OUT.until=Date.now()+36e5;r=null;break}}r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
+    r=await relayRaw(room,body,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;if(st===429){let t='';try{t=await r.text()}catch(x){}if(/42908|daily|quota|1日/i.test(t)){er='HTTP 429 今日の送信上限';OUT.until=Date.now()+36e5;r=null;break}}r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
    if(i<2)await new Promise(ok=>setTimeout(ok,1500*(i+1)))}
   if(!r)throw 0;m.pending=false;
   try{const j=await r.json();m.vf=j.vf==='ok'||j.vf==='ng'?j.vf:''}catch(e){}
@@ -2107,12 +1976,12 @@ async function postBoard(){const r=S.room;if(!r)return;const off=!!r.official,ra
  if(r.practice){const pm={id:uid(),u:S.id,n:nickFor(r),t:Date.now(),x};r.board.set(pm.id,pm);$('#bdTa').value='';drawBoard();toast('練習なので、ほかの人には届きません');return}
  const bad=gateBoard(x,off,r.norm);if(bad){toast(bad);bdTick();return}
  const m={id:uid(),u:S.id,n:nickFor(r),t:Date.now(),x};r.board.set(m.id,m);trimBoard(r);$('#bdTa').value='';drawBoard();bdTick();
- try{const body=await enc({v:'bd',id:m.id,u:S.id,t:m.t,x},r.key);const res=await relayRaw(r,body,false,m.n,'bd');if(!res.ok)throw 0}
+ try{const body=await enc({v:'bd',id:m.id,u:S.id,t:m.t,x},r.key);const res=await relayRaw(r,body,m.n,'bd');if(!res.ok)throw 0}
  catch(e){r.board.delete(m.id);cdSt(r.norm).board=0;saveCd();if(S.room===r){drawBoard();$('#bdTa').value=x;bdTick()}toast('書き込めませんでした')}}
 async function delBoard(id){const r=S.room;if(!r)return;const b=r.board.get(id);if(!b||b.u!==S.id)return;
  if(!bucket('mydel',3,4000)){toast('削除は少し間をあけてください');return}
  r.board.delete(id);r.bdel.add(id);drawBoard();if(r.practice)return;
- try{const body=await enc({v:'bdd',id,u:S.id},r.key);await relayRaw(r,body,false,nickFor(r),'bd')}catch(e){}}
+ try{const body=await enc({v:'bdd',id,u:S.id},r.key);await relayRaw(r,body,nickFor(r),'bd')}catch(e){}}
 $('#bdBtn').onclick=openBoard;
 $('#bdReload').onclick=()=>{const r=S.room;if(r&&!r.practice){r.bdTry=0;loadBoard(r)}};
 $('#bdPost').onclick=postBoard;
@@ -2249,7 +2118,7 @@ function myBh(room){if(!room||room.practice||!room.key)return '';const v=cleanBg
  if(bgMy.v!==v)bgMy={v,h:bgHash(v)};bgStore(S.id+':'+bgMy.h,v);return bgMy.h}
 function bgFor(room,m){if(m.u===S.id){const v=cleanBg(STY.bgv);return v?bgApply(v,myBo()):''}
  if(!m.bh||room.practice||!room.key)return '';
- const k=m.u+':'+m.bh,v=BGV.get(k);if(v){const b=peerBg(room,v);return b?bgApply(b,m.bo):''}askBg(room,m.u,m.bh);return ''}
+ const k=m.u+':'+m.bh,v=BGV.get(k);if(v){const b=cleanBg(v);return b?bgApply(b,m.bo):''}askBg(room,m.u,m.bh);return ''}
 async function sendBgValue(room,o,h,v){const ch=v.match(/[\s\S]{1,2200}/g)||[];for(let i=0;i<ch.length&&!room.dead;i++){try{await relay(room,{v:'bgc',u:S.id,o,h,i,n:ch.length,p:ch[i]})}catch(e){}if(i<ch.length-1)await new Promise(r=>setTimeout(r,300))}}
 function ensureBg(room){if(!room||room.dead||room.practice||room.pres.size<=1||nqBusy(15))return;const h=myBh(room);if(!h)return;
  if(room.bgSentH===h&&Date.now()-(room.bgSentT||0)<9e5)return;room.bgSentH=h;room.bgSentT=Date.now();sendBgValue(room,S.id,h,bgMy.v)}
@@ -2272,9 +2141,6 @@ function gotBgChunk(room,u,m){if(room.practice||!room.key||!idOk(m.o)||!/^[0-9a-
  if(r.n!==n)return;if(r.parts[i]===undefined){r.parts[i]=m.p;r.c++}
  if(r.c<n)return;as.delete(k);const v=r.parts.join('');
  if(v.length>5000||cleanBg(v)!==v||bgHash(v)!==m.h)return;bgStore(k,v);schedule()}
-/* 吹き出しの見た目を端末ごとに変える設定は使わないので、設定画面から隠す */
-(()=>{const hide=e=>{if(e)e.hidden=true};const b=$('#sBb');if(b){const keep=new Set([$('#cprev'),$('#sBv'),$('#sBv').nextElementSibling,$('#bgvTa'),$('#bgvCnt').closest('.setrow'),$('#bgoRow')]);let n=b;while(n){const nx=n.nextElementSibling;if(!keep.has(n))hide(n);n=nx}}
- ['#swPb','#swPbu','#swPu'].forEach(id=>{const e=$(id);hide(e&&e.closest('.setrow'))})})();
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
