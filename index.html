@@ -727,6 +727,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 
 /* ===== 吹き出し：全員共通の固定デザイン（送信者・受信者に関わらず同一） ===== */
 .row .bub,.row.mine .bub,.row:not(.mine) .bub{background:var(--bg3)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:16px!important;box-shadow:none!important;opacity:1!important;font:inherit!important;padding:8px 16px!important;background-image:none!important;animation:none!important}
+.row .bub[data-ubg]{color:#111!important;border-color:transparent!important}
 .row .bub a{color:var(--accent)!important}
 .row .bub.wh{border-style:dashed!important}
 .row.r.first .bub{border-top-right-radius:4px!important}
@@ -882,7 +883,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="setrow"><span class="pcol"><b>部屋名を伏せる</b><span class="xs mute">画面の部屋名をぼかします。タップかマウスを乗せると見えます</span></span><button class="sw" id="swHn" role="switch" aria-label="部屋名を伏せる"></button></div>
   <div class="setrow"><span class="pcol"><b>相手の吹き出しの背景を表示</b><span class="xs mute">相手が設定した背景を出します。オフなら標準の見た目です</span></span><button class="sw" id="swPb" role="switch" aria-label="相手の吹き出しの背景を表示"></button></div>
 <div class="setrow"><span class="pcol"><b>相手の吹き出しを表示</b><span class="xs mute">オフにすると、相手の発言は文字だけになります（相手が決めた色・背景・枠は出ません）。自分の吹き出しは変わりません</span></span><button class="sw" id="swPbu" role="switch" aria-label="相手の吹き出しを表示"></button></div>
-<div class="setrow"><span class="pcol"><b>相手の背景の画像（url）を読み込む</b><span class="xs mute">オンだと、画像の置き場所に、あなたのIPアドレスが届くことがあります。公式部屋では、いつも読み込みません</span></span><button class="sw" id="swPu" role="switch" aria-label="相手の背景の画像を読み込む"></button></div>
+<div class="setrow"><span class="pcol"><b>相手の背景画像を表示する</b><span class="xs mute">オフにすると、相手の背景画像を取りにいかず、表示もしません。公式部屋では、背景画像は使えません</span></span><button class="sw" id="swPu" role="switch" aria-label="相手の背景の画像を読み込む"></button></div>
 <div class="lab">雰囲気</div>
   <div class="chips" id="styleSel"><button class="chip" data-st="classic">標準</button><button class="chip" data-st="minimal">ミニマル</button><button class="chip" data-st="pop">ポップ</button><button class="chip" data-st="neon">ネオン</button></div>
   <div class="lab">明るさ</div>
@@ -908,9 +909,13 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="cprev" id="cprev"></div>
   <div class="setrow"><span class="xs faint" style="flex:1">あなたが送るメッセージの見た目として、相手の画面にも反映されます。</span><button class="chip" id="cReset">元に戻す</button></div>
 <b class="sh" id="sBv" style="font-size:16px">吹き出しの背景（相手にも見える）</b>
-<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)、url(…)）。1,000文字まで。メッセージと一緒に相手へ送られ、相手の画面でも自分の吹き出しに出ます。url は https:// か data:image/ のものだけ使えます。相手が背景を表示しない設定のときは、見えません。</p>
+<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。1,000文字まで。画像（url）は使えません（画像は、すぐ下のボタンから設定します）。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。背景をつけた吹き出しの文字は、全員に黒で表示されます。</p>
 <textarea id="bgvTa" wrap="off" maxlength="1000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しの背景" placeholder="linear-gradient(135deg,#ff9a9e,#fad0c4)"></textarea>
 <div class="setrow"><span class="xs faint" id="bgvCnt" style="flex:1"></span><button class="chip" id="bgvEx">例を入れる</button><button class="chip" id="bgvClr">消す</button></div>
+<div id="bgiBox"><b class="sh" style="font-size:16px">背景画像（相手にも見える）</b>
+<p class="xs faint">画像を選ぶと、約120KB以下に自動で縮めて、暗号化して中継サービス（ntfy.sh）に数時間だけ預けます。相手の画面にも、あなたの吹き出しの背景として出ます（白をうすく重ねて、文字を読みやすくします）。公式部屋では使えません。</p>
+<div class="icrow"><label class="chip" for="bgiFile" style="cursor:pointer">画像を選ぶ</label><button class="chip" id="bgiDel">外す</button><input type="file" id="bgiFile" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none" tabindex="-1"></div>
+<p class="xs faint" id="bgiMsg"></p></div>
 <b class="sh" id="sCs" style="font-size:16px">吹き出しのCSS（この端末だけ）</b>
 <p class="xs faint" style="margin-top:-8px">自分で書いたCSSで、見た目を自由に変えられます。<b>この端末の画面にだけ</b>効き、相手には送られません。500,000文字まで書けます。CSSを使っている間は、上の吹き出しの色の設定は使われません。</p>
 <div class="setrow"><span class="pcol"><b>CSSを使う</b><span class="xs mute">オフにすると、書いたCSSは残したまま元の見た目に戻ります</span></span><button class="sw" id="swCss" role="switch" aria-label="吹き出しのCSSを使う"></button></div>
@@ -1019,7 +1024,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
- {id:31,date:'2026-11-17',title:'ホームに、利用者数の目安を表示しました',body:'ホームの下に、いまウェブチャットを開いている人数の目安を、小さく表示します。端末ごとのランダムな匿名の印を2分おきに送って数えています（部屋名・ID・表示名は含みません）。誰でも書き込めるしくみなので、正確な人数ではありません。\n吹き出しは、送った人・見る人に関わらず、全員が同じ固定デザインで、同じ側に表示されるようにしました。\n利用規約の第9条を更新しました。'},
+ {id:31,date:'2026-11-17',title:'ホームに、利用者数の目安を表示しました',body:'ホームの下に、いまウェブチャットを開いている人数の目安を、小さく表示します。端末ごとのランダムな匿名の印を2分おきに送って数えています（部屋名・ID・表示名は含みません）。誰でも書き込めるしくみなので、正確な人数ではありません。\n吹き出しは、送った人・見る人に関わらず、同じ側に同じデザインで表示されます。自分の吹き出しの背景（グラデーションなど・1,000文字まで）と、背景画像（設定のボタンから）は、全員の画面で同じように見えます。\n利用規約の第9条を更新しました。'},
  {id:30,date:'2026-11-17',title:'メッセージが送れなくなる不具合を直しました',body:'ひとりのときは在室の合図を送らないようにし、合図の間隔も2分に伸ばしました。\n中継サービスの「短い間に使える回数」を使い切ると、メッセージが送れなくなることがありました。入力中の合図や在室の合図を減らし、残りが少ないときは送らないようにしました。受信を取りにいく間隔も長くしました。\n送れなかったときは、自動で2回までやり直します。それでも混み合っているときは、そう表示します（タップで再送できます）。\n連投の注意に出る待ち時間を、実際の残り時間にそろえました。'},
  {id:29,date:'2026-11-17',title:'アイコン・途中参加・吹き出し・連投の判定を直しました',body:'アイコン画像が左上だけに見える不具合を直しました。テーマの指定に上書きされて、画像の大きさが戻されていたためです。\n途中から入った人にも、いまいる人のアイコンが届くようにしました。人が入ってきたら、在室の人がアイコンを送り直します。\n自分の吹き出しの色・背景・左右は、これまでどおり相手の画面にも出ます。相手の吹き出しは、送った人の設定がそのまま出て、こちらからは変えられません。設定の「見た目」に「相手の吹き出しを表示」を増やし、オフにすると相手の発言は文字だけになります。\n連投の判定を、部屋ごとに数えるように直しました。別の部屋で送った分や、読み込み直す前の記録で止められることがなくなりました。練習の部屋では、間隔を気にせず送れます。'},
  {id:28,date:'2026-11-17',title:'メンション・入力中の合図・送信の取り消しを追加しました',body:'入力欄の左の「@」を押すか、「@」と打つと、いまいる人の名前が出ます。選ぶと「@名前」が入り、相手に「あなた宛て」と伝わります（吹き出しが縁取りされます）。\n設定の「通知」で、通知する相手を「全員／登録した人だけ／メンションだけ／登録した人かメンション」から選べます。\n誰かが書いている間は、上の帯のその人の名前が光ります。設定の「自分」で、自分の入力中を知らせない設定もできます。\n送って1分以内なら、メッセージをタップして「送信を取り消す」で、相手の画面からも消せます。\n「ここから新着」の線に、件数も出ます。入口では、公式部屋のボタンを部屋名のカードの中に移しました。伝言板は、読み込みに失敗したときの表示と再読み込みボタンを付けました。'},
@@ -1223,7 +1228,7 @@ async function upBig(room,force){if(!room||room.practice||!room.key)return;const
  try{const body=await encBytes(big,room.key);
   const r=await fetch(NTFY+room.topic,{method:'PUT',headers:{Filename:'a.bin',Message:await enc({v:'avb',u:S.id},room.key)},body});
   if(r.ok){up[room.topic]=Date.now();const k=Object.keys(up);if(k.length>30)delete up[k[0]];store.s('wc2.up',up)}}catch(e){}}
-async function gotBigNtfy(room,d){if(!bucket('big|'+room.topic,3,15000))return;try{const m=await dec(d.message,room.key);if(!m||m.v!=='avb'||!idOk(m.u)||m.u===S.id)return;
+async function gotBigNtfy(room,d){if(!bucket('big|'+room.topic,3,15000))return;try{const m=await dec(d.message,room.key);if(m&&m.v==='bgb'){await gotBgAtt(room,d,m);return}if(!m||m.v!=='avb'||!idOk(m.u)||m.u===S.id)return;
   const url=d.attachment&&d.attachment.url;if(typeof url!=='string'||!url.startsWith(NTFY)||!room.key)return;
   if(await IDB.get('v:'+m.u)===d.id)return;
   const r=await fetch(url);if(!r.ok)return;const buf=await decBytes(new Uint8Array(await r.arrayBuffer()),room.key);if(!buf||buf.length>400000)return;
@@ -1262,7 +1267,7 @@ function drawColors(skip){
  if(skip!=='cBg'&&hexOk(eb))$('#cBg').value=eb;if(skip!=='cTx'&&hexOk(et))$('#cTx').value=et;
  $$s('#sideSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.side===STY.side));
  const sb=hexOk(STY.bg)?STY.bg:'',sy={right:STY.side==='l'?false:true,bg:sb,tx:hexOk(STY.tx)?STY.tx:(sb?autoText(sb):'')};
- $('#cprev').innerHTML=`<div class="row mine ${sy.right?'r':''}"><div class="col"><div${STY.bgv&&cleanBg(STY.bgv)?` data-ubg="${esc(cleanBg(STY.bgv))}"`:''} class="bub${bubAttr(sy)}">こんにちは。こんな見た目になります</div></div></div>`}
+ $('#cprev').innerHTML=`<div class="row mine ${sy.right?'r':''}"><div class="col"><div${(()=>{const v=composeBg(cleanBg(STY.bgv),ownBg());return v?` data-ubg="${esc(v)}"`:''})()} class="bub${bubAttr(sy)}">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
 function styChanged(skip){saveSty();drawColors(skip);if(S.room)render()}
 $('#cBg').addEventListener('input',e=>{STY.bg=e.target.value;styChanged('cBg')});
 $('#cTx').addEventListener('input',e=>{STY.tx=e.target.value;styChanged('cTx')});
@@ -1312,7 +1317,7 @@ const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform===
 function drawSet(){
  drawColors();drawIcon();frDraw();drawTheme();ucDraw();
  const sw=(id,on)=>{const e=$(id);e.classList.toggle('on',on);e.setAttribute('aria-checked',on)};
- sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);sw('#swPb',SET.peerBg);sw('#swPu',SET.peerUrl);sw('#swPbu',SET.peerBub!==false);$('#swPu').style.opacity=SET.peerBg&&SET.peerBub!==false?1:.4;bgvDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
+ sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);sw('#swPb',SET.peerBg);sw('#swPu',SET.peerUrl);sw('#swPbu',SET.peerBub!==false);$('#swPu').style.opacity=SET.peerBg&&SET.peerBub!==false?1:.4;bgvDraw();bgiDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
  $$s('#posV .chip').forEach(b=>b.classList.toggle('on',b.dataset.pv===SET.pv));$$s('#posH .chip').forEach(b=>b.classList.toggle('on',b.dataset.ph===SET.ph));
  $$s('#sndtype .chip').forEach(b=>b.classList.toggle('on',b.dataset.s===SET.snd));
  $('#sndtype').style.opacity=SET.sound?1:.45;
@@ -1509,7 +1514,8 @@ const TERMS=[
   '入室・退室・在室の合図（1分おき）と、いま部屋にいる人の一覧：同じ部屋の人に届きます。',
   'アイコン：小さな画像（最大96px四方）は暗号化して送ります。大きな画像（最大512px四方）は、暗号化した添付として、短い時間だけ預けます。',
   '伝言板の書き込みと削除の合図：暗号化して送ります。',
-  '利用者数の集計：端末ごとのランダムな匿名の印を、2分おきに共通の部屋へ送ります（部屋名・ID・表示名は含みません）。ホームに、直近3分の印の数が、目安として表示されます。']},
+  '利用者数の集計：端末ごとのランダムな匿名の印を、2分おきに共通の部屋へ送ります（部屋名・ID・表示名は含みません）。ホームに、直近3分の印の数が、目安として表示されます。',
+  '吹き出しの背景画像（約120KBまで）：暗号化した添付として、数時間だけ預けます。見た人の端末には、画像が保存されます。']},
   '部屋名そのものは送りません。部屋名から作った識別用の記号だけが、中継サービスに見えます。',
   'IPアドレスやブラウザの種類などの通信情報は、通信するだけで、中継サービス（ntfy.sh）に届きます。その扱いは、同サービスのルールによります。',
   '本ページには、広告や、利用者の行動を追いかけるためのしくみは入れていません。運営者が、利用者のメッセージや個人情報を集めて分析することはありません。',
@@ -1543,7 +1549,7 @@ const TERMS=[
   'Web通知を許可すると、このページを開いたまま別のタブやアプリを見ている間、端末の通知で知らせます。通知には、送った人の名前、本文の最初の部分、部屋名が出ます。画面がロックされていても見えることがあるので、人に見られたくないときは、通知を切ってください。',
   '通知音は、初期設定ではオフです。端末によっては、小さく振動することがあります。',
   '外部リンクは、開く前に確認が出ますが、リンク先の安全性は保証しません。リンク先は、そのサービスの規約とプライバシーのルールに従います。',
-  '相手の吹き出しの背景に画像（url）が使われているとき、その画像を預かっているサービスに、あなたの通信情報（IPアドレスなど）が届くことがあります。設定で、読み込まないようにできます。公式部屋では、読み込みません。',
+  '相手の吹き出しの背景画像は、中継サービス（ntfy.sh）から取得します。ほかの画像置き場には接続しません。設定で、相手の背景画像を表示しないようにできます。公式部屋では、背景画像は使えません。',
   'ntfy.sh は、第三者のサービスです。障害、仕様の変更、利用の制限、規約の変更などで、本サービスが使えなくなったり、内容が失われたりすることがあります。']]},
  {s:'14 変更・終了',h:'第14条（サービスの変更・中断・終了）',b:[[
   '運営者は、予告なく、機能の追加・変更・制限・中断・終了をすることがあります。',
@@ -1614,10 +1620,10 @@ const CD_CHAT=1500,CD_BOARD=10000;
 /* 送信の間隔・連投の判定は「部屋ごと」に数える。
    以前は全部屋で1つの記録を共有し、さらに「連投ロック」を端末に保存していたため、
    別の部屋で送った分や、読み込み直す前の記録まで数えて、連投していないのに止められていた。 */
-const CDS=Object.assign({name:0,icon:0,room:0,rm:{}},store.g('wc2.cd',{}));
+const CDS=Object.assign({name:0,icon:0,room:0,bg:0,rm:{}},store.g('wc2.cd',{}));
 CDS.rm=Object.assign(Object.create(null),(CDS.rm&&typeof CDS.rm==='object')?CDS.rm:{});
 ['chat','board','lock','hist','oh','lh','bh','bt'].forEach(k=>{delete CDS[k]});
-(()=>{const n=Date.now();['name','icon','room'].forEach(k=>{if(!(CDS[k]<=n))CDS[k]=0});
+(()=>{const n=Date.now();['name','icon','room','bg'].forEach(k=>{if(!(CDS[k]<=n))CDS[k]=0});
  for(const k in CDS.rm){const s=CDS.rm[k];
   if(!s||typeof s!=='object'){delete CDS.rm[k];continue}
   ['chat','board','bt'].forEach(x=>{if(!(s[x]<=n+6e4))s[x]=0});
@@ -1644,6 +1650,7 @@ function cleanBg(v){
  if(typeof v!=='string')return '';
  v=v.normalize('NFC').replace(INV,'').replace(/[\r\n]+/g,' ').trim();
  if(!v||v.length>1000)return '';
+ if(/url\s*\(|image-set|@import|\\/i.test(v))return '';  /* 画像は使えない（IP漏れ防止）。グラデーションなどの値だけ */
  let bad=false;
  const rest=v.replace(/url\(\s*(?:"([^"\\]*)"|'([^'\\]*)'|([^)"'\s\\]*))\s*\)/gi,(m,a,b,c)=>{const u=String(a!=null?a:b!=null?b:c!=null?c:'').trim();if(!/^(https:\/\/\S+|data:image\/(png|jpe?g|gif|webp|svg\+xml)[;,]\S*)$/i.test(u)||u.length>950)bad=true;return 'url()'});
  if(bad)return '';
@@ -1652,7 +1659,7 @@ function cleanBg(v){
  let d=0;for(const c of rest){if(c==='(')d++;else if(c===')'){d--;if(d<0)return ''}}
  return d?'':v}
 function peerBg(room,v){if(!SET.peerBg)return '';const b=cleanBg(v);if(!b)return '';if(/url\(/i.test(b)&&(room.official||!SET.peerUrl))return '';return b}
-function applyUbg(root){root.querySelectorAll('[data-ubg]').forEach(el=>{const v=el.dataset.ubg;if(v)el.style.setProperty('background',v)})}
+function applyUbg(root){root.querySelectorAll('[data-ubg]').forEach(el=>{const v=el.dataset.ubg;if(v)el.style.setProperty('background',v,'important')})}
 /* トークンバケット：cap個まで溜まり、perミリ秒に1個回復 */
 const RGB=new Map();
 function bucket(key,cap,per){const n=Date.now();let b=RGB.get(key);if(!b){b={v:cap,t:n};RGB.set(key,b);if(RGB.size>800)RGB.delete(RGB.keys().next().value)}
@@ -1758,7 +1765,7 @@ async function openRoom(name,fromPop){
  if(room.official)addMsg(room,{id:'off0',u:'',su:'',sys:true,t:Date.now(),x:'ここは公式部屋です。荒らし対策が強めです：送信は5秒に1回・200文字まで、リンクは使えません。'});
  switchTo(room,fromPop);
  if(practice){setTimeout(()=>botSay(room,'ようこそ。ここは練習用の部屋です。何か送ってみてください。'),800);tutHook('enter')}
- else{connect(room);prepLeave(room);setTimeout(()=>{if(!room.dead)sendEv(room,'ask')},1200);setTimeout(()=>{if(!room.dead)loadBoard(room)},500);setTimeout(()=>{if(!room.dead&&room.bdState!=='ok')loadBoard(room)},6000);setTimeout(()=>{if(!room.dead&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(!room.dead)room.ready=true},1200);setTimeout(()=>{if(room.dead)return;postAv(room,true);upBig(room);prepLeave(room);sendEv(room,'join');room.hbT=setInterval(()=>{if(!room.dead&&room.es)sendEv(room,'hb')},120000)},1500);room.pbT=setInterval(()=>{if(!room.dead){prunePres(room);if(S.room===room)drawPbar()}},60000)}
+ else{connect(room);prepLeave(room);setTimeout(()=>{if(!room.dead)sendEv(room,'ask')},1200);setTimeout(()=>{if(!room.dead)loadBoard(room)},500);setTimeout(()=>{if(!room.dead&&room.bdState!=='ok')loadBoard(room)},6000);setTimeout(()=>{if(!room.dead&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(!room.dead)room.ready=true},1200);setTimeout(()=>{if(room.dead)return;postAv(room,true);upBig(room);upBg(room);prepLeave(room);sendEv(room,'join');room.hbT=setInterval(()=>{if(!room.dead&&room.es){sendEv(room,'hb');upBg(room)}},120000)},1500);room.pbT=setInterval(()=>{if(!room.dead){prunePres(room);if(S.room===room)drawPbar()}},60000)}
  if(!coarse)setTimeout(()=>$('#ta').focus(),340)}
 /* 部屋の表示を切り替える（接続は部屋ごとに保たれる） */
 function switchTo(r,fromPop){
@@ -1894,7 +1901,7 @@ async function onIncoming(room,d,hist){
  const cx=cleanText(m.x,room.official?200:500,room.official?5:10);if(!cx||linkN(cx)>(room.official?0:2))return;
  {const ld=room.lastTx||(room.lastTx=new Map()),q=ld.get(d.u),now=Date.now();if(q&&q.x===cx&&now-q.t<(room.official?60000:8000))return;ld.set(d.u,{x:cx,t:now})}
  const ct=Math.abs(m.t-Date.now())>3e5?Date.now():m.t;
- addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),ub:'',mn:parseMn(m.mn)})}
+ addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),ub:cleanBg(m.ub),bi:/^[0-9a-f]{16}$/.test(m.bi||'')?m.bi:'',mn:parseMn(m.mn)})}
 /* ntfyから届いた1件を処理（SSEでもポーリングでも共通） */
 function gotNtfy(room,d,hist){
  if(!d||d.event!=='message'||typeof d.message!=='string'||d.message.length>9000)return;if(hist&&!(Array.isArray(d.tags)&&d.tags.includes('bd')))return;
@@ -1968,7 +1975,7 @@ function render(first){
   if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
-  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub='';
+  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=composeBg(cleanBg(m.ub),bgUrl(room,m.u,m.bi));
   let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
@@ -1999,11 +2006,11 @@ function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){s
  const off=!!room.official;
  const x=cleanText(raw,off?200:500,off?5:10);if(!x){toast('送れない文字だけが含まれています');return}
  if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは送れません':'リンクは1通に2つまでです');return}
- {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,ub:'',mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
+ {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,ub:cleanBg(STY.bgv),bi:myBi(room),mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
  /* 練習の部屋では、送信の間隔を気にせず試せるようにする */
  const bad=room.practice?'':gateChat(x,off,room.norm);if(bad){toast(bad);return}
  const sb=$('#send');sb.classList.add('cool','fly');setTimeout(()=>sb.classList.remove('cool'),off?5000:CD_CHAT);setTimeout(()=>sb.classList.remove('fly'),450);if(coarse&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
- const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,ub:'',pending:true,fresh:true};
+ const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,ub:cleanBg(STY.bgv),bi:myBi(room),pending:true,fresh:true};
  room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m);ta.focus()}
 /* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
 async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&(room.pres.size<=1||Date.now()-(room.avT||0)<300000))return;room.avT=Date.now();
@@ -2011,7 +2018,7 @@ async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)retu
 async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
  m.failed=false;m.pending=true;m.err='';
- try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,ub:m.ub||undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
+ try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,ub:m.ub||undefined,bi:m.bi||undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
@@ -2217,9 +2224,59 @@ async function olCount(){if(document.hidden||nqBusy(25))return;OLN.t=Date.now();
 setTimeout(()=>{olPing();setTimeout(()=>{if(!$('#home').hidden)olCount()},1500)},2500);
 setInterval(()=>{olPing();if(!$('#home').hidden)olCount()},120000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#home').hidden&&Date.now()-OLN.t>60000)olCount()});
+/* ---------- 吹き出しの背景画像（ntfyの添付で預ける） ----------
+   画像は端末で縮めて(JPEG・約120KB以下)、部屋の鍵で暗号化して数時間だけ預ける。
+   メッセージには画像の指紋(16桁)だけを載せ、受け取る側がntfyから取りにいって、指紋を確かめてから使う。 */
+let MYBGH=(v=>/^[0-9a-f]{16}$/.test(v||'')?v:'')(store.g('wc2.bgh',''));
+const myBi=room=>(!room.official&&room.key&&MYBGH)?MYBGH:'';
+const BGU=new Map(),bgKey=(u,h)=>(u===S.id?'me:':u+':')+h;
+async function hashB(u8){try{return hex(new Uint8Array(await crypto.subtle.digest('SHA-256',u8))).slice(0,16)}catch(e){return ''}}
+function bgSet(k,bytes){const old=BGU.get(k);if(old&&old.url)return;
+ if(BGU.size>80){for(const [kk,v] of BGU){if(v.url&&kk!==k){try{URL.revokeObjectURL(v.url)}catch(e){}BGU.delete(kk);break}}}
+ BGU.set(k,{url:URL.createObjectURL(new Blob([bytes],{type:'image/jpeg'})),t:Date.now()});schedule()}
+function composeBg(v,img){return img?'linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,.55)),url('+img+') center/cover no-repeat'+(v?','+v:''):v}
+function bgUrl(room,u,h){if(!h||!/^[0-9a-f]{16}$/.test(h)||room.official||room.practice||!room.key)return '';if(u!==S.id&&!SET.peerUrl)return '';
+ const k=bgKey(u,h),e=BGU.get(k);if(e&&e.url)return e.url;const now=Date.now();if(e&&(e.busy||now-e.t<300000))return '';
+ BGU.set(k,{busy:true,t:now});bgLoad(room,u,h,k);return ''}
+async function bgLoad(room,u,h,k){try{let b=await IDB.get('bg:'+k);if(!b&&u!==S.id){await fetchBg(room,u,h);b=await IDB.get('bg:'+k)}if(b){BGU.delete(k);bgSet(k,b);return}}catch(e){}
+ BGU.set(k,{t:Date.now()})}
+function ownBg(){if(!MYBGH)return '';const k='me:'+MYBGH,e=BGU.get(k);if(e&&e.url)return e.url;if(!e){BGU.set(k,{busy:true,t:Date.now()});IDB.get('bg:'+k).then(b=>{BGU.delete(k);if(b){bgSet(k,b);drawColors()}else BGU.set(k,{t:Date.now()})})}return ''}
+const jpegOk=b=>!!b&&b.length>=100&&b.length<=200000&&b[0]===0xFF&&b[1]===0xD8&&b[2]===0xFF;
+async function gotBgAtt(room,d,m){if(!room.key||room.official||!idOk(m.u)||m.u===S.id||!/^[0-9a-f]{16}$/.test(m.h||'')||!SET.peerUrl)return;
+ const k=bgKey(m.u,m.h);if(await IDB.get('bg:'+k))return;
+ const url=d.attachment&&d.attachment.url;if(typeof url!=='string'||!url.startsWith(NTFY))return;
+ try{const r=await fetch(url);if(!r.ok)return;const buf=await decBytes(new Uint8Array(await r.arrayBuffer()),room.key);
+  if(!jpegOk(buf)||await hashB(buf)!==m.h)return;await IDB.put('bg:'+k,buf);bgSet(k,buf)}catch(e){}}
+/* まだ持っていない画像を、直近3時間の預かりから探す（途中参加の人向け） */
+async function fetchBg(room,u,h){if(!bucket('bgf|'+room.topic,3,20000)||!bucket('bgs|'+u,2,60000)||nqBusy(15))return;
+ try{nqUse();const r=await fetch(NTFY+room.topic+'/json?poll=1&since=3h&tags=bg',{cache:'no-store'});nqHit(r);if(!r.ok)return;const txt=await r.text();let n=0;
+  for(const ln of txt.split('\n').slice(0,200)){if(!ln.trim()||ln.length>9000)continue;let d;try{d=JSON.parse(ln)}catch(e){continue}
+   if(!d||d.event!=='message'||!d.attachment||typeof d.message!=='string')continue;if(++n>40)break;
+   const m=await dec(d.message,room.key);if(m&&m.v==='bgb'&&m.u===u&&m.h===h){await gotBgAtt(room,d,m);break}}}catch(e){}}
+async function upBg(room,force){if(!room||room.practice||room.official||!room.key||!MYBGH)return;const bytes=await IDB.get('bgimg');if(!bytes)return;
+ const up=store.g('wc2.upbg',{}),o=up[room.topic];if(!force&&o&&o.h===MYBGH&&Date.now()-o.t<9e6)return;if(!force&&nqBusy(20))return;
+ try{nqUse();const body=await encBytes(bytes,room.key);const r=await fetch(NTFY+room.topic,{method:'PUT',headers:{Filename:'b.bin',Tags:'bg',Message:await enc({v:'bgb',u:S.id,h:MYBGH},room.key)},body});nqHit(r);
+  if(r.ok){up[room.topic]={t:Date.now(),h:MYBGH};const ks=Object.keys(up);if(ks.length>30)delete up[ks[0]];store.s('wc2.upbg',up)}}catch(e){}}
+function makeBgImg(file){return new Promise((ok,ng)=>{const fr=new FileReader();fr.onerror=()=>ng('read');
+ fr.onload=()=>{const im=new Image();im.onerror=()=>ng('decode');
+  im.onload=()=>{try{const w0=im.naturalWidth||im.width,h0=im.naturalHeight||im.height;if(!w0||!h0)return ng('decode');let side=320;
+   for(let t=0;t<6;t++){const sc=Math.min(1,side/Math.max(w0,h0)),w=Math.max(1,Math.round(w0*sc)),h=Math.max(1,Math.round(h0*sc)),c=document.createElement('canvas');c.width=w;c.height=h;
+    const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,h);g.drawImage(im,0,0,w,h);
+    for(let q=.85;q>=.35;q-=.1){const d=c.toDataURL('image/jpeg',q).split(',')[1];if(d&&Math.floor(d.length*.75)<=120000)return ok(Uint8Array.from(atob(d),ch=>ch.charCodeAt(0)))}
+    side=Math.round(side*.75)}ng('size')}catch(e){ng('canvas')}};
+  im.src=fr.result};fr.readAsDataURL(file)})}
+function bgiDraw(){const d=$('#bgiDel');if(d)d.hidden=!MYBGH}
+$('#bgiFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;const msg=$('#bgiMsg');
+ {const w=CDS.bg+15000-Date.now();if(w>0){msg.textContent='背景画像の変更は15秒に1回までです（あと'+secs(w)+'秒）';return}}msg.textContent='読み込み中…';
+ try{const b=await makeBgImg(f),h=await hashB(b);if(!h)throw 'nohash';CDS.bg=Date.now();saveCd();
+  MYBGH=h;store.s('wc2.bgh',h);await IDB.put('bgimg',b);await IDB.put('bg:me:'+h,b);BGU.delete('me:'+h);bgSet('me:'+h,b);
+  S.rooms.forEach(r=>upBg(r,true));bgiDraw();drawColors();if(S.room)render();msg.textContent='背景画像を設定しました。次に送るメッセージから、全員の画面に出ます。'}
+ catch(er){msg.textContent=er==='decode'?'この形式の画像は読み込めませんでした。JPEGかPNGを選んでください。':er==='size'?'画像を小さくできませんでした。別の画像でためしてください。':'背景画像を設定できませんでした。'}});
+$('#bgiDel').onclick=()=>{MYBGH='';store.s('wc2.bgh','');IDB.put('bgimg',null);bgiDraw();drawColors();if(S.room)render();$('#bgiMsg').textContent='背景画像を外しました。'};
+bgiDraw();
 /* 吹き出しの見た目を端末ごとに変える設定は使わないので、設定画面から隠す */
-(()=>{const hide=e=>{if(e)e.hidden=true};const b=$('#sBb');if(b){let n=b;while(n){const nx=n.nextElementSibling;hide(n);n=nx}}
- ['#swPb','#swPu','#swPbu'].forEach(id=>{const e=$(id);hide(e&&e.closest('.setrow'))})})();
+(()=>{const hide=e=>{if(e)e.hidden=true};const b=$('#sBb');if(b){const keep=new Set([$('#bgiBox'),$('#cprev'),$('#sBv'),$('#sBv').nextElementSibling,$('#bgvTa'),$('#bgvCnt').closest('.setrow')]);let n=b;while(n){const nx=n.nextElementSibling;if(!keep.has(n))hide(n);n=nx}}
+ ['#swPb','#swPbu'].forEach(id=>{const e=$(id);hide(e&&e.closest('.setrow'))})})();
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
