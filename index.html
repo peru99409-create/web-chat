@@ -1953,7 +1953,7 @@ function render(first){
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
   const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=m.w?'':(me?cleanBg(STY.bgv):(SET.peerBub===false?'':peerBg(room,m.ub)));
-  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
+  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
   h+=`<div class="row ${sy.right?'r':''} ${me?'mine':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}${mentionsMe(m)?' mnme':''}${bubAttr(sy)}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
@@ -1992,19 +1992,19 @@ function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){s
 /* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
 async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&Date.now()-(room.avT||0)<300000)return;room.avT=Date.now();
  try{const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}catch(e){room.avT=0}}
-async function post(m){const room=S.room;if(!room)return;let st=0;
+async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
- m.failed=false;m.pending=true;
+ m.failed=false;m.pending=true;m.err='';
  try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,ub:m.ub||undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
-    r=await relayRaw(room,body,false,m.n||'');st=r.status;if(r.ok)break;r=null}catch(e){r=null}
+    r=await relayRaw(room,body,false,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
    if(i<2)await new Promise(ok=>setTimeout(ok,1500*(i+1)))}
   if(!r)throw 0;m.pending=false;
   try{const j=await r.json();m.vf=j.vf==='ok'||j.vf==='ng'?j.vf:''}catch(e){}
   postAv(room);setTimeout(()=>{if(m.pending&&!room.dead){m.pending=false;schedule()}},4000)}
- catch(e){m.pending=false;m.failed=true;toast(st===429?'サーバーが混み合っています。少し待ってから、タップで再送してください':'送信できませんでした')}
+ catch(e){if(!er&&e&&e.message)er=String(e.message).slice(0,40);m.pending=false;m.failed=true;m.err=er;toast(st===429?'サーバーが混み合っています。少し待ってから、タップで再送してください':'送信できませんでした'+(er?'（'+er+'）':''))}
  if(S.room===room)schedule()}
 
 /* ---------- 返信・リアクション ---------- */
