@@ -25,15 +25,14 @@
 <meta name="twitter:description" content="ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。">
 <meta name="twitter:image" content="https://web-chat-9ne.pages.dev/og-image.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://web-chat-9ne.pages.dev/#website","url":"https://web-chat-9ne.pages.dev/","name":"ウェブチャット","inLanguage":"ja"},{"@type":"WebApplication","@id":"https://web-chat-9ne.pages.dev/#app","name":"ウェブチャット","url":"https://web-chat-9ne.pages.dev/","description":"ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。","applicationCategory":"CommunicationApplication","operatingSystem":"Web（Chrome・Safari・Edge・Firefox）","browserRequirements":"JavaScriptが使える最新のブラウザ","inLanguage":"ja","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"isPartOf":{"@id":"https://web-chat-9ne.pages.dev/#website"}}]}</script>
-<meta name="theme-color" content="#111413">
+<meta name="theme-color" content="#eef1ee">
 <style>
-:root{--bg:#111413;--bg2:#171a19;--bg3:#202523;--bg4:#2b3230;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--text3:#69756f;--accent:#4cc09a;--on:#0c1f18;--danger:#e0716a;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);color-scheme:dark}
-@property --accent{syntax:"<color>";inherits:true;initial-value:#4cc09a}
-@property --on{syntax:"<color>";inherits:true;initial-value:#0c1f18}
+:root{--bg:#eef1ee;--bg2:#f7f9f6;--bg3:#ffffff;--bg4:#e3e7e3;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--text3:#8a948f;--accent:#9ca3a0;--on:#111111;--danger:#c9453d;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);color-scheme:light}
+@property --accent{syntax:"<color>";inherits:true;initial-value:#9ca3a0}
+@property --on{syntax:"<color>";inherits:true;initial-value:#111111}
 :root{--r1:8px;--r2:12px;--r3:16px;--r4:24px;transition:--accent .5s var(--ease),--on .5s var(--ease)}
-@media(prefers-color-scheme:light){:root:not([data-mode]){--bg:#eef1ee;--bg2:#f7f9f6;--bg3:#ffffff;--bg4:#e3e7e3;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--text3:#8a948f;--accent:#1c9a74;--on:#ffffff;--danger:#c9453d;color-scheme:light}}
-:root[data-mode=light]{--bg:#eef1ee;--bg2:#f7f9f6;--bg3:#ffffff;--bg4:#e3e7e3;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--text3:#8a948f;--accent:#1c9a74;--on:#ffffff;--danger:#c9453d;color-scheme:light}
-:root[data-mode=dark]{--bg:#111413;--bg2:#171a19;--bg3:#202523;--bg4:#2b3230;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--text3:#69756f;--danger:#e0716a;color-scheme:dark}
+:root[data-mode=light]{--bg:#eef1ee;--bg2:#f7f9f6;--bg3:#ffffff;--bg4:#e3e7e3;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--text3:#8a948f;--accent:#9ca3a0;--on:#111111;--danger:#c9453d;color-scheme:light}
+:root[data-mode=dark]{--bg:#111413;--bg2:#171a19;--bg3:#202523;--bg4:#2b3230;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--text3:#69756f;--accent:#555958;--on:#ffffff;--danger:#e0716a;color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--bg);color:var(--text);font:400 14px/24px -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -303,7 +302,6 @@ input:focus-visible,textarea:focus-visible{outline:0}
 [data-theme=pop] .btn.pri{box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 55%,#000)}
 [data-theme=pop] .btn.pri:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 55%,#000)}
 [data-theme=pop] .bub{padding:10px 18px;box-shadow:0 3px 10px rgb(0 0 0/.08)}
-[data-theme=pop] .av{box-shadow:0 0 0 3px color-mix(in srgb,hsl(var(--h) 60% 55%) 35%,transparent)}
 [data-theme=pop] .logo{transform:rotate(-6deg)}
 [data-theme=pop] .chip{font-weight:600}
 [data-theme=pop] #entry,[data-theme=pop] #home{background:radial-gradient(70% 45% at 85% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent),radial-gradient(60% 40% at 0% 100%,color-mix(in srgb,var(--accent) 14%,transparent),transparent),var(--bg)}
@@ -626,7 +624,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
  #setDlg{place-items:center;padding:24px;background:rgb(0 0 0/.5)}
  .setsheet{width:min(880px,100%);height:min(720px,100%);grid-template-columns:210px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);padding-top:0;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgb(0 0 0/.5),0 0 0 1px var(--line)}
  .sethd{grid-column:1/-1}
- .setnav{flex-direction:column;overflow:visible;padding:12px;border-bottom:0;border-right:1px solid var(--line)}
+ .setnav{flex-direction:column;overflow-visible;padding:12px;border-bottom:0;border-right:1px solid var(--line)}
  .setnav button{justify-content:flex-start;text-align:left;border-radius:12px;background:transparent;padding:0 14px}
  .setnav button:hover{background:var(--bg3)}
  .setnav button.on{background:var(--bg3);color:var(--text);box-shadow:inset 3px 0 0 var(--accent)}
@@ -760,7 +758,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="brand rise" style="--d:0"><button class="ib" id="eBack" aria-label="ホームに戻る" hidden><svg class="ic"><use href="#i-left"/></svg></button><span class="logo" id="logo"></span><h1 style="display:contents;font:inherit;margin:0"><b style="flex:1">ウェブチャット</b></h1><button class="ib" id="nBtn" aria-label="お知らせ"><svg class="ic"><use href="#i-bell"/></svg><i class="dotn" id="nDot" hidden></i></button><button class="ib setbtn" id="setBtn" aria-label="通知などの設定"><svg class="ic"><use href="#i-set"/></svg></button><button class="chip" id="help" aria-label="使い方を見る">使い方</button></div>
 
   <div class="card rise" style="--d:2" id="cRoom">
-   <div class="lab">部屋名　<span class="faint">同じ部屋名を知っている人と会話できます</span></div>
+   <div class="lab">部屋名 <span class="faint">同じ部屋名を知っている人と会話できます</span></div>
    <input id="room" maxlength="30" autocomplete="off" placeholder="部屋名を入力（例：ひみつ基地）" aria-label="部屋名">
    <div class="chips" id="recChips" hidden></div>
    <button class="btn pri dim" id="go">入る</button>
@@ -769,11 +767,11 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   </div>
 
   <div class="card rise" style="--d:1" id="cNick">
-   <div class="lab nl">表示名　<span class="faint">任意・チャット中も変えられます</span></div>
+   <div class="lab nl">表示名 <span class="faint">任意・チャット中も変えられます</span></div>
    <input id="nick" maxlength="12" autocomplete="off" spellcheck="false" placeholder="例：ねこ（空ならIDだけ表示）" aria-label="表示名">
   </div>
   <div class="card rise" style="--d:3" id="cId">
-   <div class="lab idl">あなたのID　<span class="faint">適当な文字を入れるとIDが決まります</span></div>
+   <div class="lab idl">あなたのID <span class="faint">適当な文字を入れるとIDが決まります</span></div>
    <div class="idbox"><span class="av big" id="eav" hidden></span><div class="idtxt none" id="eid"><span style="--i:0">—</span></div></div>
    <input id="seed" maxlength="40" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="例：ねこ、abc123、なんでもOK" aria-label="IDのもとになる文字">
    <p class="xs faint">同じ文字ならいつでも同じIDになります。入れた文字は他の人には見えません。</p>
@@ -921,13 +919,13 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 <textarea id="cssTa" wrap="off" maxlength="5000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しのCSS" placeholder=".row.mine .bub{ background:linear-gradient(135deg,#ff9a9e,#fad0c4); border-radius:24px }"></textarea>
 <div class="setrow"><span class="xs faint" id="cssCnt" style="flex:1"></span><button class="chip" id="cssEx">例を足す</button><button class="chip" id="cssClr">消す</button></div>
 <details class="xs mute"><summary style="cursor:pointer;font-weight:700;color:var(--text)">書き方のヒント</summary>
-<p style="white-space:pre-wrap;margin-top:8px">.bub　すべての吹き出し
-.row.mine .bub　自分の吹き出し
-.row:not(.mine) .bub　相手の吹き出し
-.row.first .bub　同じ人が続く最初の吹き出し
-.who　名前　　.meta　時刻　　.av　アイコン
-#msgs　メッセージ全体の背景
-.sysl　入退室の表示
+<p style="white-space:pre-wrap;margin-top:8px">.bub すべての吹き出し
+.row.mine .bub 自分の吹き出し
+.row:not(.mine) .bub 相手の吹き出し
+.row.first .bub 同じ人が続く最初の吹き出し
+.who 名前  .meta 時刻  .av アイコン
+#msgs メッセージ全体の背景
+.sysl 入退室の表示
 
 アニメーション（@keyframes）、背景画像（url(data:...) も可）、::before / ::after も使えます。
 うまく表示が崩れたら、アドレスの最後に #nocss を付けて開くと、CSSなしで開けます。</p></details></section>
@@ -1037,7 +1035,7 @@ const NOTICES=[
  {id:23,date:'2026-11-15',title:'返信・リアクション・未読の境目など、いろいろ追加',body:'メッセージをタップすると、リアクション（👍❤️😂😮😢🙏）と返信ができます。リアクションは、メッセージの下の丸をタップして付けたり外したりできます。ささやきには付けられません。\n部屋に戻ったとき、「ここから新着」の線が出ます。\n設定の「見た目」に、「この部屋だけ別の見た目」（部屋ごとに雰囲気・色を覚えます）と「部屋名を伏せる」（部屋名をぼかします）を追加しました。\nお友達に登録した人には、自分用のあだ名を付けられます。ホームには、いま入っている部屋にいるお友達が出ます。\n設定の「通知」に、「通知を止める時間帯」を追加しました（夜は鳴らさない、など）。'},
  {id:22,date:'2026-11-15',title:'通知を、登録した人だけにできます。ポップアップの位置も変えられます',body:'設定の「通知」に、「登録した人だけ通知」を追加しました。オンにすると、お友達に登録した人のメッセージだけ、通知（ポップアップ・音）が出ます。\n通知ポップアップの位置は、上・下と、左・中央・右から選べます。選ぶと、その位置にテスト通知が出ます。'},
  {id:21,date:'2026-11-15',title:'戻る画面を横から半分に。公式部屋の名前は「公式」に',body:'チャットの戻るボタンを押すと、画面の横からホームが半分だけ出てきます。部屋の切り替え・入室・退室ができ、チャット側をタップすると閉じます。\n公式部屋の名前を「公式」にしました。\n通信が切れた状態が30秒ほど続くと、その部屋から自動で退室します（放置しているだけでは退室しません）。画面を離れていても接続は保たれます。\n部屋のリンクのコピーと、ホーム画面への追加は、なくしました。設定ボタンを大きくし、設定画面も見やすくしました。'},
- {id:20,date:'2026-11-15',title:'部屋の切り替えを画面の下に移しました',body:'部屋のボタンを、入力欄の下に大きく並べました。タップで移動、＋で別の部屋に入れます。新しい部屋に入るときは、チャットの上に入力ウィンドウが出るので、いまの部屋から抜けたように見えません。\n退室は、いまの部屋のボタンをタップして「この部屋から退室する」を押します。入口とホームから公式部屋にワンタップで入れるようにもなりました。公式部屋でもささやけます。'},
+ {id:20,date:'2026-11-15',title:'部屋の切り替えを画面の下に移しました',body:'部屋のボタンを、入力欄の下に大きく並べました。タップで移動、＋で別の部屋に入れます。新しい部屋に入るときは、チャットの上に入力ウィンドウが出るので、いまの部屋から抜けたように見えません。\n退室は、いまの部屋のボタンをタップして「この部屋から退室する」を押すか、ホームの「退室」を押してください。入口とホームから公式部屋にワンタップで入れるようにもなりました。公式部屋でもささやけます。'},
  {id:19,date:'2026-11-15',title:'複数の部屋（タブ）と公式部屋',body:'最大3つの部屋に同時に入れます。チャット画面の下のバーで切り替え、＋で別の部屋に入れます。見ていない部屋の新着は、ボタンに数字で出ます。\n戻るボタンでホームに戻っても、部屋には入ったままです（ホームの「入室中」から戻れます。退室は「退室」ボタンか、いまの部屋のボタンから）。\n公式部屋「official」を追加しました。ホームの先頭にあります。荒らし対策が強めで、5秒に1回・200文字・リンク不可です。利用規約も更新しました。'},
  {id:18,date:'2026-11-15',title:'見た目を変えられるようになりました',body:'設定の「見た目」から、雰囲気（標準・ミニマル・ポップ・ネオン）、明るさ（端末に合わせる・ライト・ダーク）、メインの色（6色・好きな色・部屋ごとに自動）を選べます。切り替えると、色や形がなめらかに変わります。\n設定の上に、アイコン・吹き出し・お友達などへ飛べる見出しを付けました。パソコンの広い画面では、チャットを中央に寄せて見やすくしました。'},
  {id:17,date:'2026-11-15',title:'利用規約とプライバシーを追加',body:'本サービスを使い始めた時点で、規約に同意したものとみなします（規約はいつでも読めます）。入口・ホーム・設定の「利用規約とプライバシー」から、全文を読めます。見出しから読みたい所へ移れます。\n初めて部屋に入るときに、大事な点の確認が出ます。同意した記録は、規約のページの下から取り消せます。\n暗号化できる範囲、端末に保存される情報、中継サービスに送られる情報、荒らし対策の制限の数字も、細かく書いています。'},
@@ -1060,7 +1058,7 @@ const NOTICES=[
 
 /* ---------- utils ---------- */
 const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
 const store={g(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const two=n=>String(n).padStart(2,'0');
@@ -1073,9 +1071,9 @@ const shake=e=>{e.classList.remove('shake');void e.offsetWidth;e.classList.add('
 $('#logo').innerHTML=$('#logo2').innerHTML='<svg class="ic"><use href="#i-chat"/></svg>';
 
 /* ---------- 見た目（テーマ・明るさ・メインの色） ---------- */
-const COLS={mint:['#4cc09a','#1c9a74'],indigo:['#8b93ff','#4f56d6'],sky:['#4fb3ff','#1f7fd1'],pink:['#ff82ac','#d63d78'],orange:['#ff9a5c','#d9621a'],gold:['#e3c24a','#a8860f']};
-const CNAME={mint:'ミント',indigo:'インディゴ',sky:'スカイ',pink:'ピンク',orange:'オレンジ',gold:'ゴールド'};
-const THM=Object.assign({style:'pop',mode:'dark',color:'mint',custom:'#4cc09a'},store.g('wc2.theme2',{}));
+const COLS={gray:['#555958','#9ca3a0'],mint:['#4cc09a','#1c9a74'],indigo:['#8b93ff','#4f56d6'],sky:['#4fb3ff','#1f7fd1'],pink:['#ff82ac','#d63d78'],orange:['#ff9a5c','#d9621a'],gold:['#e3c24a','#a8860f']};
+const CNAME={gray:'グレー',mint:'ミント',indigo:'インディゴ',sky:'スカイ',pink:'ピンク',orange:'オレンジ',gold:'ゴールド'};
+const THM=Object.assign({style:'pop',mode:'light',color:'gray',custom:'#9ca3a0'},store.g('wc2.theme2',{}));
 const mqDark=matchMedia('(prefers-color-scheme: dark)');
 const RT=Object.assign(Object.create(null),store.g('wc2.roomTheme',{}));
 const eff=room=>{const o=room&&!room.practice&&RT[room.norm];return o?Object.assign({},THM,o):THM};
@@ -1085,21 +1083,21 @@ function hslHex(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),
 function accentFor(room){const th=eff(room),d=isDark(th);
  if(th.color==='auto'&&room)return hslHex(hueOf(room.topic),d?62:56,d?64:42);
  if(th.color==='custom'&&/^#[0-9a-f]{6}$/i.test(th.custom))return th.custom;
- const c=COLS[th.color]||COLS.mint;return d?c[0]:c[1]}
+ const c=COLS[th.color]||COLS.gray;return d?c[0]:c[1]}
 function applyTheme(room){const r=document.documentElement,th=eff(room);r.dataset.theme=th.style;
  if(th.style==='neon'||th.mode==='dark')r.dataset.mode='dark';else if(th.mode==='light')r.dataset.mode='light';else delete r.dataset.mode;
  const a=accentFor(room);r.style.setProperty('--accent',a);r.style.setProperty('--on',autoText(a));
  const bg=getComputedStyle(r).getPropertyValue('--bg').trim(),m=document.querySelector('meta[name=theme-color]');if(m&&bg)m.content=bg}
 function drawTheme(){const th=eff(S.room),on=(sel,att,v)=>$$s(sel).forEach(b=>b.classList.toggle('on',b.dataset[att]===v));
  on('#styleSel .chip','st',th.style);on('#modeSel .chip','md',th.mode);on('#colSel [data-col]','col',th.color);
- $('#colCustom').value=/^#[0-9a-f]{6}$/i.test(th.custom)?th.custom:'#4cc09a';
+ $('#colCustom').value=/^#[0-9a-f]{6}$/i.test(th.custom)?th.custom:'#9ca3a0';
  $('#modeSel').style.opacity=th.style==='neon'?.45:1;$('#modeNote').hidden=th.style!=='neon';
  const inr=!!(S.room&&!S.room.practice),own=inr&&!!RT[S.room.norm];$('#rtRow').hidden=!inr;
  if(inr){$('#swRt').classList.toggle('on',own);$('#swRt').setAttribute('aria-checked',own);$('#rtName').textContent=own?'いま、この部屋専用の見た目です（下の設定は、この部屋だけに効きます）':'オンにすると、下の見た目をこの部屋だけに覚えさせます'}}
 let themeT;
 function themeChanged(){const r=document.documentElement;r.classList.add('tt');clearTimeout(themeT);themeT=setTimeout(()=>r.classList.remove('tt'),600);
  store.s('wc2.theme2',THM);store.s('wc2.roomTheme',RT);applyTheme(S.room);drawTheme();drawColors()}
-$('#colSel').innerHTML=Object.keys(COLS).map(k=>`<button class="swc" data-col="${k}" style="--c:${COLS[k][0]}" aria-label="${CNAME[k]}" title="${CNAME[k]}"></button>`).join('')+'<label class="swc rainbow" data-col="custom" title="好きな色" aria-label="好きな色"><input type="color" id="colCustom" aria-label="好きな色"></label><button class="chip" data-col="auto">部屋ごとに自動</button>';
+$('#colSel').innerHTML=Object.keys(COLS).map(k=>`<button class="swc" data-col="${k}" style="--c:${COLS[k][isDark(THM)?0:1]}" aria-label="${CNAME[k]}" title="${CNAME[k]}"></button>`).join('')+'<label class="swc rainbow" data-col="custom" title="好きな色" aria-label="好きな色"><input type="color" id="colCustom" aria-label="好きな色"></label><button class="chip" data-col="auto">部屋ごとに自動</button>';
 $('#styleSel').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(!b)return;tgt().style=b.dataset.st;themeChanged()});
 $('#modeSel').addEventListener('click',e=>{const b=e.target.closest('[data-md]');if(!b)return;tgt().mode=b.dataset.md;themeChanged()});
 $('#colSel').addEventListener('click',e=>{const b=e.target.closest('[data-col]');if(!b)return;tgt().color=b.dataset.col;themeChanged()});
@@ -1306,10 +1304,10 @@ function notifyMsg(room,m,soundOnly){
  if(SET.popup&&!soundOnly){if(document.hidden){if(sysState()==='granted')webNotify(room,m)}else showPop(room,m)}
  playSnd()}
 /* ホーム画面に追加 */
-function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz;const x=c.getContext('2d');x.fillStyle='#4cc09a';x.fillRect(0,0,sz,sz);x.fillStyle='#0c1f18';
+function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz;const x=c.getContext('2d');x.fillStyle='#9ca3a0';x.fillRect(0,0,sz,sz);x.fillStyle='#111111';
  const a=sz*.2,b=sz*.26,w=sz*.6,h=sz*.38,r=sz*.09;x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();x.fill();
  x.beginPath();x.moveTo(sz*.3,sz*.6);x.lineTo(sz*.3,sz*.76);x.lineTo(sz*.46,sz*.6);x.closePath();x.fill();
- x.fillStyle='#4cc09a';[.36,.5,.64].forEach(f=>{x.beginPath();x.arc(sz*f,sz*.45,sz*.035,0,7);x.fill()});return c}
+ x.fillStyle='#9ca3a0';[.36,.5,.64].forEach(f=>{x.beginPath();x.arc(sz*f,sz*.45,sz*.035,0,7);x.fill()});return c}
 let ICON='';
 try{ICON=mkIcon(192).toDataURL('image/png')}catch(e){}
 let DIP=null;
@@ -1342,7 +1340,7 @@ $('#swQh').onclick=()=>{SET.qh=!SET.qh;saveSet();drawSet()};
 $('#swPb').onclick=()=>{SET.peerBg=!SET.peerBg;saveSet();drawSet();if(S.room)render()};
 $('#swPu').onclick=()=>{SET.peerUrl=!SET.peerUrl;saveSet();drawSet();if(S.room)render()};
 $('#swPbu').onclick=()=>{SET.peerBub=SET.peerBub===false;saveSet();drawSet();if(S.room)render()};
-function bgvDraw(){const t=$('#bgvTa');if(!t)return;if(t.value!==(STY.bgv||''))t.value=STY.bgv||'';{const r=$('#bgoR');if(r){r.value=myBo();$('#bgoV').textContent=myBo()+'%'}}const n=t.value.length,ok=!n||!!cleanBg(t.value),c=$('#bgvCnt');c.textContent=n+' / 5,000文字'+(ok?'':'　⚠ この値は使えません（送られません）');c.style.color=ok?'':'var(--danger)'}
+function bgvDraw(){const t=$('#bgvTa');if(!t)return;if(t.value!==(STY.bgv||''))t.value=STY.bgv||'';{const r=$('#bgoR');if(r){r.value=myBo();$('#bgoV').textContent=myBo()+'%'}}const n=t.value.length,ok=!n||!!cleanBg(t.value),c=$('#bgvCnt');c.textContent=n+' / 5,000文字'+(ok?'':' ⚠ この値は使えません（送られません）');c.style.color=ok?'':'var(--danger)'}
 let bgvT=0,bgvEi=0;
 const BGV_EX=['linear-gradient(135deg,#ff9a9e,#fad0c4)','radial-gradient(circle at 20% 20%,rgba(255,255,255,.35) 2px,transparent 3px) 0 0/16px 16px,#6c5ce7','conic-gradient(from 45deg,#f6d365,#fda085,#f6d365)'];
 $('#bgoR').addEventListener('input',e=>{STY.bgo=+e.target.value;$('#bgoV').textContent=myBo()+'%';saveSty();drawColors();clearTimeout(window.__bgoT);window.__bgoT=setTimeout(()=>{if(S.room)render()},150)});
@@ -1385,7 +1383,7 @@ function drawChips(){const r=store.g('wc2.recent',[]).filter(n=>!isOffN(normRoom
 $('#recChips').addEventListener('click',e=>{const b=e.target.closest('[data-rc]');if(!b)return;$('#room').value=b.dataset.rc;upd();$('#room').focus()});
 function drawHome(still){
  const hp=$('#hprof'),hr=$('#hrooms');if(!hp||!hr)return;
- if(!still){if(S.id){hp.innerHTML=`<div class="row2">${avHtml(S.id,S.nick,' big')}<span class="pcol"><b class="ell1"${S.nick?'':' style="color:var(--text3)"'}>${S.nick?esc(S.nick):'表示名なし'}</b><span class="mono hid">ID　${S.id}${S.guest?'（仮）':''}</span></span><button class="chip" id="hEdit">変更</button></div>`;
+ if(!still){if(S.id){hp.innerHTML=`<div class="row2">${avHtml(S.id,S.nick,' big')}<span class="pcol"><b class="ell1"${S.nick?'':' style="color:var(--text3)"'}>${S.nick?esc(S.nick):'表示名なし'}</b><span class="mono hid">ID ${S.id}${S.guest?'（仮）':''}</span></span><button class="chip" id="hEdit">変更</button></div>`;
   $('#hEdit').onclick=()=>{show('entry');if(!coarse)setTimeout(()=>$('#seed').focus(),350)}}}
  hr.classList.toggle('still',!!still);
  const open=S.rooms.filter(r=>!r.official),off=S.rooms.find(r=>r.official),openN=new Set(S.rooms.map(r=>r.norm));
@@ -1586,9 +1584,9 @@ const TERMS=[
 let tmDone=false,tmCur=-1;
 function tmRender(){if(tmDone)return;tmDone=true;
  $('#tmToc').innerHTML=TERMS.map((t,i)=>`<button class="chip" data-tm="${i}">${esc(t.s)}</button>`).join('');
- $('#tmBody').innerHTML=TERMS.map((t,i)=>`<section class="tms" id="tms${i}" style="--d:${Math.min(i,8)}"><h3>${esc(t.h)}</h3>`+t.b.map(x=>typeof x==='string'?`<p>${esc(x)}</p>`:Array.isArray(x)?`<ol>${x.map(y=>`<li>${esc(y)}</li>`).join('')}</ol>`:x.u?`<ul>${x.u.map(y=>`<li>${esc(y)}</li>`).join('')}</ul>`:`<p class="note">${esc(x.n)}</p>`).join('')+'</section>').join('')+`<p class="xs faint" style="text-align:center">制定：${TERMS_DATE}　最終改定：${TERMS_DATE}</p>`}
+ $('#tmBody').innerHTML=TERMS.map((t,i)=>`<section class="tms" id="tms${i}" style="--d:${Math.min(i,8)}"><h3>${esc(t.h)}</h3>`+t.b.map(x=>typeof x==='string'?`<p>${esc(x)}</p>`:Array.isArray(x)?`<ol>${x.map(y=>`<li>${esc(y)}</li>`).join('')}</ol>`:x.u?`<ul>${x.u.map(y=>`<li>${esc(y)}</li>`).join('')}</ul>`:`<p class="note">${esc(x.n)}</p>`).join('')+'</section>').join('')+`<p class="xs faint" style="text-align:center">制定：${TERMS_DATE} 最終改定：${TERMS_DATE}</p>`}
 function tmFoot(){const a=store.g('wc2.terms',null);
- $('#tmAg').innerHTML=a&&a.v>=TERMS_VER?`同意済み：${new Date(a.t).toLocaleDateString('ja-JP')}　<button class="lnk" id="tmReset">同意を取り消す</button>`:'まだ同意していません。初めて部屋に入るときに確認します。';
+ $('#tmAg').innerHTML=a&&a.v>=TERMS_VER?`同意済み：${new Date(a.t).toLocaleDateString('ja-JP')} <button class="lnk" id="tmReset">同意を取り消す</button>`:'まだ同意していません。初めて部屋に入るときに確認します。';
  const r=$('#tmReset');if(r)r.onclick=()=>{store.s('wc2.terms',null);tmFoot();toast('同意を取り消しました。次に部屋へ入るとき、もう一度確認します')}}
 function tmSpy(){const b=$('#tmBody'),max=b.scrollHeight-b.clientHeight;$('#tmProg').style.width=(max>0?Math.min(100,b.scrollTop/max*100):0)+'%';
  let cur=0;const top=b.getBoundingClientRect().top;TERMS.forEach((_,i)=>{const e=$('#tms'+i);if(e&&e.getBoundingClientRect().top-top<=32)cur=i});
@@ -1642,7 +1640,7 @@ const idRe=/^[A-Za-z0-9_-]{1,24}$/;
 const INV=/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f­͏؜ᅟᅠ឴឵᠎​‌‎‏‪-‮⁠-⁯⠀ㅤ︀-︎﻿ﾠ￹-￼]/g;
 /* 文字列の浄化：見えない文字・向きを変える文字・結合文字の重ね・同じ文字の長い繰り返し・空行の連続・行数・長さ */
 function cleanText(s,max,lines){
- s=String(s==null?'':s).normalize('NFC').replace(INV,'').replace(/\r\n?/g,'\n').replace(/\p{M}{3,}/gu,m=>m.slice(0,2)).replace(/(\S)\1{9,}/gu,(m,c)=>c.repeat(9)).replace(/[ \t　]{5,}/g,'    ').replace(/\n{3,}/g,'\n\n');
+ s=String(s==null?'':s).normalize('NFC').replace(INV,'').replace(/\r\n?/g,'\n').replace(/\p{M}{3,}/gu,m=>m.slice(0,2)).replace(/(\S)\1{9,}/gu,(m,c)=>c.repeat(9)).replace(/[ \t ]{5,}/g,'    ').replace(/\n{3,}/g,'\n\n');
  s=s.split('\n').slice(0,lines).join('\n');
  s=[...s].slice(0,max).join('').trim();
  return /[^\s‍]/u.test(s)?s:''}
@@ -1738,542 +1736,502 @@ $('#perBig').onclick=()=>{$('#perDlg').hidden=true;showBig(PER.u)};
 $('#perSave').onclick=()=>{const u=PER.u;if(!u||!FR[u])return;FR[u].alias=cleanNick($('#perAlias').value);saveFr();frDraw();$('#perDlg').hidden=true;toast('あだ名を保存しました');if(S.room){render();drawPbar()}};
 $('#perClose').onclick=()=>{$('#perDlg').hidden=true};
 $('#perDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-const reEsc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-const unesc=x=>x.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&');
-function parseMn(a){if(!Array.isArray(a))return null;const o=[];for(const x of a.slice(0,5)){if(Array.isArray(x)&&idOk(x[0])){const n=cleanNick(x[1]);if(n)o.push([x[0],n])}}return o.length?o:null}
-const mentionsMe=m=>!!(m&&m.mn&&m.mn.some(x=>x[0]===S.id)&&m.u!==S.id);
-function linkifyM(t,mn){const names=(mn||[]).map(x=>x[1]).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>b.length-a.length);
- const meN=new Set((mn||[]).filter(x=>x[0]===S.id).map(x=>x[1])),re=names.length?new RegExp('@('+names.map(n=>reEsc(esc(n))).join('|')+')','g'):null;
- return esc(t).split(/(https?:\/\/[^\s<]+)/).map((p,i)=>i%2?`<a href="${p}" target="_blank" rel="noopener noreferrer">${p}</a>`:(re?p.replace(re,(w,n)=>`<span class="mt${meN.has(unesc(n))?' me':''}">${w}</span>`):p)).join('')}
-function mnFromText(room,x){const out=[];for(const m of memList()){if(m.u===S.id)continue;const nm=m.n||m.u;if(nm&&x.includes('@'+nm)&&out.length<5)out.push([m.u,cleanNick(nm)||m.u])}return out}
-function mnQuery(){const c=ta.selectionStart==null?ta.value.length:ta.selectionStart,m=/(^|\s)@([^\s@]*)$/.exec(ta.value.slice(0,c));return m?{q:m[2],start:c-m[2].length-1,c}:null}
-function drawMn(){const box=$('#mnList'),r=S.room,q=r&&mnQuery();if(!q){box.hidden=true;return}
- const k=normRoom(q.q),l=memList().filter(x=>x.u!==S.id&&(!k||normRoom(x.n||x.u).startsWith(k)||x.u.toLowerCase().startsWith(k))).slice(0,6);
- if(!l.length){box.hidden=true;return}
- box.innerHTML=l.map(x=>`<button class="chip" data-mn="${esc(x.n||x.u)}">@${esc(x.n||x.u)}</button>`).join('');box.hidden=false}
-function insMn(name){const q=mnQuery();if(!q)return;const v=ta.value;ta.value=v.slice(0,q.start)+'@'+name+' '+v.slice(q.c);const pos=q.start+name.length+2;ta.focus();try{ta.setSelectionRange(pos,pos)}catch(e){}autosize();drawMn()}
-const linkify=t=>esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-async function openRoom(name,fromPop){
- let norm=normRoom(name);if(!norm)return;if(norm==='official'||norm==='公式'){norm=OFFN;name=OFFNAME}if(!T.on){const ag=store.g('wc2.terms',null);if(!(ag&&ag.v>=TERMS_VER)){askTerms(()=>openRoom(name,fromPop));return}}
- if(!T.on){const ex=S.rooms.find(r=>r.norm===norm);if(ex){switchTo(ex,fromPop);return}
-  if(S.rooms.length>=MAXR){toast('同時に入れるのは'+MAXR+'部屋までです。どれかを退室してください');if(S.id&&!drawerOpen()&&$('#chat').hidden){closeRoom();show('home',true);drawHome()}return}
-  const w=CDS.room+2000-Date.now();if(w>0){toast('部屋への出入りは少し間をあけてください（あと'+secs(w)+'秒）');return}CDS.room=Date.now();saveCd()}
- closeRoom();if(!S.id){S.id=rndId();S.hue=hueOf(S.id);S.guest=true}
- const practice=T.on;
- const topic=practice?'practice':topicOf(norm);
- const key=practice?null:await getKey(norm);
- const room={name,norm,topic,key,msgs:new Map(),ready:practice,unseen:0,unread:0,practice,official:!practice&&isOffN(norm),openT:Date.now(),season:SEASONS[Math.floor(Math.random()*4)],pres:new Map(),to:null,board:new Map(),bdel:new Set(),known:new Set(),bdNew:0,bdReady:false,dead:false,badSince:practice?0:Date.now(),es:null,st:[practice?'on':'wait',practice?'れんしゅう中（送信されません）':'接続中…']};
- if(!practice){S.rooms.push(room);if(!room.official){const rec=[name,...store.g('wc2.recent',[]).filter(n=>normRoom(n)!==norm&&!isOffN(normRoom(n)))].slice(0,6);store.s('wc2.recent',rec)}}
- room.pres.set(S.id,{n:nickFor(room),t:Date.now()});if(practice)room.pres.set('MIO',{n:'ミオ',t:Date.now()});
- if(room.official)addMsg(room,{id:'off0',u:'',su:'',sys:true,t:Date.now(),x:'ここは公式部屋です。荒らし対策が強めです：送信は5秒に1回・200文字まで、リンクは使えません。'});
- switchTo(room,fromPop);
- if(practice){setTimeout(()=>botSay(room,'ようこそ。ここは練習用の部屋です。何か送ってみてください。'),800);tutHook('enter')}
- else{connect(room);prepLeave(room);setTimeout(()=>{if(!room.dead)sendEv(room,'ask')},1200);setTimeout(()=>{if(!room.dead)loadBoard(room)},500);setTimeout(()=>{if(!room.dead&&room.bdState!=='ok')loadBoard(room)},6000);setTimeout(()=>{if(!room.dead&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(!room.dead)room.ready=true},1200);setTimeout(()=>{if(room.dead)return;postAv(room,true);upBig(room);prepLeave(room);sendEv(room,'join');ensureBg(room);room.hbT=setInterval(()=>{if(!room.dead&&room.es){sendEv(room,'hb')}},120000)},1500);room.pbT=setInterval(()=>{if(!room.dead){prunePres(room);if(S.room===room)drawPbar()}},60000)}
- if(!coarse)setTimeout(()=>$('#ta').focus(),340)}
-/* 部屋の表示を切り替える（接続は部屋ごとに保たれる） */
-function switchTo(r,fromPop){
- const cur=S.room;if(cur&&cur!==r&&!cur.practice)cur.draft=ta.value;if(cur&&cur!==r)cur.firstUnread='';
- const was=!$('#chat').hidden;
- $('#memDlg').hidden=true;$('#bdDlg').hidden=true;$('#lkDlg').hidden=true;
- S.room=r;r.unread=0;applyTheme(r);
- $('#rname').textContent=r.name;$('#exitBtn').hidden=!!r.practice;$('#offB').hidden=true;$('#chat').classList.toggle('isoff',!!r.official);setMid(r);applyAv($('#mav'),S.id,'',S.hue);
- ta.value=r.draft||'';ta.maxLength=r.official?200:500;autosize();setStatus(r.st[0],r.st[1]);
- show('chat');if(!was&&!fromPop)pushH('chat');
- render(true);drawPbar();drawTo();drawRp();drawTabs();$('#jump').hidden=!r.unseen;
- if(was){const b=$('#msgs');b.classList.remove('swap');void b.offsetWidth;b.classList.add('swap')}}
-function drawTabs(){const el=$('#tabs');if(!el)return;const L=S.room&&S.room.practice?[S.room]:S.rooms;
- el.innerHTML=L.map((r,i)=>`<div class="tab${r===S.room?' on':''}${r.official?' off':''}" role="tab" tabindex="0" data-i="${i}" aria-selected="${r===S.room}"><span class="tn ell1${r.official?'':' rn'}">${esc(r.name)}</span>${r!==S.room&&r.unread?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:''}${r.practice?'':`<button class="tx" data-x="${i}" aria-label="${esc(r.name)}から退室">✕</button>`}</div>`).join('')+(!(S.room&&S.room.practice)&&L.length<MAXR?'<button class="tab add" data-add aria-label="別の部屋に入る">＋</button>':'');
- if(!$('#home').hidden)drawHome(true)}
-function openJoin(){const left=MAXR-S.rooms.length;if(left<=0){toast('同時に入れるのは'+MAXR+'部屋までです。先に、どれかを退室してください');return}
- const openN=new Set(S.rooms.map(r=>r.norm));
- $('#jnLeft').textContent='あと'+left+'部屋、入れます（'+S.rooms.length+'/'+MAXR+'）';
- $('#jnOff').hidden=openN.has(OFFN);
- const rec=store.g('wc2.recent',[]).filter(n=>!openN.has(normRoom(n))&&!isOffN(normRoom(n))).slice(0,4);
- $('#jnRec').innerHTML=rec.map(n=>`<button class="chip rn" data-rc="${esc(n)}">${esc(n)}</button>`).join('');$('#jnRec').hidden=!rec.length;
- $('#jnRoom').value='';$('#jnDlg').hidden=false;if(!coarse)setTimeout(()=>$('#jnRoom').focus(),80)}
-function joinGo(name){const v=(name||$('#jnRoom').value).trim();if(!normRoom(v)){shake($('#jnRoom'));toast('部屋名を入れてください');$('#jnRoom').focus();return}$('#jnDlg').hidden=true;openRoom(v)}
-$('#jnGo').onclick=()=>joinGo();
-$('#jnNo').onclick=()=>{$('#jnDlg').hidden=true};
-$('#jnOff').onclick=()=>{$('#jnDlg').hidden=true;openRoom(OFFN)};
-$('#jnRoom').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)joinGo()});
-$('#jnRec').addEventListener('click',e=>{const b=e.target.closest('[data-rc]');if(b)joinGo(b.dataset.rc)});
-$('#jnDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-const RM={r:null};
-function openRoomMenu(r){RM.r=r;if(SET.skipLeave&&!r.practice){if(S.rooms.includes(r))leaveTab(r);return}RM.skip=false;drawSkip();$('#rmT').textContent='「'+dispRoom(r)+'」から退室しますか？';$('#rmS').textContent=r.practice?'練習の部屋です。送信されません。':'退室すると、ほかの人に伝わり、この端末のメッセージ履歴も消えます。入り直すには、もう一度部屋名を入れます。';
- $('#rmLeave').hidden=!!r.practice;$('#rmSkip').hidden=!!r.practice;$('#rmDlg').hidden=false}
-function drawSkip(){const b=$('#rmSkip');b.textContent=(RM.skip?'☑':'☐')+' 次からは表示しない';b.classList.toggle('on',!!RM.skip);b.setAttribute('aria-checked',!!RM.skip);b.hidden=false}
-$('#rmSkip').onclick=()=>{RM.skip=!RM.skip;drawSkip()};
-$('#rmLeave').onclick=()=>{const r=RM.r;$('#rmDlg').hidden=true;if(RM.skip){SET.skipLeave=true;saveSet();toast('次から確認なしで退室します（設定の「規約・ほか」で戻せます）')}if(r&&!r.practice&&S.rooms.includes(r))leaveTab(r)};
-$('#exitBtn').onclick=()=>{const r=S.room;if(r&&!r.practice)openRoomMenu(r)};
-$('#rmNo').onclick=()=>{$('#rmDlg').hidden=true};
-$('#rmDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-$('#tabs').addEventListener('click',e=>{const L=S.room&&S.room.practice?[S.room]:S.rooms;
- if(e.target.closest('[data-add]')){openJoin();return}
- const t=e.target.closest('[data-i]');if(!t)return;const r=L[+t.dataset.i];if(!r)return;
- if(e.target.closest('[data-x]')){if(!r.practice)openRoomMenu(r);return}if(r!==S.room&&!r.practice)switchTo(r,true)});
-$('#tabs').addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.closest&&e.target.closest('[data-i]');if(t)t.click()}});
-function leaveTab(r){const idx=S.rooms.indexOf(r),was=S.room===r;dropRoom(r);
- if(was){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else{backToEntry()}}else drawTabs();
- toast(dispRoom(r)+'から退室しました')}
-/* 自分の通信が切れた状態が続いたら、その部屋から退室する（放置では退室しない） */
-function lostRoom(r){if(r.dead||r.practice)return;const was=S.room===r,idx=S.rooms.indexOf(r),nm=dispRoom(r);dropRoom(r);
- if(was){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else backToEntry()}else drawTabs();
- if(!$('#home').hidden)drawHome(true);toast('通信が切れたので「'+nm+'」から退室しました')}
-setInterval(()=>{if(document.hidden)return;const n=Date.now();for(const r of S.rooms.slice()){if(r.dead||r.practice)continue;if(r.st[0]!=='on'&&r.badSince&&n-r.badSince>30000)lostRoom(r)}},5000);
-/* ---- 入力中の合図 ---- */
-function sendTy(room){if(!room||room.practice||room.left||room.to||SET.typ===false||room.pres.size<=1||nqBusy(30))return;const n=Date.now();if(n-(room.tyT||0)<(room.official?8000:5000))return;room.tyT=n;relay(room,{v:'ty',u:S.id}).catch(()=>{})}
-function gotTy(room,u,nm){if(u===S.id)return;const now=Date.now();let p=room.pres.get(u);if(p){p.t=now;p.ty=now;if(nm)p.n=nm}else if(room.pres.size<60)room.pres.set(u,{n:nm,t:now,ty:now});if(S.room===room)drawPbar()}
-setInterval(()=>{const r=S.room;if(!r||$('#chat').hidden)return;const sig=memList().filter(x=>x.ty).map(x=>x.u).join();if(sig!==(r.tySig||'')){r.tySig=sig;drawPbar()}},1000);
-/* ---- 入退室・いる人・ささやき・ミュート ---- */
-const SEASONS=['春','夏','秋','冬'],PTTL=300000;
-const rndId=()=>[...crypto.getRandomValues(new Uint8Array(6))].map(v=>AL[v%32]).join('');
-const nickFor=room=>S.nick||(room&&room.season)||'';
-const idOk=u=>typeof u==='string'&&/^[A-Z0-9]{1,6}$/.test(u);
-const MUTE=store.g('wc2.mute',[]);const saveMute=()=>store.s('wc2.mute',MUTE.slice(-100));
-async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid()},extra||{}))}catch(e){}}
-async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid()},room.key),false,nickFor(room))}catch(e){}}
-function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true}).catch(()=>{})}catch(e){}}
-addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
-function addSys(room,id,text,u){addMsg(room,{id:'ev'+String(id).slice(0,24),u:'',su:u,sys:true,t:Date.now(),x:text})}
-const presList=room=>[...room.pres].slice(0,40).map(([u,v])=>[u,v.n||'',u===S.id?0:Math.max(0,Date.now()-v.t)]);
-function schedReply(room){clearTimeout(room.repT);room.repT=setTimeout(()=>{if(!room.dead)sendEv(room,'pres',{list:presList(room)})},300+Math.random()*1700)}
-/* 途中から入った人にアイコンを届ける：いる人が、自分のアイコンをもう一度送る（20秒に1回まで） */
-function schedAv(room,force){if(!MYAV||!room||room.dead)return;
- /* 以前は「20秒に1回」の全体制限だったため、続けて2人入ってきたとき2人目に届かなかった。
-    入ってきた人には force で必ず送り直し、送りすぎないように部屋ごとの回数制限にする */
- if(!force&&Date.now()-(room.avForce||0)<20000)return;
- if(!bucket('avR|'+room.topic,force?4:2,8000))return;
- clearTimeout(room.avRT);room.avRT=setTimeout(()=>{if(room.dead)return;room.avForce=Date.now();postAv(room,true)},force?300+Math.random()*900:700+Math.random()*2500)}
-function handleEv(room,m){if(!idOk(m.u)||m.u===S.id)return;const n=cleanNick(m.n),vf=m.vf||'',now=Date.now(),nm=n||m.u,id=typeof m.id==='string'&&idRe.test(m.id)?m.id:uid();
- room.gone=room.gone||new Map();room.sysT=room.sysT||new Map();const cap=room.pres.has(m.u)||room.pres.size<60;if(!cap&&m.k!=='leave')return;const sys=t=>{if(now-(room.sysT.get(m.u)||0)<(room.official?30000:8000))return;room.sysT.set(m.u,now);addSys(room,id,t,m.u)};
- if(m.k==='leave'){room.pres.delete(m.u);room.gone.set(m.u,now);sys(nm+'が退室しました')}
- else if(m.k==='join'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});sys(nm+'が入室しました');schedReply(room);schedAv(room,true);schedBg(room)}
- else if(m.k==='ask'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});schedReply(room);schedAv(room,true);schedBg(room)}
- else if(m.k==='hb'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf})}
- else if(m.k==='pres'){clearTimeout(room.repT);room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});
-  /* 一覧の人は「最後に確認した時刻」付き。退室した人や古い情報では復活させない */
-  (Array.isArray(m.list)?m.list:[]).slice(0,40).forEach(x=>{if(!Array.isArray(x)||!idOk(x[0])||x[0]===S.id||room.pres.has(x[0])||room.pres.size>=60)return;
-   const age=Math.max(0,+x[2]||0);if(age>=PTTL)return;const seen=now-age;if((room.gone.get(x[0])||0)>=seen)return;
-   room.pres.set(x[0],{n:cleanNick(x[1]),t:seen})})
-  /* 一覧に、まだアイコンを知らない人がいたら、自分のアイコンを送り直す（途中参加の人に届かせる） */
-  if(MYAV&&[...room.pres.keys()].some(u=>u!==S.id&&!AVC[u]))schedAv(room,true)}
- drawPbar();if(!$('#home').hidden)drawHome(true)}
-function prunePres(room){const now=Date.now();for(const [u,v] of [...room.pres]){if(u===S.id||now-v.t<=PTTL)continue;room.pres.delete(u);addSys(room,'x'+u+now,(v.n||u)+'が退室しました',u)}}
-function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<PTTL).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||'')),ty:u!==S.id&&!!v.ty&&now-v.ty<5000}))}
-function drawPbar(){const r=S.room,b=$('#prow');if(!r){b.hidden=true;return}b.hidden=false;bdBadge();const l=memList();
- $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc${x.ty?' ty':''}">${x.u===S.id?'あなた':esc(aliasOf(x.u)||x.n||x.u)+(isMuted(x.u)?'（'+(MUTE.includes(x.u)?'ミュート':'一時非表示')+'）':'')}${vfHtml(x.vf)}</span>`).join('')}
-function drawTo(){const r=S.room;$('#toBar').hidden=!(r&&r.to);if(r&&r.to)$('#toTx').textContent=(r.to.n||r.to.u)+'さんだけに送ります'}
-function openMem(){const r=S.room;if(!r)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
- $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}${me?'（あなた）':''}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
- $('#memDlg').hidden=false}
-$('#pbar').onclick=openMem;
-$('#memClose').onclick=()=>{$('#memDlg').hidden=true};
-$('#memAll').onclick=()=>{if(S.room){S.room.to=null;drawTo()}$('#memDlg').hidden=true};
+$('#frList').addEventListener('click',e=>{const b=e.target.closest('[data-frdel]');if(!b)return;delete FR[b.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}toast('削除しました')});
+const SEASONS=['春','夏','秋','冬'];
+const randSeason=()=>SEASONS[Math.floor(Math.random()*SEASONS.length)];
+const nickFor=room=>(S.nick||room.season||'');
+/* 部屋に入っている人の一覧・ささやき・ミュート */
+const PTTL=360000;
+const MUTE=store.g('wc2.mute',[]);
+const saveMute=()=>store.s('wc2.mute',MUTE);
+function touchPres(room,u,n,t,join){if(!u)return;const now=Date.now(),cur=room.pres.get(u),name=n||(cur&&cur.n)||'';
+ room.pres.set(u,{n:name,t:Math.max(t||now,cur?cur.t:0)});
+ if(u!==S.id&&join&&now-room.since>4000&&(!cur||now-cur.t>PTTL)&&!isMuted(u)){
+  addMsg(room,{id:'sys'+uid(),u:'',su:u,sys:true,t:t||now,x:(name||u)+'が入りました'});
+  if(room===S.room)notifyMsg(room,{u,n:name,x:'部屋に入りました'},true)}}
+function leavePres(room,u,n,t){if(!u||u===S.id)return;const cur=room.pres.get(u);if(!cur)return;const name=n||cur.n||'';room.pres.delete(u);if(room.ty)room.ty.delete(u);
+ if(!isMuted(u))addMsg(room,{id:'sys'+uid(),u:'',su:u,sys:true,t:t||Date.now(),x:(name||u)+'が退室しました'})}
+function prunePres(room){const now=Date.now();let ch=false;for(const [u,v] of room.pres)if(u!==S.id&&now-v.t>PTTL){room.pres.delete(u);if(room.ty)room.ty.delete(u);ch=true;if(!isMuted(u))addMsg(room,{id:'sys'+uid(),u:'',su:u,sys:true,t:now,x:(v.n||u)+'が退室しました'})}if(room.ty)for(const [u,t] of room.ty)if(now-t>5000){room.ty.delete(u);ch=true}if(ch&&room===S.room){drawPbar();render()}}
+function drawPbar(){const r=S.room;if(!r)return;const now=Date.now();
+ const list=[[S.id,{n:nickFor(r),t:now}],...[...r.pres].filter(([u,v])=>u!==S.id&&now-v.t<PTTL)];
+ const ty=r.ty||new Map();const nm=([u,v])=>{const a=aliasOf(u);const t=a||(v.n?v.n+' #'+u:u);return `<span class="pc${ty.has(u)&&(now-ty.get(u)<5000)?' ty':''}"${u!==S.id?` data-pu="${u}"`:''}>${esc(t)}</span>`};
+ $('#pbt').innerHTML=`<span class="pn">${list.length}人</span>`+list.map(nm).join('')}
+let pingAt=0;
+/* 在室(ping)の送り過ぎを防ぐ：
+   - ひとりの部屋では送らない（見る相手がいないので）
+   - 画面を見ていない間は 4分おき、見ている間は 2分おき（相手側は 6分まで在室扱い）
+   - ntfy の残り枠が少ないときはスキップ */
+function peerAlive(room){const now=Date.now();for(const [u,v] of room.pres)if(u!==S.id&&now-v.t<PTTL)return true;return false}
+async function postEv(room,k,force){if(!room||room.practice||room.dead||!S.id)return;if(k==='ping'&&!force){if(!peerAlive(room))return;const iv=document.hidden?240000:120000;if(Date.now()-pingAt<iv||nqBusy(22))return}if(k==='ping')pingAt=Date.now();
+ try{const o={v:'ev',k,u:S.id,n:nickFor(room),t:Date.now()};if(k==='join'&&MYAV)o.a=MYAV;await relay(room,o)}catch(e){}}
+let avSent=0;
+async function postAv(room,force){if(!room||room.practice||room.dead||!S.id||!MYAV)return;if(!force&&(Date.now()-avSent<15000||nqBusy(20)))return;avSent=Date.now();
+ try{await relay(room,{v:'av',u:S.id,a:MYAV,t:Date.now()})}catch(e){}}
+function setTo(u){const r=S.room;if(!r)return;if(!u){r.to=null;$('#toBar').hidden=true;return}const p=r.pres.get(u);r.to={u,n:p&&p.n||''};
+ $('#toTx').textContent=(r.to.n?r.to.n+' #'+u:u)+' にささやく（この人だけに届きます）';$('#toBar').hidden=false;$('#ta').focus()}
+$('#toX').onclick=()=>setTo(null);
+function openMem(){const r=S.room;if(!r)return;const now=Date.now();
+ const list=[[S.id,{n:nickFor(r),t:now}],...[...r.pres].filter(([u,v])=>u!==S.id&&now-v.t<PTTL)];
+ $('#memT').textContent='いま入っている人（'+list.length+'人）';
+ $('#memList').innerHTML=list.map(([u,v])=>{const me=u===S.id,mu=MUTE.includes(u),who=whoHtml(u,v.n);
+  return `<div class="mrow">${avHtml(u,v.n)}<span class="pcol"><b class="ell1">${who}${vfHtml(fvf(u,v.n))}</b><span class="xs mute">${me?'あなた':mu?'ミュート中':'入室中'}</span></span>${me?'':`<button class="chip" data-wh="${u}">ささやく</button><button class="chip" data-mu="${u}">${mu?'解除':'ミュート'}</button>`}</div>`}).join('');
+ $('#memAll').hidden=!r.to;$('#memDlg').hidden=false}
+$('#pbar').onclick=openMem;$('#memClose').onclick=()=>{$('#memDlg').hidden=true};
+$('#memAll').onclick=()=>{setTo(null);$('#memDlg').hidden=true};
 $('#memDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-$('#memList').addEventListener('click',e=>{const r=S.room;if(!r)return;const t=e.target.closest('[data-to]'),mu=e.target.closest('[data-mu]'),pr=e.target.closest('[data-pr]');
- if(pr){$('#memDlg').hidden=true;openPerson(pr.dataset.pr);return}
- if(t){const u=t.dataset.to,x=memList().find(y=>y.u===u);r.to=(r.to&&r.to.u===u)?null:{u,n:x?x.n:''};drawTo();$('#memDlg').hidden=true;if(r.to)toast((r.to.n||u)+'さんだけに送ります')}
- else if(mu){const u=mu.dataset.mu,i=MUTE.indexOf(u);i<0?MUTE.push(u):MUTE.splice(i,1);saveMute();openMem();drawPbar();render()}});
-$('#toX').onclick=()=>{if(S.room){S.room.to=null;drawTo()}};
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#perDlg').hidden){$('#perDlg').hidden=true;e.stopImmediatePropagation();return}if(e.key==='Escape'&&!$('#memDlg').hidden){$('#memDlg').hidden=true;e.stopImmediatePropagation()}},true);
-function dropRoom(r){if(r.practice){const i=MUTE.indexOf('MIO');if(i>=0){MUTE.splice(i,1);saveMute()}if(FR.MIO){delete FR.MIO;saveFr()}}
- leaveRoom(r);clearTimeout(r.sseT);clearTimeout(r.rt);clearTimeout(r.hideT);r.dead=true;if(r.es){try{r.es.close()}catch(e){}r.es=null}
- const i=S.rooms.indexOf(r);if(i>=0)S.rooms.splice(i,1);if(S.room===r)S.room=null;
- if(S.guest&&!S.rooms.length&&!S.room){S.guest=false;S.id=null;S.hue=0;drawId();upd()}}
-/* 画面から部屋を隠す（練習の部屋だけは、ここで退室する）。ほかの部屋は入ったままで、ホームから戻れる */
-function closeRoom(){const r=S.room;if(r&&r.practice)dropRoom(r);else if(r){r.draft=ta.value;r.firstUnread=''}S.room=null;applyTheme();$('#memDlg').hidden=true;$('#bdDlg').hidden=true;$('#lkDlg').hidden=true;$('#nameDlg').hidden=true;$('#jnDlg').hidden=true;$('#rmDlg').hidden=true}
-function setStatus(k,t){const d=$('#dot');d.className='dot '+(k==='on'?'on':'wait');$('#stxt').textContent=t+(S.room&&S.room.key?'　暗号化':'')}
-function stat(room,k,t){room.st=[k,t];if(k==='on')room.badSince=0;else if(!room.badSince)room.badSince=Date.now();if(S.room===room)setStatus(k,t)}
-/* 受け取った1件を処理する。srv: サーバーが付けた vf（ok=登録と一致 / ng=同じ名前で別ID / 空=未登録）を使う。ntfy: 認証なし(vf空) */
-async function onIncoming(room,d,hist){
- if(room.dead||!d||typeof d.b!=='string'||d.b.length>8000||!idOk(d.u)||isTM(d.u))return;
- if(!hist){room.lastAct=Date.now();if(typeof d.seq==='number')room.seq=Math.max(room.seq||0,d.seq)}
- const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'';let nm=cleanNick(d.n);
- if(!m||m.u!==d.u||room.dead)return;
- if(room.official&&IMP.test(nm))nm='';
- const k=['av','ev','bd','bdd','rx','ty','del','bgc','bgq'].includes(m.v)?m.v:'c';
- if(hist&&k!=='bd'&&k!=='bdd')return;
- if(!guardIn(room,d.u,k,hist))return;
- if(k==='bd'||k==='bdd'){gotBoard(room,d.u,nm,m,hist);return}
- if(k==='rx'){gotReact(room,d.u,m);return}
- if(k==='ty'){gotTy(room,d.u,nm);return}
- if(k==='del'){gotDel(room,d.u,m);return}
- if(k==='bgc'){gotBgChunk(room,d.u,m);return}
- if(k==='bgq'){gotBgReq(room,d.u,m);return}
- 
- if(k==='av'){if(b64ok(m.a)){setAvc(d.u,m.a);schedule();if(S.room===room)drawPbar()}return}
- if(m.v==='ev'){handleEv(room,Object.assign({},m,{u:d.u,n:nm,vf}));return}
- if(typeof m.id!=='string'||!idRe.test(m.id)||typeof m.x!=='string'||typeof m.t!=='number'||!isFinite(m.t))return;
- const cx=cleanText(m.x,room.official?200:500,room.official?5:10);if(!cx||linkN(cx)>(room.official?0:2))return;
- {const ld=room.lastTx||(room.lastTx=new Map()),q=ld.get(d.u),now=Date.now();if(q&&q.x===cx&&now-q.t<(room.official?60000:8000))return;ld.set(d.u,{x:cx,t:now})}
- const ct=Math.abs(m.t-Date.now())>3e5?Date.now():m.t;
- addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),bh:/^[0-9a-f]{16}$/.test(m.bh||'')?m.bh:'',bo:Number.isInteger(m.bo)&&m.bo>=0&&m.bo<=90?m.bo:0,mn:parseMn(m.mn)})}
-/* ntfyから届いた1件を処理（SSEでもポーリングでも共通） */
-function gotNtfy(room,d,hist){
- if(!d||d.event!=='message'||typeof d.message!=='string'||d.message.length>9000)return;if(hist&&!(Array.isArray(d.tags)&&d.tags.includes('bd')))return;
- if(d.id){room.seen=room.seen||new Set();if(room.seen.has(d.id))return;room.seen.add(d.id);if(room.seen.size>400){room.seen=new Set([...room.seen].slice(-200))}if(!hist)room.lastId=d.id}
- if(!hist)room.lastAct=Date.now();
- if(d.attachment){if(!hist)gotBigNtfy(room,d);return}
- let e;try{e=JSON.parse(d.message)}catch(x){return}
- if(e&&typeof e.b==='string')onIncoming(room,{u:e.u,n:e.n,b:e.b},hist)}
-/* 受信方式その2：定期的に取りにいく（Windowsのセキュリティソフト・プロキシ等でSSEが通らない環境向け） */
-const pollPref=()=>{const v=store.g('wc2.poll',0);return typeof v==='number'&&Date.now()-v<216e5};
-function startPoll(room){
- if(room.es){try{room.es.close()}catch(e){}room.es=null}
- clearTimeout(room.rt);room.paused=false;room.polling=true;
- const h={stop:false,close(){this.stop=true;clearTimeout(this.t);if(this.ac)try{this.ac.abort()}catch(e){}}};room.es=h;
- let since=room.lastId||String(Math.floor(Date.now()/1000)-(room.again?Math.min(43,Math.ceil((Date.now()-room.lastAct)/1000)+5):0)),fails=0;room.again=true;
- const tick=async()=>{if(h.stop||room.dead||room.es!==h)return;
-  try{h.ac=typeof AbortController!=='undefined'?new AbortController():null;nqUse();const to=setTimeout(()=>{try{h.ac&&h.ac.abort()}catch(e){}},15000);
-   const r=await fetch(NTFY+room.topic+'/json?poll=1&since='+encodeURIComponent(since),{cache:'no-store',signal:h.ac?h.ac.signal:undefined});clearTimeout(to);
-   nqHit(r);if(!r.ok)throw 0;const txt=await r.text();if(h.stop||room.dead||room.es!==h)return;
-   fails=0;stat(room,'on','接続済み');
-   for(const ln of txt.split('\n').slice(0,300)){if(!ln.trim())continue;let d;try{d=JSON.parse(ln)}catch(e){continue}if(d.id)since=d.id;gotNtfy(room,d)}}
-  catch(e){if(h.stop||room.dead||room.es!==h)return;fails++;stat(room,'wait',navigator.onLine?'再接続中…':'オフライン')}
-  if(!h.stop)h.t=setTimeout(tick,fails?Math.min(30000,6000*fails):(document.hidden?15000:6000))};
- tick()}
-function connect(room){
- if(room.es){room.es.close();room.es=null}
- clearTimeout(room.rt);clearTimeout(room.sseT);room.paused=false;room.lastAct=room.lastAct||Date.now();
- if(room.polling||pollPref()||typeof EventSource==='undefined'){startPoll(room);return}
- /* 初回は「今から」の分だけ受け取る。再接続時は、途切れていた間の分だけ取りにいく */
- const gap=room.again?Math.min(43000,Math.ceil((Date.now()-room.lastAct)/1000)+5):0;
- const es=room.es=new EventSource(NTFY+room.topic+'/sse'+(gap?'?since='+gap+'s':''));room.again=true;
- /* 一定時間つながらない、または一度も開かないままエラーになったら、ポーリングに切り替える */
- let opened=false,errs=0;
- const fallback=()=>{if(room.dead||room.es!==es)return;try{es.close()}catch(e){}room.es=null;store.s('wc2.poll',Date.now());startPoll(room)};
- room.sseT=setTimeout(()=>{if(!opened)fallback()},7000);
- es.onopen=()=>{opened=true;clearTimeout(room.sseT);room.lastAct=Date.now();stat(room,'on','接続済み')};
- es.onerror=()=>{if(room.dead||room.es!==es)return;
-  if(!opened&&++errs>=2){fallback();return}
-  es.close();room.es=null;stat(room,'wait',navigator.onLine?'再接続中…':'オフライン');
-  clearTimeout(room.rt);room.rt=setTimeout(()=>{if(!room.dead&&!room.es&&!room.paused)connect(room)},navigator.onLine?3000:8000)};
- es.onmessage=ev=>{if(typeof ev.data!=='string'||ev.data.length>12000)return;let d;try{d=JSON.parse(ev.data)}catch(e){return}gotNtfy(room,d)}}
-/* 長く画面を離れている間は接続を止め、戻ったら続きを取りにいく（入っている全部屋） */
-let hidAt=0;
-document.addEventListener('visibilitychange',()=>{if(document.hidden){hidAt=Date.now();return}
- const far=Date.now()-hidAt>20000;
- for(const r of S.rooms){r.badSince=r.st[0]==='on'?0:Date.now();if(!r.es||r.paused||far)connect(r)}});
-function addMsg(room,m){if(room.del&&room.del.has(m.id))return;const old=room.msgs.get(m.id);
- if(m.w&&m.w!==S.id&&m.u!==S.id)return;
- if(old){if(m.u===S.id&&old.vf!==m.vf){old.vf=m.vf;schedule()}if(old.pending||old.failed){old.pending=false;old.failed=false;schedule()}return}
- m.fresh=room.ready;room.msgs.set(m.id,m);if(!m.sys&&m.u!==S.id){const pp=room.pres.get(m.u);if(pp)pp.ty=0}
- if(m.u!==S.id&&room.ready&&!room.practice&&!m.sys&&!isMuted(m.u)){if(!room.firstUnread&&(S.room!==room||$('#chat').hidden||document.hidden))room.firstUnread=m.id;if(document.hidden)document.title='● ウェブチャット';if(S.room!==room){room.unread=(room.unread||0)+1;drawTabs()}if(m.t>room.openT-5000)notifyMsg(room,m,document.hasFocus()&&!document.hidden&&S.room===room&&!$('#chat').hidden)}
- trim30(room);schedule()}
-/* 部屋のメッセージは30件まで。超えたら古い順に消す */
-function trim30(room){const all=[...room.msgs.values()].sort((x,y)=>x.t-y.t),ch=all.filter(x=>!x.sys),sy=all.filter(x=>x.sys);for(let i=0;i<ch.length-30;i++)room.msgs.delete(ch[i].id);for(let i=0;i<sy.length-12;i++)room.msgs.delete(sy[i].id)}
-try{Object.keys(localStorage).filter(k=>k.startsWith('wc2.h.')).forEach(k=>localStorage.removeItem(k))}catch(e){}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)document.title='ウェブチャット'});
-addEventListener('online',()=>{for(const r of S.rooms)stat(r,'wait','再接続中…')});
-let rq=0;function schedule(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;render()})}
+$('#memList').addEventListener('click',e=>{const w=e.target.closest('[data-wh]'),m=e.target.closest('[data-mu]');
+ if(w){$('#memDlg').hidden=true;setTo(w.dataset.wh);return}
+ if(m){const u=m.dataset.mu,i=MUTE.indexOf(u);if(i>=0)MUTE.splice(i,1);else MUTE.push(u);saveMute();openMem();render();drawBoard();toast(i>=0?'ミュートを解除しました':'この人をミュートしました')}});
 
-const kf=x=>x.sys?'':x.u+'|'+(x.n||'');   /* 同じ人（IDと名前が同じ）が続くあいだは、アイコンを省略する */
-function render(first){
- const room=S.room,box=$('#msgs');if(!room)return;
- const near=first||box.scrollHeight-box.scrollTop-box.clientHeight<96;
- let list=[...room.msgs.values()].sort((a,b)=>a.t-b.t);if(list.length>300)list=list.slice(-300);
- let h='',prev=null,fresh=0,mineNew=false,fuN=0;
- if(room.firstUnread){const ix=list.findIndex(x=>x.id===room.firstUnread);if(ix>=0)fuN=list.slice(ix).filter(x=>!x.sys&&x.u!==S.id&&!isMuted(x.u)).length}
- if(!list.length)h=`<div class="hint"><div class="ring"><svg class="ic"><use href="#i-chat"/></svg></div><b style="color:var(--text)">まだ誰もいません</b><br>この部屋名を伝えると、相手も同じ部屋に入れます。</div>`;
- for(const m of list){
-  if(m.sys?isMuted(m.su):(m.u!==S.id&&isMuted(m.u)))continue;
-  const newDay=!prev||dayK(prev.t)!==dayK(m.t);
-  if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
-  if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
-  if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
-  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m);
-  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
-  if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
-  const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row ${sy.right?'r':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
-  if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
-  prev=m}
- box.innerHTML=h;applyUbg(box);
- if(near||mineNew){box.scrollTop=box.scrollHeight;room.unseen=0;$('#jump').hidden=true}
- else{box.scrollTop=room.lastTop||0;if(fresh){room.unseen+=fresh;$('#jump').hidden=false;$('#jump').textContent='↓ 新着 '+room.unseen}}
- if(first&&room.firstUnread){const dv=box.querySelector('.newline');if(dv){box.scrollTop=Math.max(0,dv.offsetTop-12);$('#jump').hidden=false;$('#jump').textContent='↓ 最新へ'+(fuN?'（'+fuN+'件）':'')}}}
-$('#msgs').addEventListener('scroll',()=>{const b=$('#msgs');if(S.room)S.room.lastTop=b.scrollTop;if(b.scrollHeight-b.scrollTop-b.clientHeight<96){$('#jump').hidden=true;if(S.room)S.room.unseen=0}},{passive:true});
-$('#jump').onclick=()=>{const b=$('#msgs');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})};
-$('#msgs').addEventListener('click',e=>{const r=e.target.closest('[data-retry]');if(!r||!S.room)return;const m=S.room.msgs.get(r.dataset.retry);if(m)post(m)});
-
-/* ---------- 送信 ---------- */
-const ta=$('#ta');
-function autosize(){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,136)+'px';const n=[...ta.value].length;$('#send').classList.toggle('rdy',!!ta.value.trim());const mx=S.room&&S.room.official?200:500,c=$('#cnt');c.hidden=n<mx*.9;c.textContent=n+'/'+mx}
-ta.addEventListener('input',autosize);
-ta.addEventListener('input',()=>{if(ta.value.trim())sendTy(S.room);drawMn()});
-ta.addEventListener('click',drawMn);ta.addEventListener('keyup',e=>{if(e.key.startsWith('Arrow'))drawMn()});
-ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!coarse){e.preventDefault();send()}});
-$('#send').onclick=send;
-$('#mnList').addEventListener('pointerdown',e=>e.preventDefault());
-$('#mnList').addEventListener('click',e=>{const b=e.target.closest('[data-mn]');if(b)insMn(b.dataset.mn)});
-$('#mnBtn').addEventListener('pointerdown',e=>e.preventDefault());
-$('#mnBtn').onclick=()=>{const c=ta.selectionStart==null?ta.value.length:ta.selectionStart,v=ta.value,pre=v.slice(0,c),sp=pre&&!/\s$/.test(pre)?' ':'';ta.value=pre+sp+'@'+v.slice(c);const pos=c+sp.length+1;ta.focus();try{ta.setSelectionRange(pos,pos)}catch(e){}autosize();drawMn()};
-function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){shake($('.compbox'));ta.focus();return}
- const off=!!room.official;
- const x=cleanText(raw,off?200:500,off?5:10);if(!x){toast('送れない文字だけが含まれています');return}
- if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは送れません':'リンクは1通に2つまでです');return}
- {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,bh:'0'.repeat(16),bo:90,mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
- /* 練習の部屋では、送信の間隔を気にせず試せるようにする */
- const bad=room.practice?'':gateChat(x,off,room.norm);if(bad){toast(bad);return}
- const sb=$('#send');sb.classList.add('cool','fly');setTimeout(()=>sb.classList.remove('cool'),off?5000:CD_CHAT);setTimeout(()=>sb.classList.remove('fly'),450);if(coarse&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
- const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,bh:myBh(room),bo:myBo(),pending:true,fresh:true};
- room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m);ta.focus()}
-/* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
-async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&(room.pres.size<=1||Date.now()-(room.avT||0)<300000))return;room.avT=Date.now();
- try{const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}catch(e){room.avT=0}}
-async function post(m){const room=S.room;if(!room)return;let st=0,er='';
- if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
- m.failed=false;m.pending=true;m.err='';
- try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
-  let r=null;
-  for(let i=0;i<3&&!room.dead;i++){
-   try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
-    r=await relayRaw(room,body,false,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;if(st===429){let t='';try{t=await r.text()}catch(x){}if(/42908|daily|quota|1日/i.test(t)){er='HTTP 429 今日の送信上限';OUT.until=Date.now()+36e5;r=null;break}}r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
-   if(i<2)await new Promise(ok=>setTimeout(ok,1500*(i+1)))}
-  if(!r)throw 0;m.pending=false;
-  try{const j=await r.json();m.vf=j.vf==='ok'||j.vf==='ng'?j.vf:''}catch(e){}
-  postAv(room);setTimeout(()=>{if(m.pending&&!room.dead){m.pending=false;schedule()}},4000)}
- catch(e){if(!er&&e&&e.message)er=String(e.message).slice(0,40);m.pending=false;m.failed=true;m.err=er;toast(st===429?'中継サービスの送信制限です（'+er+'）。しばらくしてからタップで再送してください':'送信できませんでした'+(er?'（'+er+'）':''))}
- if(S.room===room)schedule()}
+/* ---------- 伝言板 ---------- */
+function cleanNote(m){if(!m||typeof m!=='object')return null;const t=Number(m.t);if(!idRe.test(m.id||'')||!idOk(m.u)||!Number.isFinite(t))return null;
+ const x=cleanText(m.x,100,3);if(!x)return null;
+ return {id:m.id,u:m.u,n:cleanNick(m.n),x,t}}
+function addBoard(room,m,hist){
+ if(room.bdDel.has(m.id)||room.board.has(m.id))return;
+ const off=room.official;
+ if(off&&linkN(m.x)>0)return;
+ if(!off&&linkN(m.x)>2)return;
+ room.board.set(m.id,m);
+ /* 1人あたりの上限（通常3件・公式1件）と、部屋全体の上限（通常40件・公式20件） */
+ const mine=[...room.board.values()].filter(v=>v.u===m.u).sort((a,b)=>a.t-b.t);
+ while(mine.length>(off?1:3))room.board.delete(mine.shift().id);
+ while(room.board.size>(off?20:40)){const f=[...room.board.values()].sort((a,b)=>a.t-b.t)[0];room.board.delete(f.id)}
+ if(!hist&&m.u!==S.id&&!isMuted(m.u)&&$('#bdDlg').hidden&&room===S.room){room.bdNew++;drawBdBadge()}
+ if(!$('#bdDlg').hidden&&room===S.room)drawBoard()}
+function drawBdBadge(){const r=S.room,b=$('#bdBadge');if(!b)return;const n=r?r.bdNew:0;b.hidden=!n;b.textContent=n>9?'9+':String(n)}
+function drawBoard(){const r=S.room,el=$('#bdList');if(!r||!el)return;
+ const list=[...r.board.values()].filter(m=>!isMuted(m.u)).sort((a,b)=>b.t-a.t);
+ if(!list.length){el.innerHTML='<p class="xs mute" style="padding:16px 0;text-align:center">'+(r.bdErr?'伝言を読み込めませんでした。「再読み込み」を試してください。':'まだ伝言はありません。')+'</p>';return}
+ el.innerHTML=list.map(m=>`<div class="bdn"><div class="row2" style="gap:8px">${avHtml(m.u,m.n)}<span class="pcol"><b class="xs ell1">${whoHtml(m.u,m.n)}${vfHtml(fvf(m.u,m.n))}</b><span class="xs faint">${fmtD(m.t)} ${fmtT(m.t)}</span></span>${m.u===S.id?`<button class="chip" data-bddel="${esc(m.id)}" style="height:26px;padding:0 10px;font-size:11px">消す</button>`:''}</div><div class="bdt">${linkify(m.x)}</div></div>`).join('')}
+async function fetchBoard(room){if(!room||room.practice)return;room.bdErr=false;try{const res=await fetch(topicUrl(room)+'/json?poll=1&since=24h',{cache:'no-store'});if(!res.ok){room.bdErr=true;return}const tx=await res.text();
+ for(const l of tx.split('\n')){if(!l.trim())continue;try{const d=JSON.parse(l);if(d.event!=='message')continue;const w=JSON.parse(d.message);if(!w||!w.b)continue;const m=await dec(w.b,room.key);if(!m)continue;
+  if(m.v==='bdd'&&idRe.test(m.id||'')&&idOk(m.u)&&m.u===w.u){room.bdDel.add(m.id);room.board.delete(m.id);continue}
+  if(m.v==='bd'){const c=cleanNote(m);if(c&&c.u===w.u)addBoard(room,c,true)}}catch(e){}}}catch(e){room.bdErr=true}}
+async function openBoard(){const r=S.room;if(!r)return;r.bdNew=0;drawBdBadge();$('#bdTa').maxLength=r.official?60:100;$('#bdTa').placeholder=r.official?'伝言を書く（公式は60文字まで・URL不可）':'伝言を書く';drawBoard();$('#bdDlg').hidden=false;await fetchBoard(r);drawBoard()}
+$('#bdBtn').onclick=openBoard;$('#bdClose').onclick=()=>{$('#bdDlg').hidden=true};
+$('#bdReload').onclick=async()=>{const r=S.room;if(!r)return;$('#bdList').innerHTML='<p class="xs mute" style="padding:16px 0;text-align:center">読み込み中…</p>';await fetchBoard(r);drawBoard()};
+$('#bdDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#bdPost').onclick=async()=>{const r=S.room;if(!r)return;
+ const off=r.official,x=cleanText($('#bdTa').value,off?60:100,off?2:3);if(!x){toast('伝言を入れてください');return}
+ if(off&&linkN(x)>0){toast('公式部屋の伝言板にはURLを書けません');return}
+ if(!off&&linkN(x)>2){toast('URLは2つまでです');return}
+ const g=gateBoard(x,off,r.norm);if(g){toast(g);return}
+ $('#bdTa').value='';const m={id:uid(),u:S.id,n:nickFor(r),x,t:Date.now()};
+ addBoard(r,m,true);drawBoard();
+ if(r.practice){toast('書き込みました（練習なので外には送られません）');return}
+ try{await relay(r,Object.assign({v:'bd'},m));toast('伝言板に書き込みました')}catch(e){toast('送信に失敗しました')}};
+$('#bdList').addEventListener('click',async e=>{const b=e.target.closest('[data-bddel]');if(!b)return;const r=S.room;if(!r)return;const id=b.dataset.bddel,m=r.board.get(id);if(!m||m.u!==S.id)return;
+ r.bdDel.add(id);r.board.delete(id);drawBoard();if(!r.practice)try{await relay(r,{v:'bdd',id,u:S.id})}catch(e){}});
 
 /* ---------- 返信・リアクション ---------- */
 const RXS=['👍','❤️','😂','😮','😢','🙏'];
-function parseRp(r){if(!r||typeof r!=='object'||typeof r.id!=='string'||!idRe.test(r.id))return null;const x=cleanText(r.x,40,1);return x?{id:r.id.slice(0,24),x,u:idOk(r.u)?r.u:'',n:cleanNick(r.n)}:null}
-function quoteHtml(room,rp){if(!rp)return '';const o=room.msgs.get(rp.id),ok=o&&!o.sys&&!o.w,gone=room.del&&room.del.has(rp.id),tx=gone?'（取り消されました）':ok?cleanText(o.x,40,1):rp.x,nm=ok?(aliasOf(o.u)||o.n||o.u):'元のメッセージ';return `<div class="qt"><span class="qn">${esc(nm)}</span>${esc(tx)}</div>`}
-function rxAgg(m){const o={};if(m.rx)for(const u in m.rx){if(u!==S.id&&isMuted(u))continue;(o[m.rx[u]]=o[m.rx[u]]||[]).push(u)}return o}
-function rxHtml(m){const a=rxAgg(m),ks=RXS.filter(e=>a[e]);if(!ks.length)return '';return '<div class="rxs">'+ks.map(e=>`<button class="rxc${a[e].includes(S.id)?' me':''}" data-rxc="${esc(m.id)}|${e}">${e} ${a[e].length}</button>`).join('')+'</div>'}
-function gotReact(room,u,m){if(typeof m.id!=='string'||!idRe.test(m.id)||!(m.e===''||RXS.includes(m.e)))return;
- const t=room.msgs.get(m.id.slice(0,24));if(!t||t.sys||t.w)return;t.rx=t.rx||{};if(m.e)t.rx[u]=m.e;else delete t.rx[u];schedule()}
-function setReact(room,mid,e){const m=room.msgs.get(mid);if(!m||m.sys||m.w||!RXS.includes(e))return;
- const cur=(m.rx&&m.rx[S.id])||'',ne=cur===e?'':e;
- if(!room.practice&&!bucket('rxs|'+room.topic,room.official?2:5,room.official?8000:3000)){toast('リアクションは少し間をあけてください');return}
- m.rx=m.rx||{};if(ne)m.rx[S.id]=ne;else delete m.rx[S.id];schedule();
- if(!room.practice)relay(room,{v:'rx',id:mid,u:S.id,e:ne}).catch(()=>{})}
-const UNSEND=60000;
-function gotDel(room,u,m){if(typeof m.id!=='string'||!idRe.test(m.id))return;const id=m.id.slice(0,24);room.del=room.del||new Set();const t=room.msgs.get(id);if(t){if(t.u!==u||t.sys)return;room.msgs.delete(id);addSys(room,'dl'+id,(nameOf(u)||u)+'がメッセージを取り消しました',u)}room.del.add(id);if(room.del.size>300)room.del.delete(room.del.values().next().value);if(room.firstUnread===id)room.firstUnread='';schedule()}
-async function unsend(){const r=S.room,m=r&&r.msgs.get(MA.id);$('#maDlg').hidden=true;if(!m||m.u!==S.id)return;if(Date.now()-m.t>=UNSEND){toast('取り消せる時間（1分）を過ぎました');return}
- if(!r.practice){try{const res=await relay(r,{v:'del',id:m.id,u:S.id});if(!res.ok)throw 0}catch(e){toast('取り消せませんでした。もう一度ためしてください');return}}
- r.msgs.delete(m.id);(r.del||(r.del=new Set())).add(m.id);if(r.firstUnread===m.id)r.firstUnread='';render();toast('送信を取り消しました')}
-const MA={id:''};
-function openMa(id){const r=S.room,m=r&&r.msgs.get(id);if(!m||m.sys||m.pending||m.failed)return;const own=m.u===S.id,canDel=own&&Date.now()-m.t<UNSEND;if(m.w&&!canDel)return;MA.id=id;const cur=(m.rx&&m.rx[S.id])||'';
- $('#maRx').hidden=!!m.w;$('#maReply').hidden=!!m.w;$('#maDel').hidden=!canDel;if(canDel)$('#maDel').textContent='送信を取り消す（あと'+secs(UNSEND-(Date.now()-m.t))+'秒・相手の画面からも消えます）';
- $('#maPv').innerHTML=`<b>${whoHtml(m.u,m.n)}</b> <span class="xs faint">${fmtT(m.t)}</span><div class="mute bdt">${esc([...m.x].slice(0,80).join(''))}</div>`;
- $('#maRx').innerHTML=RXS.map(e=>`<button class="chip${cur===e?' on':''}" data-e="${e}">${e}</button>`).join('');$('#maDlg').hidden=false}
-$('#msgs').addEventListener('click',e=>{if(e.target.closest('[data-retry]'))return;
- const rc=e.target.closest('[data-rxc]');if(rc){const [id,em]=rc.dataset.rxc.split('|');if(S.room)setReact(S.room,id,em);return}
- if(e.target.closest('a'))return;const b=e.target.closest('.bub');if(!b||!S.room)return;const row=b.closest('.row[data-mid]');if(!row)return;
- try{if(String(getSelection()).length>0)return}catch(x){}openMa(row.dataset.mid)});
-$('#maRx').addEventListener('click',e=>{const b=e.target.closest('[data-e]');if(!b||!S.room)return;$('#maDlg').hidden=true;setReact(S.room,MA.id,b.dataset.e)});
-$('#maReply').onclick=()=>{const r=S.room,m=r&&r.msgs.get(MA.id);$('#maDlg').hidden=true;if(!m)return;r.rpTo={id:m.id,u:m.u,n:m.n||'',x:cleanText(m.x,40,1)};drawRp();ta.focus()};
-$('#maDel').onclick=unsend;
+const MA={id:null};
+function setReply(m){const r=S.room;if(!r)return;if(!m){r.reply=null;$('#rpBar').hidden=true;return}
+ const nm=aliasOf(m.u)||m.n||m.u;r.reply={id:m.id,u:m.u,n:nm,x:m.x.slice(0,40)};
+ $('#rpTx').textContent='↩ '+nm+': '+r.reply.x;$('#rpBar').hidden=false;$('#ta').focus()}
+$('#rpX').onclick=()=>setReply(null);
+function applyRx(room,m,u,e,on){if(!m.rx)m.rx={};const a=m.rx[e]||(m.rx[e]=[]),i=a.indexOf(u);
+ if(on){if(i<0&&a.length<50)a.push(u)}else if(i>=0)a.splice(i,1);if(!a.length)delete m.rx[e];if(room===S.room)render()}
+async function toggleRx(id,e){const r=S.room;if(!r)return;const m=r.msgs.get(id);if(!m||m.sys||m.to)return;
+ const on=!((m.rx&&m.rx[e]||[]).includes(S.id));
+ if(!r.practice&&!bucket('myrx|'+r.topic,1,r.official?8000:3000)){toast('少し間をあけてください');return}
+ applyRx(r,m,S.id,e,on);if(!r.practice)try{await relay(r,{v:'rx',id,e,on:on?1:0,u:S.id})}catch(x){}}
+function openMA(id){const r=S.room;if(!r)return;const m=r.msgs.get(id);if(!m||m.sys)return;MA.id=id;
+ const nm=aliasOf(m.u)||m.n||m.u;$('#maPv').innerHTML=`<span class="xs mute">${esc(nm)} ・ ${fmtT(m.t)}</span><span class="ell1">${esc(m.x)}</span>`;
+ $('#maRx').innerHTML=m.to?'':RXS.map(e=>{const on=(m.rx&&m.rx[e]||[]).includes(S.id);return `<button class="chip${on?' on':''}" data-rx="${e}">${e}</button>`}).join('');
+ const canDel=m.u===S.id&&!m.pend&&!m.fail&&Date.now()-m.t<60000;
+ $('#maDel').hidden=!canDel;
+ $('#maDlg').hidden=false}
+$('#maDel').onclick=async()=>{const r=S.room,id=MA.id;$('#maDlg').hidden=true;if(!r||!id)return;const m=r.msgs.get(id);if(!m||m.u!==S.id)return;
+ r.msgs.delete(id);if(r.del)r.del.add(id);render();
+ if(!r.practice)try{await relay(r,{v:'del',id,u:S.id,t:Date.now()});toast('送信を取り消しました')}catch(e){toast('取り消しの送信に失敗しました')}};
+$('#maReply').onclick=()=>{const r=S.room,id=MA.id;$('#maDlg').hidden=true;if(r&&id&&r.msgs.has(id))setReply(r.msgs.get(id))};
 $('#maClose').onclick=()=>{$('#maDlg').hidden=true};
 $('#maDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-function drawRp(){const r=S.room;$('#rpBar').hidden=!(r&&r.rpTo);if(r&&r.rpTo)$('#rpTx').textContent='返信：'+(aliasOf(r.rpTo.u)||r.rpTo.n||r.rpTo.u)+'「'+r.rpTo.x+'」'}
-$('#rpX').onclick=()=>{if(S.room){S.room.rpTo=null;drawRp()}};
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#maDlg').hidden){$('#maDlg').hidden=true;e.stopImmediatePropagation()}},true);
-/* ---------- 伝言板 ---------- */
-const trimBoard=room=>{const lim=room.official?1:3,tot=room.official?20:40,a=[...room.board.values()].sort((p,q)=>q.t-p.t),cnt={};for(const b of a){cnt[b.u]=(cnt[b.u]||0)+1;if(cnt[b.u]>lim)room.board.delete(b.id)}
- const r=[...room.board.values()].sort((p,q)=>q.t-p.t);for(let i=tot;i<r.length;i++)room.board.delete(r[i].id)};
-function bdBadge(){const r=S.room,n=r?r.bdNew||0:0,b=$('#bdBadge');b.hidden=!n;b.textContent=n>9?'9+':n}
-function gotBoard(room,u,nm,m,hist){
- if(m.v==='bdd'){if(typeof m.id!=='string'||!idRe.test(m.id))return;const x=room.board.get(m.id);room.bdel.add(m.id);if(room.bdel.size>200)room.bdel.delete(room.bdel.values().next().value);
-  if(x&&x.u===u){room.board.delete(m.id);if(S.room===room)drawBoard()}return}
- if(typeof m.id!=='string'||!idRe.test(m.id)||typeof m.x!=='string'||typeof m.t!=='number'||!isFinite(m.t))return;
- if(room.board.has(m.id)||room.bdel.has(m.id))return;
- const x=cleanText(m.x,room.official?60:100,room.official?2:3);if(!x||linkN(x)>(room.official?0:2))return;
- const now=Date.now(),t=Math.min(m.t,now);if(now-t>13*36e5)return;
- if(u!==S.id&&[...room.board.values()].some(b=>b.u===u&&b.x===x))return;
- room.board.set(m.id,{id:m.id,u,n:nm,t,x});trimBoard(room);
- if(!hist&&u!==S.id&&room.bdReady&&!isMuted(u)&&$('#bdDlg').hidden){room.bdNew=(room.bdNew||0)+1;bdBadge()}
- if(S.room===room)drawBoard()}
-async function loadBoard(room){room.bdLoadT=Date.now();room.bdState='loading';if(S.room===room)drawBoard();let ok=false;
- try{const r=await fetch(NTFY+room.topic+'/json?poll=1&since=12h&tags=bd',{cache:'no-store'});
-  if(r.ok){ok=true;const txt=await r.text();for(const ln of txt.split('\n').slice(0,200)){if(!ln.trim())continue;let d;try{d=JSON.parse(ln)}catch(e){continue}gotNtfy(room,d,true)}}}catch(e){}
- room.bdState=ok?'ok':'fail';if(ok)room.bdTry=0;else if(!room.dead&&(room.bdTry=(room.bdTry||0)+1)<=3)setTimeout(()=>{if(!room.dead)loadBoard(room)},5000*room.bdTry);
- setTimeout(()=>{room.bdReady=true},1500);if(S.room===room)drawBoard()}
-function drawBoard(){const r=S.room,el=$('#bdList');if(!r||$('#bdDlg').hidden)return;
- const l=[...r.board.values()].filter(b=>!isMuted(b.u)).sort((a,b)=>b.t-a.t);
- el.innerHTML=l.length?l.map(b=>{const me=b.u===S.id;return `<div class="bdn"><div class="row2" style="gap:12px">${avHtml(b.u,b.n,'')}<span class="pcol"><b class="ell1">${whoHtml(b.u,b.n)}${vfHtml(me?'':fvf(b.u,b.n))}</b><span class="xs faint">${fmtD(b.t)} ${fmtT(b.t)}</span></span>${me?`<button class="ib" data-bdd="${esc(b.id)}" aria-label="削除"><svg class="ic"><use href="#i-x"/></svg></button>`:''}</div><div class="bdt">${linkify(b.x)}</div></div>`}).join(''):(r.practice||r.bdState==='ok'||!r.bdState?'<p class="xs mute">まだ伝言はありません。</p>':r.bdState==='loading'?'<p class="xs mute">読み込み中…</p>':'<p class="xs mute" style="color:var(--danger)">伝言を読み込めませんでした。通信を確かめて、右上の「再読み込み」を押してください。</p>')}
-function bdTick(){const b=$('#bdPost');if(!b||!S.room)return;const w=cdSt(S.room.norm).board+cdBoard(S.room)-Date.now();b.disabled=w>0;b.textContent=w>0?'あと'+secs(w)+'秒':'書き込む'}
-setInterval(()=>{if(!$('#bdDlg').hidden)bdTick()},500);
-function openBoard(){const r=S.room;if(!r)return;r.bdNew=0;bdBadge();$('#bdDlg').hidden=false;drawBoard();bdTick();if(!r.practice&&(Date.now()-(r.bdLoadT||0)>20000||r.bdState==='fail'))loadBoard(r);if(!coarse)setTimeout(()=>$('#bdTa').focus(),60)}
-async function postBoard(){const r=S.room;if(!r)return;const off=!!r.official,raw=$('#bdTa').value,x=cleanText(raw,off?60:100,off?2:3);
- if(!x){if(raw.trim())toast('書けない文字だけが含まれています');return}
- if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは書けません':'リンクは1つの伝言に2つまでです');return}
- if(r.practice){const pm={id:uid(),u:S.id,n:nickFor(r),t:Date.now(),x};r.board.set(pm.id,pm);$('#bdTa').value='';drawBoard();toast('練習なので、ほかの人には届きません');return}
- const bad=gateBoard(x,off,r.norm);if(bad){toast(bad);bdTick();return}
- const m={id:uid(),u:S.id,n:nickFor(r),t:Date.now(),x};r.board.set(m.id,m);trimBoard(r);$('#bdTa').value='';drawBoard();bdTick();
- try{const body=await enc({v:'bd',id:m.id,u:S.id,t:m.t,x},r.key);const res=await relayRaw(r,body,false,m.n,'bd');if(!res.ok)throw 0}
- catch(e){r.board.delete(m.id);cdSt(r.norm).board=0;saveCd();if(S.room===r){drawBoard();$('#bdTa').value=x;bdTick()}toast('書き込めませんでした')}}
-async function delBoard(id){const r=S.room;if(!r)return;const b=r.board.get(id);if(!b||b.u!==S.id)return;
- if(!bucket('mydel',3,4000)){toast('削除は少し間をあけてください');return}
- r.board.delete(id);r.bdel.add(id);drawBoard();if(r.practice)return;
- try{const body=await enc({v:'bdd',id,u:S.id},r.key);await relayRaw(r,body,false,nickFor(r),'bd')}catch(e){}}
-$('#bdBtn').onclick=openBoard;
-$('#bdReload').onclick=()=>{const r=S.room;if(r&&!r.practice){r.bdTry=0;loadBoard(r)}};
-$('#bdPost').onclick=postBoard;
-$('#bdClose').onclick=()=>{$('#bdDlg').hidden=true};
-$('#bdDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-$('#bdList').addEventListener('click',e=>{const d=e.target.closest('[data-bdd]');if(d)delBoard(d.dataset.bdd)});
-$('#bdTa').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!coarse){e.preventDefault();postBoard()}});
-/* 外部リンクは、開く前に確認する */
-let LK='';
-document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a||!(a.closest('#msgs')||a.closest('#bdList')))return;
- e.preventDefault();LK=a.href;let h='';try{h=new URL(LK).hostname}catch(x){}
- $('#lkHost').textContent=h+(/xn--/i.test(h)?'　（似た文字を使ったアドレスの可能性があります）':'');$('#lkUrl').textContent=LK.slice(0,300);$('#lkDlg').hidden=false});
-$('#lkNo').onclick=()=>{$('#lkDlg').hidden=true};
-$('#lkGo').onclick=()=>{$('#lkDlg').hidden=true;try{window.open(LK,'_blank','noopener,noreferrer')}catch(e){}};
-$('#lkDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-addEventListener('keydown',e=>{if(e.key!=='Escape')return;for(const d of ['#jnDlg','#rmDlg'])if(!$(d).hidden){$(d).hidden=true;e.stopImmediatePropagation();return}if(!$('#tmDlg').hidden){$('#tmDlg').hidden=true;e.stopImmediatePropagation();return}if(!$('#agDlg').hidden){$('#agDlg').hidden=true;AG.cb=null;e.stopImmediatePropagation();return}if(!$('#lkDlg').hidden){$('#lkDlg').hidden=true;e.stopImmediatePropagation();return}if(!$('#bdDlg').hidden){$('#bdDlg').hidden=true;e.stopImmediatePropagation()}},true);
+$('#maRx').addEventListener('click',e=>{const b=e.target.closest('[data-rx]');if(!b)return;const id=MA.id;$('#maDlg').hidden=true;if(id)toggleRx(id,b.dataset.rx)});
 
-/* ---------- 戻る・リンク ---------- */
-function backToEntry(){closeRoom();show(S.id?'home':'entry',true);drawHome();tutHook('back')}
-$('#cBack').onclick=()=>{const r=S.room;if(r&&!r.practice){drawerOpen()?closeDrawer(true):openDrawer()}else goBackUI()};
-$('#hscrim').addEventListener('click',()=>closeDrawer(true));
-addEventListener('keydown',e=>{if(e.key==='Escape'&&drawerOpen()&&!document.querySelector('.tut:not([hidden])'))closeDrawer(true)});
-/* 戻る: 埋め込み(iframe)ではブラウザ履歴を使わず、画面を直接切り替える */
-const useHist=(()=>{try{return window.self===window.top}catch(e){return false}})();
+function makeRoom(name){const norm=normRoom(name),off=isOffN(norm),rn=off?OFFN:norm,disp=off?OFFNAME:name.trim();return {name:disp,norm:rn,official:off,topic:topicOf(rn),key:null,msgs:new Map(),board:new Map(),bdDel:new Set(),bdNew:0,es:null,since:Date.now(),pres:new Map(),to:null,reply:null,readAt:Date.now(),markAt:0,unread:0,lastTx:'',ty:new Map(),del:new Set()}}
+
+const idOk=u=>typeof u==='string'&&/^[A-Z0-9]{1,6}$/.test(u);
+const cleanNick=n=>cleanText(n,12,1);
+function cleanMsg(m,off){if(!m||typeof m!=='object')return null;const t=Number(m.t);if(!idRe.test(m.id||'')||!idOk(m.u)||!Number.isFinite(t))return null;
+ const x=cleanText(m.x,off?200:500,off?5:10);if(!x)return null;
+ if(off&&linkN(x)>0)return null;
+ if(!off&&linkN(x)>2)return null;
+ let n=cleanNick(m.n);if(off&&IMP.test(n))n='';
+ const rp=(m.rp&&typeof m.rp==='object'&&idRe.test(m.rp.id||''))?{id:m.rp.id,n:cleanNick(m.rp.n),x:cleanText(m.rp.x,40,1)}:null;
+ return {id:m.id,u:m.u,n,x,t,c:hexOk(m.c)?m.c:'',k:hexOk(m.k)?m.k:'',s:(m.s==='r'||m.s==='l')?m.s:'',to:idOk(m.to)?m.to:'',rp,rx:{},gh:(typeof m.gh==='string'&&/^[0-9a-f]{16}$/.test(m.gh))?m.gh:'',bo:Number.isFinite(+m.bo)?Math.max(0,Math.min(90,Math.round(+m.bo))):0}}
+
+async function handlePayload(room,d,hist){
+ if(!d||d.event!=='message')return;
+ let w;try{w=JSON.parse(d.message)}catch(e){return}
+ if(!w||typeof w!=='object'||!w.b||!idOk(w.u)||w.u===S.id)return;
+ /* 自分のIDと同じIDが外から来た（別の端末など）ときは無視する */
+ const m=await dec(w.b,room.key);if(!m)return;
+ if(m.v==='bgb'){gotBigBg(room,d,m,w.u);return}
+ if(m.v==='bgc'){gotBgChunk(room,m,w.u);return}
+ if(m.v==='bgq'){gotBgReq(room,m,w.u);return}
+ if(m.v==='avb'){gotBigNtfy(room,d);return}
+ /* 封筒(w.u)と暗号文の中(m.u)が違う＝別の人のIDを騙った偽装メッセージ */
+ if(m.u!==w.u)return;
+ if(!guardIn(room,w.u,m.v||'c',hist))return;
+ /* 入退室・在室の合図 */
+ if(m.v==='ev'){if(m.k==='leave'){leavePres(room,m.u,cleanNick(m.n),m.t);if(room===S.room){drawPbar();render()}}
+  else if(m.k==='join'||m.k==='ping'){if(b64ok(m.a))setAvc(m.u,m.a);const first=!room.pres.has(m.u);touchPres(room,m.u,cleanNick(m.n),m.t,m.k==='join');if(m.k==='join'&&!hist){if(first)postEv(room,'ping',true);if(MYAV)postAv(room);if(cleanBg(STY.bgv))ensureBg(room);if(first)upBig(room)}if(room===S.room)drawPbar()}return}
+ /* アイコン更新の合図 */
+ if(m.v==='av'){if(b64ok(m.a)){setAvc(m.u,m.a);if(room===S.room)render()}return}
+ if(m.v==='ty'){if(!hist&&!isMuted(m.u)){if(!room.ty)room.ty=new Map();room.ty.set(m.u,Date.now());if(room===S.room)drawPbar()}return}
+ if(m.v==='del'){if(idRe.test(m.id||'')){if(!room.del)room.del=new Set();room.del.add(m.id);const o=room.msgs.get(m.id);if(o&&o.u===m.u){room.msgs.delete(m.id);if(room===S.room)render()}}return}
+ /* 伝言板 */
+ if(m.v==='bdd'){if(idRe.test(m.id||'')){room.bdDel.add(m.id);room.board.delete(m.id);if(!$('#bdDlg').hidden&&room===S.room)drawBoard()}return}
+ if(m.v==='bd'){const c=cleanNote(m);if(c)addBoard(room,c,hist);return}
+ /* リアクション */
+ if(m.v==='rx'){if(idRe.test(m.id||'')&&RXS.includes(m.e)){const o=room.msgs.get(m.id);if(o&&!o.sys&&!o.to)applyRx(room,o,m.u,m.e,!!m.on)}return}
+ const c=cleanMsg(m,room.official);if(!c)return;
+ if(c.gh&&!BGC[c.gh]&&!hist)reqBg(room,c.gh);
+ if(b64ok(m.a))setAvc(c.u,m.a);
+ if(!hist)touchPres(room,c.u,c.n,c.t,false);
+ if(room.ty&&room.ty.delete(c.u)&&room===S.room)drawPbar();
+ addMsg(room,c,hist);
+ if(!hist&&!isMuted(c.u)){const cur=room===S.room&&!$('#chat').hidden;if(!cur){room.unread++;drawTabs()}notifyMsg(room,c,cur&&!document.hidden)}}
+
+const status=(cls,txt)=>{const d=$('#dot');d.className='dot '+cls;$('#stxt').textContent=txt};
+const setConnected=room=>{if(room!==S.room)return;status('on',(room.key?'暗号化 ・ ':'平文 ・ ')+(room.official?'公式部屋（制限強め）':'接続中'))};
+
+async function connect(room){
+ room.key=await getKey(room.norm);
+ setConnected(room);
+ let since='2h',retry=1500,pollId=0;
+ /* EventSource(SSE) がブロックされたり、途中で切れても取りこぼさないよう、poll を併用 */
+ const poll=async(initial)=>{if(room.dead)return;
+  if(OUT.until>Date.now())return;
+  if(!initial&&nq()<12)return;
+  try{nqUse();const res=await fetch(topicUrl(room)+'/json?poll=1&since='+since,{cache:'no-store'});nqHit(res);
+   if(!res.ok)return;const tx=await res.text();
+   for(const l of tx.split('\n')){if(!l.trim())continue;try{const d=JSON.parse(l);if(d.time)since=String(d.time);await handlePayload(room,d,initial)}catch(e){}}
+   if(initial){render(true);drawPbar()}
+  }catch(e){}};
+ await poll(true);
+ const es=()=>{if(room.dead)return;if(room.es)room.es.close();
+  const s=new EventSource(topicUrl(room)+'/sse?since='+since);room.es=s;
+  s.onopen=()=>{retry=1500;clearTimeout(room.discT);room.discT=0;setConnected(room)};
+  s.onmessage=async e=>{try{const d=JSON.parse(e.data);if(d.time)since=String(d.time);await handlePayload(room,d,false)}catch(x){}};
+  s.onerror=()=>{s.close();if(room.dead)return;if(room===S.room)status('wait','再接続中…');if(!room.discT)room.discT=setTimeout(()=>{if(!room.dead&&room.es&&room.es.readyState!==1)autoDrop(room)},32000);setTimeout(es,retry);retry=Math.min(retry*1.7,20000)}};
+ es();
+ /* 画面を見ているときは 7秒、離れているときは 20秒ごとに確認（ntfy の回数制限を避ける） */
+ const loop=()=>{if(room.dead)return;pollId=setTimeout(async()=>{await poll(false);loop()},document.hidden?20000:7000)};loop();
+ room.stop=()=>{room.dead=true;clearTimeout(pollId);clearTimeout(room.discT);if(room.es)room.es.close()}}
+
+/* ---------- 描画 ---------- */
+function linkify(s){const re=/https?:\/\/[^\s<>"'」』）】〉》〕］｝]+/g;let out='',i=0,m;
+ while((m=re.exec(s))){out+=esc(s.slice(i,m.index));const u=m[0].replace(/[.,;:!?。、]+$/,'');out+=`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a>`;i=m.index+u.length}
+ return out+esc(s.slice(i))}
+const mentionsMe=m=>{if(!m||m.sys||m.u===S.id)return false;const me=(S.room&&nickFor(S.room))||S.nick;if(!me)return false;const i=m.x.indexOf('@'+me);if(i<0)return false;const c=m.x[i+1+me.length];return !c||/[\s、。,.!?！？）)」』]/.test(c)};
+function bodyHtml(m){const h=linkify(m.x),r=S.room;if(!r)return h;const nms=new Set([nickFor(r),S.nick]);for(const [,v] of r.pres)if(v.n)nms.add(v.n);for(const x of r.msgs.values())if(x.n)nms.add(x.n);const a=[...nms].filter(x=>x&&x.length>=1).sort((x,y)=>y.length-x.length);if(!a.length)return h;const re=new RegExp('(^|[\\s (（])@('+a.map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')(?=$|[\\s 、。,.!?！？)）」』])','g');return h.replace(re,'$1<span class="mt">@$2</span>')}
+const atBottom=()=>{const e=$('#msgs');return e.scrollHeight-e.scrollTop-e.clientHeight<48};
+function scrollB(smooth){const e=$('#msgs');e.scrollTo({top:e.scrollHeight,behavior:smooth?'smooth':'auto'});$('#jump').hidden=true}
+$('#msgs').addEventListener('scroll',()=>{if(atBottom())$('#jump').hidden=true});
+$('#jump').onclick=()=>scrollB(true);
+
+function addMsg(room,m,hist){
+ if(!m.sys&&room.del&&room.del.has(m.id))return;
+ const dup=room.msgs.has(m.id);room.msgs.set(m.id,m);
+ /* メッセージは最大30件まで。超えたら古いものから捨てる */
+ while(room.msgs.size>30)room.msgs.delete(room.msgs.keys().next().value);
+ if(hist)return;
+ const cur=room===S.room&&!$('#chat').hidden;
+ if(!cur)return;
+ const stick=atBottom()||m.u===S.id;
+ render(false,dup?null:m.id);
+ if(stick)scrollB(!dup&&m.u===S.id);else if(m.u!==S.id)$('#jump').hidden=false}
+
+function render(jump,animId){
+ const box=$('#msgs'),r=S.room;if(!r)return;
+ const vis=[...r.msgs.values()].filter(m=>!isMuted(m.su||m.u)&&(!m.to||m.to===S.id||m.u===S.id));
+ if(!vis.length){
+  box.innerHTML=`<div class="hint"><div class="ring"><svg class="ic"><use href="#i-chat"/></svg></div><b style="color:var(--text)">まだメッセージはありません</b><br>同じ部屋名「<span class="rn">${esc(r.name)}</span>」を知っている人と話せます。</div>`;
+  return}
+ const keep=box.scrollTop;let html='',prev=null,prevD='',mk=false,un=vis.filter(m=>!m.sys&&m.u!==S.id&&r.markAt&&m.t>r.markAt).length;
+ for(const m of vis){
+  const dk=dayK(m.t);if(dk!==prevD){html+=`<div class="day">${fmtD(m.t)}</div>`;prevD=dk;prev=null}
+  if(!mk&&r.markAt&&!m.sys&&m.u!==S.id&&m.t>r.markAt){mk=true;html+=`<div class="newline">ここから新着（${un}件）</div>`}
+  if(m.sys){html+=`<div class="sysl${m.id===animId?' in':''}">${esc(m.x)}</div>`;prev=null;continue}
+  const sy=styleOf(m),first=!prev||prev.u!==m.u||m.t-prev.t>180000;
+  const rx=m.rx?Object.entries(m.rx).filter(([,a])=>a&&a.length).map(([e,a])=>`<button class="rxc${a.includes(S.id)?' me':''}" data-rxm="${esc(m.id)}" data-rxe="${esc(e)}">${esc(e)} ${a.length}</button>`).join(''):'';
+  const qt=m.rp?`<div class="qt"><span class="qn">${esc(aliasOf(m.rp.u)||m.rp.n||m.rp.u)}</span>${esc(m.rp.x)}</div>`:'';
+  const toN=m.to?(m.u===S.id?((r.pres.get(m.to)||{}).n||m.to):'あなた'):'';
+  const meta=m.fail?'送信失敗 ・ タップで再送':(m.pend?'送信中…':(m.to?(m.u===S.id?toN+' へのささやき':'あなたへのささやき ・ '):'')+fmtT(m.t));
+  html+=`<div class="row${sy.right?' r':''}${sy.mine?' mine':''}${first?' first':''}${m.pend?' pend':''}${m.id===animId?' in':''}" data-id="${esc(m.id)}">
+   ${first?avHtml(m.u,m.n):'<span class="sp"></span>'}
+   <div class="col">
+    ${first?`<div class="who"${m.u!==S.id?` data-pu="${esc(m.u)}"`:''}>${whoHtml(m.u,m.n)}${vfHtml(fvf(m.u,m.n))}</div>`:''}
+    <div${(()=>{const v=m.u===S.id?cleanBg(STY.bgv):(m.gh?bgOf(m.gh):'');return v?` data-ubg="${esc(bgApply(v,m.u===S.id?myBo():(m.bo||0)))}"`:''})()} class="bub${bubAttr(sy)}${m.to?' wh':''}${mentionsMe(m)?' mnme':''}">${qt}${bodyHtml(m)}</div>${rx?`<div class="rxs">${rx}</div>`:''}
+    ${m.fail?`<button class="meta fail" data-retry="${esc(m.id)}">${meta}</button>`:`<div class="meta">${meta}</div>`}
+   </div></div>`;
+  prev=m}
+ box.innerHTML=html;applyUbg(box);
+ if(jump)scrollB(false);else box.scrollTop=keep}
+
+$('#msgs').addEventListener('click',e=>{
+ const a=e.target.closest('a[href]');if(a){e.preventDefault();openLink(a.href);return}
+ const rc=e.target.closest('[data-rxe]');if(rc){e.stopPropagation();toggleRx(rc.dataset.rxm,rc.dataset.rxe);return}
+ const b=e.target.closest('[data-retry]');if(b){sendText(null,b.dataset.retry);return}
+ if(String(getSelection()).trim())return;
+ const bub=e.target.closest('.bub');if(bub){const row=bub.closest('[data-id]');if(row)openMA(row.dataset.id)}});
+let lkTo='';
+function openLink(u){try{const p=new URL(u);if(p.protocol!=='http:'&&p.protocol!=='https:')return;lkTo=p.href;$('#lkHost').textContent=p.hostname;$('#lkUrl').textContent=p.href;$('#lkDlg').hidden=false}catch(e){}}
+$('#lkGo').onclick=()=>{$('#lkDlg').hidden=true;if(lkTo)window.open(lkTo,'_blank','noopener,noreferrer')};
+$('#lkNo').onclick=()=>{$('#lkDlg').hidden=true};
+$('#lkDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+
+/* ---------- 送信 ---------- */
+async function sendText(raw,retryId){
+ const r=S.room;if(!r)return;
+ let m;
+ if(retryId){m=r.msgs.get(retryId);if(!m)return;m.fail=false;m.pend=true;render()}
+ else{const off=r.official,x=cleanText(raw,off?200:500,off?5:10);if(!x)return;
+  if(off&&linkN(x)>0){toast('公式部屋ではURLを送れません');return}
+  if(!off&&linkN(x)>2){toast('URLは2つまでです');return}
+  const g=gateChat(x,off,r.norm);if(g){toast(g);return}
+  const to=r.to?r.to.u:'',rp=r.reply;if(rp)setReply(null);
+  m={id:uid(),u:S.id,n:nickFor(r),x,t:Date.now(),pend:true,c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side,to,rp,rx:{},gh:(cleanBg(STY.bgv)?bgHash(cleanBg(STY.bgv)):''),bo:myBo()};
+  if(!r.practice&&cleanBg(STY.bgv))ensureBg(r);
+  addMsg(r,m,false);scrollB(true)}
+ if(r.practice){setTimeout(()=>{if(r.msgs.has(m.id)){m.pend=false;render();T.sent&&T.sent(m.x)}},180);return}
+ try{
+  const pay=Object.assign({v:'c'},m);delete pay.pend;delete pay.fail;if(MYAV)pay.a=MYAV;
+  let res;
+  for(let a=0;a<3;a++){
+   const wait=OUT.until-Date.now();if(wait>0)await new Promise(ok=>setTimeout(ok,Math.min(wait,12000)));
+   res=await relay(r,pay);
+   if(res.ok||res.status!==429)break;
+   if(a<2)await new Promise(ok=>setTimeout(ok,2500*(a+1)));
+  }
+  if(!res.ok)throw res.status;
+  m.pend=false;render();
+ }catch(e){m.pend=false;m.fail=true;render();toast(e===429?'混み合っています。少し待ってからタップで再送できます':'送信できませんでした（タップで再送）')}}
+
+const ta=$('#ta'),sendBtn=$('#send');
+const mnList=$('#mnList');let mnOpen=false,mnAt=-1;
+function mnCandidates(){const r=S.room;if(!r)return[];const m=new Map();for(const [u,v] of r.pres)if(u!==S.id&&!isMuted(u)&&v.n)m.set(u,v.n);for(const x of r.msgs.values())if(!x.sys&&x.u!==S.id&&!isMuted(x.u)&&x.n)m.set(x.u,x.n);return [...m].map(([u,n])=>({u,n,al:aliasOf(u)}))}
+function closeMn(){mnOpen=false;mnAt=-1;mnList.hidden=true}
+function drawMn(q){const c=mnCandidates().filter(x=>!q||x.n.toLowerCase().includes(q)||(x.al&&x.al.toLowerCase().includes(q)));if(!c.length){closeMn();return}mnList.innerHTML=c.slice(0,8).map(x=>`<button class="chip" type="button" data-mn="${esc(x.n)}">${esc(x.al||x.n)}<span class="idc">#${esc(x.u)}</span></button>`).join('');mnList.hidden=false}
+function pickMn(n){const p=ta.selectionStart??ta.value.length,v=ta.value;const s=mnAt>=0?mnAt:p;ta.value=v.slice(0,s)+'@'+n+' '+v.slice(p);const np=s+n.length+2;ta.focus();ta.setSelectionRange(np,np);closeMn();syncTa()}
+mnList.addEventListener('click',e=>{const b=e.target.closest('[data-mn]');if(b)pickMn(b.dataset.mn)});
+$('#mnBtn').onclick=()=>{if(mnOpen){closeMn();return}const p=ta.selectionStart??ta.value.length,v=ta.value,sp=p>0&&!/\s/.test(v[p-1])?' ':'';ta.value=v.slice(0,p)+sp+'@'+v.slice(p);mnAt=p+sp.length;ta.focus();ta.setSelectionRange(mnAt+1,mnAt+1);mnOpen=true;drawMn('');syncTa()};
+let tyAt=0;
+function pingTyp(){const r=S.room;if(!r||r.practice||r.dead||!S.id||SET.typ===false)return;if(!peerAlive(r)||nqBusy(24))return;const n=Date.now();if(n-tyAt<5000)return;tyAt=n;relay(r,{v:'ty',u:S.id}).catch(()=>{})}
+function syncTa(){
+ ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,136)+'px';
+ const l=ta.value.length,ok=!!ta.value.trim();
+ sendBtn.classList.toggle('rdy',ok);
+ $('#cnt').hidden=l<420;$('#cnt').textContent='残り '+(500-l)+' 文字';
+ if(ok)pingTyp();
+ if(mnOpen){const p=ta.selectionStart??ta.value.length,sub=ta.value.slice(mnAt,p);if(mnAt<0||sub[0]!=='@'||/\s/.test(sub))closeMn();else drawMn(sub.slice(1).toLowerCase())}
+ else{const p=ta.selectionStart??ta.value.length,m=/(?:^|[\s (（])@([^\s @]{0,12})$/.exec(ta.value.slice(0,p));if(m){mnOpen=true;mnAt=p-m[1].length-1;drawMn(m[1].toLowerCase())}}}
+ta.addEventListener('input',syncTa);
+ta.addEventListener('keydown',e=>{if(e.key==='Escape'&&mnOpen){e.preventDefault();closeMn();return}if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!coarse){e.preventDefault();fire()}});
+function fire(){const v=ta.value;if(!v.trim())return;closeMn();ta.value='';syncTa();sendBtn.classList.remove('fly');void sendBtn.offsetWidth;sendBtn.classList.add('fly');sendText(v)}
+sendBtn.onclick=fire;
+
+/* ---------- 画面遷移 ---------- */
 let hDepth=0;
-function pushH(v){if(!useHist)return;try{history.pushState({v},'');hDepth++}catch(e){}}
-function goBackUI(){if(hDepth>0)history.back();else backToEntry()}
-addEventListener('popstate',()=>{hDepth=Math.max(0,hDepth-1);
- if(!$('#notice').hidden){noticeBack();return}
- if(!$('#chat').hidden&&S.room){if(S.room.practice)backToEntry();else{drawerOpen()?closeDrawer(true):openDrawer();pushH('chat')}return}
- if(!$('#home').hidden)return;backToEntry()});
+const pushH=st=>{try{history.pushState({w:st},'');hDepth++}catch(e){}};
+function drawTabs(){const bar=$('#tabs');if(!bar)return;
+ let h=S.rooms.map(r=>{const on=r===S.room,nm=r.practice?'練習':r.name,u=!on&&r.unread;
+  return `<div class="tab${on?' on':''}" role="tab" tabindex="0" aria-selected="${on}" data-tab="${esc(r.norm)}"><span class="tn ell1${r.official||r.practice?'':' rn'}">${r.official?'<i class="ofi">公式</i>':''}${esc(nm)}</span>${u?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:''}<button class="tx" type="button" data-tx="${esc(r.norm)}" aria-label="${esc(nm)}から退室">✕</button></div>`}).join('');
+ if(S.rooms.length<MAXR&&!(S.room&&S.room.practice))h+=`<button class="tab add" id="tabAdd" aria-label="別の部屋に入る">＋</button>`;
+ bar.innerHTML=h}
+function switchRoom(room,anim){if(!room)return;
+ if(S.room&&S.room!==room&&!S.room.practice)S.room.readAt=Date.now();
+ S.room=room;room.markAt=room.readAt||0;room.readAt=Date.now();room.unread=0;
+ setTo(null);setReply(null);$('#rname').textContent=room.name;$('#offB').hidden=!room.official;$('#chat').classList.toggle('isoff',!!room.official);
+ $('#ta').maxLength=room.official?200:500;$('#ta').placeholder=room.official?'公式部屋（5秒に1回・200文字まで・URL不可）':'メッセージを入力';
+ setMid(room);applyAv($('#mav'),S.id,'',S.hue);applyTheme(room);
+ if(room.practice)status('on','使い方の練習（送信しても外には届きません）');
+ else if(room.es&&room.es.readyState===1)setConnected(room);
+ else status('wait','接続中…');
+ render(true);drawPbar();drawTabs();drawBdBadge();
+ if(anim){const m=$('#msgs');m.classList.remove('swap');void m.offsetWidth;m.classList.add('swap')}}
+function dropRoom(room){if(!room)return;if(!room.practice)postEv(room,'leave');if(room.stop)room.stop();
+ const i=S.rooms.indexOf(room);if(i>=0)S.rooms.splice(i,1);
+ if(S.room===room)S.room=S.rooms[S.rooms.length-1]||null;
+ if(!S.rooms.length&&S.guest){S.id=null;S.guest=false;drawId()}}
+function autoDrop(room){if(!room||room.dead||!S.rooms.includes(room))return;
+ const wasCur=S.room===room&&!$('#chat').hidden;dropRoom(room);
+ toast('通信が切れたため、'+dispRoom(room)+'から退室しました');
+ if(S.room){if(wasCur)switchRoom(S.room,true);else{drawTabs();if(drawerOpen())drawHome(true)}}
+ else{show('home',true);drawHome()}}
+const RM={room:null};
+function askLeave(room){if(!room)return;if(room.practice){closeT(true);return}
+ if(SET.skipLeave){leaveTab(room);return}
+ RM.room=room;$('#rmT').textContent=dispRoom(room)+' から退室しますか？';
+ $('#rmS').textContent='退室すると、この部屋の画面からメッセージが消えます。';
+ $('#rmSkip').setAttribute('aria-checked','false');$('#rmSkip').textContent='☐ 次からは表示しない';
+ $('#rmDlg').hidden=false}
+function leaveTab(room){const n=dispRoom(room);dropRoom(room);
+ if(S.room){switchRoom(S.room,true);toast(n+'から退室しました')}
+ else{show('home',true);drawHome();toast(n+'から退室しました')}}
+$('#rmSkip').onclick=()=>{const b=$('#rmSkip'),on=b.getAttribute('aria-checked')!=='true';b.setAttribute('aria-checked',on);b.textContent=(on?'☑':'☐')+' 次からは表示しない'};
+$('#rmLeave').onclick=()=>{const r=RM.room;$('#rmDlg').hidden=true;if($('#rmSkip').getAttribute('aria-checked')==='true'){SET.skipLeave=true;saveSet()}if(r)leaveTab(r)};
+$('#rmNo').onclick=()=>{$('#rmDlg').hidden=true};
+$('#rmDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#tabs').addEventListener('click',e=>{
+ const x=e.target.closest('[data-tx]');if(x){const r=S.rooms.find(v=>v.norm===x.dataset.tx);if(r)askLeave(r);return}
+ if(e.target.closest('#tabAdd')){openJoin();return}
+ const t=e.target.closest('[data-tab]');if(!t)return;
+ const r=S.rooms.find(v=>v.norm===t.dataset.tab);if(!r)return;
+ if(r===S.room)askLeave(r);else switchRoom(r,true)});
+$('#tabs').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.tab)e.target.click()});
+function openJoin(){if(S.rooms.length>=MAXR){toast('同時に入れるのは'+MAXR+'部屋までです');return}
+ $('#jnLeft').textContent='あと'+(MAXR-S.rooms.length)+'部屋まで入れます（最大'+MAXR+'部屋）。';
+ const openN=new Set(S.rooms.map(r=>r.norm));$('#jnOff').hidden=openN.has(OFFN);
+ const rec=store.g('wc2.recent',[]).filter(n=>!openN.has(normRoom(n))&&!isOffN(normRoom(n)));
+ $('#jnRec').hidden=!rec.length;$('#jnRec').innerHTML=rec.slice(0,4).map(n=>`<button class="chip rn" data-jrc="${esc(n)}">${esc(n)}</button>`).join('');
+ $('#jnRoom').value='';$('#jnDlg').hidden=false;if(!coarse)setTimeout(()=>$('#jnRoom').focus(),50)}
+$('#jnRec').addEventListener('click',e=>{const b=e.target.closest('[data-jrc]');if(!b)return;$('#jnRoom').value=b.dataset.jrc;$('#jnGo').click()});
+$('#jnOff').onclick=()=>{$('#jnDlg').hidden=true;openRoom(OFFN)};
+$('#jnNo').onclick=()=>{$('#jnDlg').hidden=true};
+$('#jnDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#jnRoom').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#jnGo').click()});
+$('#jnGo').onclick=()=>{const v=$('#jnRoom').value.trim();if(!normRoom(v)){shake($('#jnRoom'));toast('部屋名を入れてください');$('#jnRoom').focus();return}$('#jnDlg').hidden=true;openRoom(v)};
+function openRoom(name,skipTerms){
+ const norm=normRoom(name);if(!norm)return;
+ /* 初めて使うときは、利用規約の大切な点を確認する */
+ if(!skipTerms&&(store.g('wc2.terms',null)||{}).v!==TERMS_VER){askTerms(()=>openRoom(name,true));return}
+ /* IDを作らずに入ったときは、その間だけ使う仮のIDを自動でつくる */
+ if(!S.id){const r=idOf('guest:'+uid());S.id=r.id;S.hue=r.hue;S.guest=true}
+ const rn=isOffN(norm)?OFFN:norm,ex=S.rooms.find(r=>r.norm===rn);
+ if(ex){show('chat');switchRoom(ex,true);return}
+ if(S.rooms.length>=MAXR){toast('同時に入れるのは'+MAXR+'部屋までです。いまの部屋をタップして退室してください');return}
+ const w=CDS.room+2000-Date.now();if(w>0){toast('少し間をあけてください（あと'+secs(w)+'秒）');return}CDS.room=Date.now();saveCd();
+ const room=makeRoom(name);
+ if(!S.nick)room.season=randSeason();
+ S.rooms.push(room);
+ if(!room.official){const rec=store.g('wc2.recent',[]).filter(x=>normRoom(x)!==norm);rec.unshift(room.name);store.s('wc2.recent',rec.slice(0,6))}
+ show('chat');switchRoom(room,false);pushH('chat');
+ connect(room).then(async()=>{await fetchBoard(room);drawBdBadge();postEv(room,'join');upBig(room)})}
+
+$('#cBack').onclick=()=>openDrawer();
+$('#exitBtn').onclick=()=>{if(S.room)askLeave(S.room)};
+$('#hscrim').onclick=()=>closeDrawer(true);
+addEventListener('popstate',()=>{hDepth=Math.max(0,hDepth-1);if(drawerOpen()){closeDrawer(true);return}if(!$('#notice').hidden)noticeBack();else if(!$('#chat').hidden){if(T.on)closeT(true);else openDrawer()}});
+addEventListener('pagehide',()=>S.rooms.forEach(r=>{if(!r.practice)postEv(r,'leave')}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.room&&!S.room.practice)S.room.readAt=Date.now()}else{if(S.room&&!$('#chat').hidden){S.room.readAt=Date.now();S.room.unread=0;drawTabs()}if(S.room&&!S.room.practice&&S.room.es&&S.room.es.readyState!==1)connect(S.room)}});
+setInterval(()=>{const nw=Date.now();S.rooms.forEach(r=>{if(r.practice)return;prunePres(r);if(r.es&&r.es.readyState!==1&&nw-(r.recAt||0)>10000){r.recAt=nw;connect(r)}if(r===S.room)postEv(r,'ping')});if(drawerOpen())drawHome(true)},15000);
+
+/* ---------- 表示名 ---------- */
+function drawNick(){$('#cNick').classList.toggle('done',!!S.nick);if(S.room){setMid(S.room);render();drawPbar()}}
+$('#nick').addEventListener('input',e=>{S.nick=cleanNick(e.target.value);if(e.target.value!==S.nick)e.target.value=S.nick;store.s('wc2.nick',S.nick);drawNick()});
+$('#meChip').onclick=()=>{$('#nn').value=S.nick;$('#nameDlg').hidden=false;if(!coarse)setTimeout(()=>$('#nn').focus(),50)};
+$('#nnCancel').onclick=()=>{$('#nameDlg').hidden=true};
+$('#nameDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
+$('#nnSave').onclick=()=>{const w=CDS.name+10000-Date.now();if(w>0){toast('表示名の変更は10秒に1回までです（あと'+secs(w)+'秒）');return}CDS.name=Date.now();saveCd();
+ const v=cleanNick($('#nn').value);S.nick=v;$('#nick').value=v;store.s('wc2.nick',v);
+ if(!v&&S.room&&!S.room.season)S.room.season=randSeason();
+ drawNick();$('#nameDlg').hidden=true;toast(v?'表示名を「'+v+'」にしました':'表示名をなくしました（'+nickFor(S.room)+'）')};
+$('#nn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#nnSave').click()});
+
+/* ---------- 使い方（実践チュートリアル） ---------- */
+const T={on:false,i:0,prev:null,sent:null};
+function placeCoach(el){
+ const sp=$('#spot'),sc=$('#cscrim'),cb=$('#coachb'),vw=innerWidth,vh=innerHeight;
+ let r=null;if(el){const b=el.getBoundingClientRect();if(b.width>0&&b.height>0)r=b}
+ if(r){sp.style.cssText=`left:${r.left-6}px;top:${r.top-6}px;width:${r.width+12}px;height:${r.height+12}px;opacity:1`;sc.hidden=true}
+ else{sp.style.opacity=0;sc.hidden=false}
+ cb.style.left='16px';cb.style.top='16px';
+ const bw=cb.offsetWidth,bh=cb.offsetHeight,m=16;
+ let top=r?r.bottom+14:Math.max(m,(vh-bh)/2);
+ if(r&&top+bh>vh-m)top=Math.max(m,r.top-bh-14);
+ if(r&&top+bh>vh-m)top=Math.max(m,(vh-bh)/2);
+ const cx=r?r.left+r.width/2:vw/2;
+ cb.style.top=Math.round(top)+'px';cb.style.left=Math.round(Math.max(m,Math.min(vw-bw-m,cx-bw/2)))+'px'}
+function showT(){
+ const st=STEPS[T.i];if(!st)return;
+ if(st.prep)st.prep();
+ T.sent=st.onSent||null;
+ const n=STEPS.length;
+ $('#coachb').innerHTML=`<div class="cin"><div class="chd"><span class="cn">使い方 ${T.i+1} / ${n}</span><button class="cbtn" id="cX">やめる</button></div><b>${st.t}</b><p class="xs mute" style="white-space:pre-line">${st.b}</p><div class="cb">${T.i>0?'<button class="cbtn" id="cP">戻る</button>':''}<span style="flex:1"></span>${st.act?'<span class="xs faint">'+st.act+'</span>':'<button class="cbtn pri" id="cN">'+(T.i===n-1?'完了':'次へ')+'</button>'}</div></div>`;
+ $('#cX').onclick=()=>closeT(true);
+ if($('#cP'))$('#cP').onclick=()=>{T.i--;showT()};
+ if($('#cN'))$('#cN').onclick=()=>{if(T.i===n-1)closeT(true);else{T.i++;showT()}};
+ requestAnimationFrame(()=>placeCoach(st.el&&st.el()))}
+function openPrac(){
+ T.prev=S.room?{room:S.room,scr:screens.find(s=>!$('#'+s).hidden)}:{scr:screens.find(s=>!$('#'+s).hidden)};
+ const r=makeRoom('使い方の練習');r.practice=true;
+ const now=Date.now();
+ r.pres.set('DEMO01',{n:'ミオ',t:now});
+ addMsg(r,{id:'d1',u:'DEMO01',n:'ミオ',x:'ようこそ！ここは練習の部屋です。\n送ったメッセージは外には届かないので、気軽に試してください。',t:now-60000},true);
+ addMsg(r,{id:'d2',u:'DEMO01',n:'ミオ',x:'下の入力欄に何か打って、送信してみましょう！',t:now-30000},true);
+ r.markAt=now-45000;
+ show('chat');switchRoom(r,false);$('#stxt').textContent='使い方の練習（外には送られません）'}
+function closeT(restore){
+ T.on=false;T.sent=null;$('#coach').hidden=true;
+ if(restore&&T.prev){if(T.prev.room&&!T.prev.room.dead){show('chat',true);switchRoom(T.prev.room,false)}else{show(T.prev.scr||'home',true);drawHome()}}
+ T.prev=null}
+const STEPS=[
+ {el:()=>$('#cId'),t:'① あなたのID',b:'適当な文字を入れると、6文字のIDが決まります。\n同じ文字なら次回も同じID。入れなくても部屋に入れます（その間だけ仮のIDになります）。',prep:()=>{if($('#entry').hidden)show('entry')}},
+ {el:()=>$('#cNick'),t:'② 表示名（任意）',b:'部屋の中で表示される名前です。いつでも変えられます。\n空のまま入ると「春・夏・秋・冬」のどれかになります。',prep:()=>{if($('#entry').hidden)show('entry')}},
+ {el:()=>$('#cRoom'),t:'③ 部屋名',b:'同じ部屋名を知っている人と話せます（大文字・小文字や全角・半角は区別しません）。\n下の「公式部屋」を押すと、部屋名なしでみんなが集まる部屋に入れます。最大3つの部屋に同時に入れます。',prep:()=>{if($('#entry').hidden)show('entry')}},
+ {el:()=>$('.compbox'),t:'④ 実際に送ってみよう',b:'練習の部屋を開きました。\n下の入力欄にメッセージを入れて、送信してみてください（外には届きません）。',act:'送信すると次へ進みます',prep:openPrac,onSent:()=>{T.i++;showT()}},
+ {el:()=>$('#msgs .row'),t:'⑤ 返信とリアクション',b:'メッセージをタップすると、絵文字でリアクションしたり、その発言に返信したりできます。\n部屋に戻ったときは、未読の境目に「ここから新着」の線が出ます。'},
+ {el:()=>$('#pbar'),t:'⑥ いま入っている人・ささやき・お友達',b:'上の帯をタップすると、入っている人の一覧が開きます。人を選んで「ささやく」と、その人だけに届きます。\nアイコンか名前をタップすると「お友達に登録」でき、自分用のあだ名も付けられます。迷惑な人は「ミュート」で見えなくなります。'},
+ {el:()=>$('#bdBtn'),t:'⑦ 伝言板',b:'いま部屋にいない人にも、100文字までのメモを残せます。12時間ほど残るので、あとから入った人も見られます。'},
+ {el:()=>$('#setBtn2'),t:'⑧ 設定（見た目・アイコン・通知）',b:'右上の設定から、見た目（雰囲気・明るさ・メインの色・この部屋だけの見た目・部屋名を伏せる）、アイコン、吹き出しの色や左右、Web通知（登録した人だけ・位置・止める時間帯）を変えられます。'},
+ {el:()=>$('#tabs'),t:'⑨ 部屋の切り替え・退室・ルール',b:'下のバーで最大3つの部屋を切り替えられ、＋で別の部屋に入れます。退室は、いまの部屋のボタンか、ホームの「退室」から。\n荒らし対策のため、1.5秒に1回・500文字まで。連投すると自動で一時的に非表示になります。以上で完了です！'}
+];
+function startTut(){T.on=true;T.i=0;$('#coach').hidden=false;showT()}
+$('#help').onclick=$('#help2').onclick=startTut;
+addEventListener('resize',()=>{if(T.on)placeCoach(STEPS[T.i].el&&STEPS[T.i].el())});
+
+/* ---------- 吹き出しの背景（長い値を分けて送り、指紋で結びつける） ---------- */
+const BGC=Object.assign(Object.create(null),store.g('wc2.bgc',{}));
+const BG_LIM=200000;
+const saveBgc=()=>{const ks=Object.keys(BGC);while(ks.length>40)delete BGC[ks.shift()];store.s('wc2.bgc',BGC)};
+const bgHash=v=>hex(sha256('bg:'+v)).slice(0,16);
+const bgOf=h=>(typeof h==='string'&&BGC[h])||'';
+const myBo=()=>Math.max(0,Math.min(90,Math.round(Number(STY.bgo)||0)));
+const bgApply=(v,o)=>v?(o>0?`linear-gradient(rgba(255,255,255,${(o/100).toFixed(2)}),rgba(255,255,255,${(o/100).toFixed(2)})),${v}`:v):'';
+const BG_PART=2200,bgSent=new Map(),bgParts=new Map(),bgReqAt=new Map();
+function putBg(room,h,v){if(!v||v.length>BG_LIM||BGC[h])return;BGC[h]=v;saveBgc();if(room===S.room)render()}
+async function sendBgParts(room,v,h){const parts=[];for(let i=0;i<v.length;i+=BG_PART)parts.push(v.slice(i,i+BG_PART));
+ for(let i=0;i<parts.length;i++){if(room.dead)return;
+  for(let a=0;a<2;a++){const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,10000)));
+   const r=await relay(room,{v:'bgc',u:S.id,h,i,n:parts.length,d:parts[i]});if(r.ok||r.status!==429)break;await new Promise(ok=>setTimeout(ok,2500))}
+  if(i+1<parts.length)await new Promise(ok=>setTimeout(ok,220))}}
+async function ensureBg(room,force){if(!room||room.practice||room.dead||!room.key)return;const v=cleanBg(STY.bgv);if(!v)return;const h=bgHash(v);putBg(room,h,v);
+ const k=room.topic+'|'+h,now=Date.now();if(!force&&now-(bgSent.get(k)||0)<120000)return;bgSent.set(k,now);
+ try{await sendBgParts(room,v,h)}catch(e){}}
+function reqBg(room,h){if(!room||room.practice||room.dead||!h||BGC[h])return;const k=room.topic+'|'+h,now=Date.now();if(now-(bgReqAt.get(k)||0)<20000||nqBusy(22))return;bgReqAt.set(k,now);relay(room,{v:'bgq',u:S.id,h}).catch(()=>{})}
+function gotBgChunk(room,m,wu){if(m.u!==wu||!guardIn(room,wu,'bgc',false))return;if(typeof m.h!=='string'||!/^[0-9a-f]{16}$/.test(m.h)||typeof m.d!=='string'||m.d.length>2500)return;
+ const n=m.n|0,i=m.i|0;if(n<1||n>90||i<0||i>=n||BGC[m.h])return;
+ const k=wu+'|'+m.h;let e=bgParts.get(k);if(!e||e.n!==n){e={n,p:new Array(n),c:0,t:Date.now()};bgParts.set(k,e);if(bgParts.size>30)bgParts.delete(bgParts.keys().next().value)}
+ if(e.p[i]==null){e.p[i]=m.d;e.c++}
+ if(e.c===n){bgParts.delete(k);const raw=e.p.join('');if(raw.length>BG_LIM)return;const v=cleanBg(raw,BG_LIM);if(v&&bgHash(v)===m.h)putBg(room,m.h,v)}}
+function gotBgReq(room,m,wu){if(m.u!==wu||!guardIn(room,wu,'bgq',false))return;if(typeof m.h!=='string'||!/^[0-9a-f]{16}$/.test(m.h))return;
+ const v=BGC[m.h];if(!v)return;setTimeout(()=>{if(!room.dead&&!nqBusy(22))sendBgParts(room,v,m.h).catch(()=>{})},300+Math.floor(Math.random()*1500))}
+async function gotBigBg(room,d,m,wu){if(m.u!==wu||!bucket('bgb|'+room.topic,4,15000))return;
+ if(typeof m.h!=='string'||!/^[0-9a-f]{16}$/.test(m.h)||BGC[m.h])return;
+ const url=d.attachment&&d.attachment.url;if(typeof url!=='string'||!url.startsWith(NTFY)||!room.key)return;
+ try{const r=await fetch(url);if(!r.ok)return;const buf=await decBytes(new Uint8Array(await r.arrayBuffer()),room.key);if(!buf||buf.length>300000)return;
+  const v=cleanBg(new TextDecoder().decode(buf),BG_LIM);if(v&&bgHash(v)===m.h)putBg(room,m.h,v)}catch(e){}}
+
+/* ---------- オンライン人数の目安（ランダムな匿名の印を2分おきに送って数える） ---------- */
+const OL_TP='wcr-'+hex(sha256('online-v1')).slice(0,40);
+const OL_ID=hex(crypto.getRandomValues(new Uint8Array(6)));
+const OLN={n:0,t:0,p:0};
+function drawOnline(){const e=$('#online');if(!e)return;if(OLN.n>0){e.hidden=false;e.textContent='いま開いている人の目安：約'+OLN.n+'人'}else e.hidden=true}
+async function olBeat(){if(nqBusy(24))return;const n=Date.now();if(n-OLN.p<110000)return;OLN.p=n;try{nqUse();const r=await fetch(NTFY+OL_TP,{method:'POST',headers:{'Content-Type':'text/plain'},body:OL_ID});nqHit(r)}catch(e){}}
+async function olCount(){if(nqBusy(18))return;const n=Date.now();if(n-OLN.t<45000)return;OLN.t=n;try{nqUse();const r=await fetch(NTFY+OL_TP+'/json?poll=1&since=3m',{cache:'no-store'});nqHit(r);if(!r.ok)return;const tx=await r.text(),s=new Set([OL_ID]);for(const l of tx.split('\n')){if(!l.trim())continue;try{const d=JSON.parse(l);if(d.event==='message'&&/^[0-9a-f]{12}$/.test(d.message))s.add(d.message)}catch(e){}}OLN.n=s.size;drawOnline()}catch(e){}}
+setInterval(()=>{olBeat();if(!$('#home').hidden)olCount()},120000);
 
 /* ---------- 起動 ---------- */
-$('#seed').value=S.seed;if(S.seed.trim()){const r=idOf(S.seed);S.id=r.id;S.hue=r.hue}drawId();drawBadge();
-{const sn=new Set();store.s('wc2.recent',store.g('wc2.recent',[]).filter(n=>{const k=normRoom(n);if(!k||isOffN(k)||sn.has(k))return false;sn.add(k);return true}))}
-let invite=false;const m0=location.hash.match(/^#r=(.+)$/);if(m0){invite=true;try{$('#room').value=decodeURIComponent(m0[1]).slice(0,30)}catch(e){}try{history.replaceState(null,'',location.href.split('#')[0])}catch(e){}}
-upd();
-/* ---------- 表示名 ---------- */
-function cleanNick(s){return cleanText(String(s||'').replace(/[#＃]/g,''),12,1).replace(/\s+/g,' ')}
-function setNick(v){S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room)setMid(S.room);for(const r of S.rooms){r.pres.set(S.id,{n:nickFor(r),t:Date.now()});prepLeave(r);sendEv(r,'hb')}if(S.room)drawPbar()}
-$('#nick').value=S.nick;
-$('#nick').addEventListener('input',e=>{S.nick=cleanNick(e.target.value);store.s('wc2.nick',S.nick);drawReg()});
-$('#seed').addEventListener('input',()=>drawReg());
-$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#room').focus()});
-function saveNn(){if(S.room&&!S.room.practice&&cleanNick($('#nn').value)!==S.nick){const w=CDS.name+10000-Date.now();if(w>0){toast('表示名の変更は10秒に1回までです（あと'+secs(w)+'秒）');return}CDS.name=Date.now();saveCd()}setNick($('#nn').value);$('#nick').value=S.nick;$('#nameDlg').hidden=true;toast(S.nick?'表示名を変更しました':'表示名を外しました')}
-$('#meChip').onclick=()=>{$('#nn').value=S.nick;$('#nameDlg').hidden=false;setTimeout(()=>$('#nn').focus(),60)};
-$('#nnCancel').onclick=()=>{$('#nameDlg').hidden=true};
-$('#nnSave').onclick=saveNn;
-$('#nn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)saveNn()});
-$('#nameDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-
-/* ---------- 使い方（一緒に進める） ---------- */
-const T={on:false,i:0,cur:null,nameOpened:false,raf:0};
-const BOTLINES=['届きました。メッセージはこのように表示されます。','何度でも送れます。本番では、同じ部屋名の人にも届きます。','その調子です。'];
-function botSay(room,text){if(S.room!==room)return;addMsg(room,{id:uid(),u:'MIO',n:'ミオ',t:Date.now(),x:text})}
-const STEPS=[
- {tg:'#room',hook:'room',tx:()=>'まず部屋名です。同じ部屋名を知っている人と、同じ部屋で話せます。大文字・小文字や全角・半角は区別しません。',act:()=>({label:'「れんしゅう」と入れる',fn(){$('#room').value='れんしゅう';upd();setTimeout(tutNext,350)}})},
- {tg:'#nick',hook:'nick',next:'あとで',tx:()=>'表示名も付けてみましょう。IDの横に出ます。空のままなら、入るたびに春・夏・秋・冬のどれかになります。'},
- {tg:'#seed',hook:'seed',tx:()=>S.id?'すでにIDが決まっています。文字を書き換えると別のIDになります。試してみてください。':'最後にIDです（なくても入れます）。適当な文字を入れてみましょう。ひらがなでも英数字でもOKです。入れた文字は他の人には見えません。'},
- {tg:'#eid',next:'次へ',tx:()=>S.id?`これがあなたのIDです（${S.id}）。同じ文字を入れれば、いつでも同じIDになります。相手があなたを見分ける目印です。`:'IDがまだ決まっていません。上の欄に文字を入れてみてください。'},
- {tg:'#go',hook:'enter',noskip:true,tx:()=>'「入る」を押してみましょう。練習なので、外には送られません。IDを作らなくても入れます。'},
- {tg:'.compbox',hook:'sent',tx:()=>'メッセージを書いて、送信ボタンを押してみましょう。PCでは Enter で送れます（改行は Shift+Enter）。'},
- {tg:'#msgs',next:'次へ',tx:()=>'ミオから返事が来ました。何も変えなければ、自分は右・相手は左に出ます。相手のアイコンや名前をタップすると、お友達に登録できます（自分用のあだ名も付けられます）。登録した人がいま入っている部屋は、ホームに出ます。'},
- {tg:'#msgs',next:'次へ',act:()=>({label:'開いてみる',fn(){const r=S.room,m=r&&[...r.msgs.values()].find(x=>x.u==='MIO'&&!x.sys);if(m)openMa(m.id)}}),tx:()=>'メッセージをタップすると、リアクション（👍❤️😂など）と返信ができます。リアクションは、メッセージの下の丸をタップして付けたり外したりできます。返信を選ぶと、入力欄の上に返信先が出ます。ささやきには付けられません。'},
- {tg:'#tabs',next:'次へ',tx:()=>'画面の下のバーで、最大3つの部屋に同時に入れます。別の部屋のボタンをタップで移動、＋で別の部屋に入れます（今の部屋は、入ったままです）。退室は、各部屋の ✕ か、右上の「退室」ボタンで、確認のあとにできます。戻るボタンを押すと、横からホームが半分だけ出ます（入った部屋はそのままです）。公式部屋「公式」は、ホームの先頭にもあります。見ていない部屋に届いた分は、戻ると「ここから新着」の線で分かります。'},
- {tg:'#pbar',next:'次へ',act:()=>({label:'開いてみる',fn:openMem}),tx:()=>'この帯は、いま部屋にいる人の一覧です。タップすると、人ごとに「ささやく」（その人の画面にだけ届く）「ミュート」（自分の画面だけ消す）「登録」を選べます。'},
- {tg:'#bdBtn',next:'次へ',act:()=>({label:'開いてみる',fn:openBoard}),tx:()=>'伝言板は、いない人にも残せるメモです。100文字まで、10秒に1回。サーバーが覚えている12時間ほどは、あとから入った人にも見えます。自分の伝言は×で消せます。'},
- {tg:'#setBtn2',next:'次へ',act:()=>({label:'開いてみる',fn:openSet}),tx:()=>'歯車では、見た目（雰囲気・明るさ・メインの色、この部屋だけ別の見た目、部屋名を伏せる）、アイコン画像、吹き出しの色と右／左、通知（登録した人だけ・ポップアップの位置・止める時間帯・音）を変えられます。あなたの吹き出しの見た目は、相手の画面にも反映されます。'},
- {tg:'#meChip',hook:'name',tx:()=>'右上のあなたのIDをタップすると、部屋の中でも表示名を変えられます。変えたら「保存」を押して閉じてください。'},
- {tg:'.comp',next:'次へ',tx:()=>'荒らし防止のため、チャットは1.5秒に1回・500文字まで、リンクは2つまでです。リアクションは3秒に1回ほどです。メッセージは暗号化され、部屋には最大30件。部屋を出ると消えます。'},
- {tg:'#cBack',hook:'back',noskip:true,tx:()=>'練習では、戻るボタンで入口に戻ります（本番の部屋では、横からホームが半分だけ出ます）。押してみましょう。'},
- {tg:null,next:'はじめる',end:true,tx:()=>'おしまいです。本番は、部屋名を入れて入るだけ。「使い方」からいつでもやり直せます。利用規約は、入口・ホーム・設定から読めます。'}
-];
-function drawStep(){const s=T.cur=STEPS[T.i],act=s.act&&s.act(),fwd=s.next||(s.hook&&!s.noskip?'とばす':'');
- $('#coachb').innerHTML=`<div class="cin"><div class="chd"><span class="cn">${T.i+1} / ${STEPS.length}</span>${s.end?'':'<button class="cbtn" id="cx">スキップ</button>'}</div><div>${esc(s.tx())}</div><div class="cb"><span style="flex:1"></span>${act?`<button class="cbtn" id="cact">${esc(act.label)}</button>`:''}${fwd?`<button class="cbtn ${s.next?'pri':''}" id="cnext">${esc(fwd)}</button>`:''}</div></div>`;
- $('#cscrim').hidden=!!s.tg;
- if(act)$('#cact').onclick=act.fn;if(fwd)$('#cnext').onclick=tutNext;if(!s.end)$('#cx').onclick=endTut}
-function tutNext(){if(!T.on)return;T.i++;if(T.i>=STEPS.length)return endTut();drawStep()}
-function tutHook(n){if(!T.on||!T.cur||T.cur.hook!==n)return;const i=T.i;setTimeout(()=>{if(T.on&&T.i===i)tutNext()},n==='enter'?500:250)}
-function placeCoach(){const b=$('#coachb'),sp=$('#spot'),vh=window.visualViewport?visualViewport.height:innerHeight;
- const el=T.cur.tg&&$(T.cur.tg),r=el&&el.getClientRects().length?el.getBoundingClientRect():null,bh=b.offsetHeight,bw=b.offsetWidth;let top,left;
- if(!r||!r.width){sp.style.opacity=0;top=(vh-bh)/2;left=(innerWidth-bw)/2}
- else{const pd=6;sp.style.opacity=1;sp.style.left=r.left-pd+'px';sp.style.top=r.top-pd+'px';sp.style.width=r.width+pd*2+'px';sp.style.height=r.height+pd*2+'px';
-  if(r.height>vh*.45)top=r.top+12;else if(vh-r.bottom>=bh+20)top=r.bottom+14;else top=r.top-bh-14;
-  left=Math.max(16,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-16))}
- b.style.top=Math.max(8,Math.min(top,vh-bh-8))+'px';b.style.left=left+'px'}
-function tutLoop(){if(!T.on)return;const dlg=!!document.querySelector('.tut:not([hidden])'),nd=!$('#nameDlg').hidden;$('#coach').style.visibility=dlg?'hidden':'visible';
- if(T.cur.hook==='name'&&T.nameOpened&&!nd){T.nameOpened=false;tutNext()}
- if(T.on){placeCoach();T.raf=requestAnimationFrame(tutLoop)}}
-function startTut(){if(T.on)return;if($('#entry').hidden){if(S.room||!$('#notice').hidden)return;show('entry')}T.on=true;T.i=0;T.nameOpened=false;$('#coach').hidden=false;drawStep();T.raf=requestAnimationFrame(tutLoop)}
-function endTut(){if(!T.on)return;T.on=false;cancelAnimationFrame(T.raf);$('#coach').hidden=true;store.s('wc2.tut2',true);
- if($('#room').value==='れんしゅう'){$('#room').value='';upd()}
- if(S.room&&S.room.practice)goBackUI()}
-const dbHook=(sel,hook,ok)=>{let t;$(sel).addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>{if(ok())tutHook(hook)},1000)})};
-dbHook('#seed','seed',()=>!!S.id);dbHook('#nick','nick',()=>!!S.nick);dbHook('#room','room',()=>!!normRoom($('#room').value));
-$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)tutHook('nick')});
-$('#meChip').addEventListener('click',()=>{T.nameOpened=true});
-$('#help').onclick=startTut;$('#help2').onclick=startTut;
-addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#setDlg').hidden){$('#setDlg').hidden=true;return}if(!$('#nameDlg').hidden){$('#nameDlg').hidden=true;return}if(T.on)endTut()});
-/* 使い方は最初の1回だけ自動で始める（始めた時点で済みにする。すでにIDがある人や旧版で見た人には出さない）。やり直しは「使い方」から */
-const tutSeen=store.g('wc2.tut2',false)||store.g('wc2.tut',false)||!!S.id;
-if(!tutSeen){store.s('wc2.tut2',true);setTimeout(startTut,700)}
-else if(!S.id)setTimeout(()=>{if(!coarse)$('#room').focus()},500);
-else if($('#room').value&&!coarse)setTimeout(()=>$('#room').focus(),500);
-/* ---------- 利用者数（目安） ----------
-   共通の公開トピックに、ランダムな匿名の印を2分おきに送り、直近3分の印の数を数える。
-   部屋名・ID・表示名は含まない。誰でも書き込めるので、あくまで目安。 */
-const OLN={topic:'wc2-online-v1',oid:store.g('wc2.oid',''),n:0,ok:false,t:0};
-if(!/^[A-Z0-9]{8}$/.test(OLN.oid||'')){OLN.oid=[...crypto.getRandomValues(new Uint8Array(8))].map(v=>AL[v%32]).join('');store.s('wc2.oid',OLN.oid)}
-function drawOnline(){const el=$('#online');if(!el)return;el.hidden=!OLN.ok;el.textContent='いま、約'+OLN.n+'人がウェブチャットを開いています'}
-async function olPing(){if(document.hidden||nqBusy(25))return;try{nqUse();const r=await fetch(NTFY+OLN.topic,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({o:OLN.oid})});nqHit(r)}catch(e){}}
-async function olCount(){if(document.hidden||nqBusy(25))return;OLN.t=Date.now();
- try{nqUse();const r=await fetch(NTFY+OLN.topic+'/json?poll=1&since=3m',{cache:'no-store'});nqHit(r);if(!r.ok)throw 0;const txt=await r.text(),set=new Set([OLN.oid]),lim=Date.now()/1000-190;
-  for(const ln of txt.split('\n').slice(0,3000)){if(!ln||ln.length>2000)continue;let d;try{d=JSON.parse(ln)}catch(e){continue}
-   if(!d||d.event!=='message'||typeof d.message!=='string'||(d.time&&d.time<lim))continue;let e;try{e=JSON.parse(d.message)}catch(x){continue}
-   if(e&&typeof e.o==='string'&&/^[A-Z0-9]{8}$/.test(e.o))set.add(e.o)}
-  OLN.n=set.size;OLN.ok=true}catch(e){OLN.ok=false}
- drawOnline()}
-setTimeout(()=>{olPing();setTimeout(()=>{if(!$('#home').hidden)olCount()},1500)},2500);
-setInterval(()=>{olPing();if(!$('#home').hidden)olCount()},120000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#home').hidden&&Date.now()-OLN.t>60000)olCount()});
-/* ---------- 吹き出しの背景（5,000文字まで・全員の画面に同じように出る） ----------
-   背景の値は長いので、チャットのメッセージには「指紋(bh・16桁)」だけを載せる。
-   値そのものは、メッセージとは別の通知(bgc)に2,200文字ずつ分けて、部屋の鍵で暗号化して送る。
-   受け取る側は、全部そろったら指紋を確かめて、メモリにだけ持つ（ページを閉じると消える）。
-   持っていない人は「ください」(bgq)と頼み、持っている人が代わりに送る。公式部屋では使えない。 */
-const BGV=new Map(),BGC=2200;
-function myBo(){const n=+STY.bgo;return isFinite(n)?Math.max(0,Math.min(90,Math.round(n))):0}
-function bgApply(v,bo){const a=Math.max(0,Math.min(90,Math.round(+bo||0)))/100;return a>0?'linear-gradient(rgba(255,255,255,'+a+'),rgba(255,255,255,'+a+')),'+v:v}
-const bgHash=v=>hex(sha256('bg:'+v)).slice(0,16);
-let bgMy={v:'',h:''};
-function bgStore(k,v){BGV.delete(k);BGV.set(k,v);while(BGV.size>60)BGV.delete(BGV.keys().next().value)}
-function myBh(room){if(!room||room.practice||!room.key)return '';const v=cleanBg(STY.bgv);if(!v)return '';
- if(bgMy.v!==v)bgMy={v,h:bgHash(v)};bgStore(S.id+':'+bgMy.h,v);return bgMy.h}
-function bgFor(room,m){if(m.u===S.id){const v=cleanBg(STY.bgv);return v?bgApply(v,myBo()):''}
- if(!m.bh||room.practice||!room.key)return '';
- const k=m.u+':'+m.bh,v=BGV.get(k);if(v){const b=peerBg(room,v);return b?bgApply(b,m.bo):''}askBg(room,m.u,m.bh);return ''}
-async function sendBgValue(room,o,h,v){const ch=v.match(/[\s\S]{1,2200}/g)||[];for(let i=0;i<ch.length&&!room.dead;i++){try{await relay(room,{v:'bgc',u:S.id,o,h,i,n:ch.length,p:ch[i]})}catch(e){}if(i<ch.length-1)await new Promise(r=>setTimeout(r,300))}}
-function ensureBg(room){if(!room||room.dead||room.practice||room.pres.size<=1||nqBusy(15))return;const h=myBh(room);if(!h)return;
- if(room.bgSentH===h&&Date.now()-(room.bgSentT||0)<9e5)return;room.bgSentH=h;room.bgSentT=Date.now();sendBgValue(room,S.id,h,bgMy.v)}
-function schedBg(room){if(!room||room.dead||room.practice||!bgMy.v&&!cleanBg(STY.bgv))return;if(!bucket('bgj|'+room.topic,3,10000))return;
- setTimeout(()=>{if(room.dead||nqBusy(15))return;const h=myBh(room);if(!h)return;room.bgSentH=h;room.bgSentT=Date.now();sendBgValue(room,S.id,h,bgMy.v)},500+Math.random()*2500)}
-function askBg(room,u,h){if(room.dead||room.practice||!room.key||room.pres.size<=1||nqBusy(25))return;
- const a=room.bgAsk||(room.bgAsk=new Map()),k=u+':'+h,t=a.get(k);if(t&&Date.now()-t<300000)return;
- if(!bucket('bgq|'+room.topic,2,30000))return;a.set(k,Date.now());if(a.size>40)a.delete(a.keys().next().value);
- relay(room,{v:'bgq',u:S.id,tu:u,h}).catch(()=>{})}
-function gotBgReq(room,u,m){if(u===S.id||room.dead||room.practice||!room.key||!idOk(m.tu)||!/^[0-9a-f]{16}$/.test(m.h||''))return;
- if(m.tu===S.id)myBh(room);const k=m.tu+':'+m.h,v=BGV.get(k);if(!v)return;
- const sd=room.bgSeed||(room.bgSeed=new Map()),old=sd.get(k);if(old&&(old.timer||Date.now()-old.t<60000))return;
- const rec={t:Date.now(),timer:0};sd.set(k,rec);if(sd.size>40)sd.delete(sd.keys().next().value);
- rec.timer=setTimeout(()=>{rec.timer=0;if(room.dead||nqBusy(15)||!bucket('bgr|'+room.topic,2,30000))return;sendBgValue(room,m.tu,m.h,v)},m.tu===S.id?200+Math.random()*400:1000+Math.random()*4000)}
-function gotBgChunk(room,u,m){if(room.practice||!room.key||!idOk(m.o)||!/^[0-9a-f]{16}$/.test(m.h||''))return;
- const i=m.i,n=m.n;if(!Number.isInteger(i)||!Number.isInteger(n)||n<1||n>4||i<0||i>=n||typeof m.p!=='string'||m.p.length>2300)return;
- const k=m.o+':'+m.h,sd=room.bgSeed&&room.bgSeed.get(k);if(sd&&sd.timer){clearTimeout(sd.timer);sd.timer=0;sd.t=Date.now()}
- if(BGV.has(k))return;
- const as=room.bgAsm||(room.bgAsm=new Map());let r=as.get(k);if(!r){if(as.size>=8)as.delete(as.keys().next().value);r={n,parts:[],c:0};as.set(k,r)}
- if(r.n!==n)return;if(r.parts[i]===undefined){r.parts[i]=m.p;r.c++}
- if(r.c<n)return;as.delete(k);const v=r.parts.join('');
- if(v.length>5000||cleanBg(v)!==v||bgHash(v)!==m.h)return;bgStore(k,v);schedule()}
-/* 吹き出しの見た目を端末ごとに変える設定は使わないので、設定画面から隠す */
-(()=>{const hide=e=>{if(e)e.hidden=true};const b=$('#sBb');if(b){const keep=new Set([$('#cprev'),$('#sBv'),$('#sBv').nextElementSibling,$('#bgvTa'),$('#bgvCnt').closest('.setrow'),$('#bgoRow')]);let n=b;while(n){const nx=n.nextElementSibling;if(!keep.has(n))hide(n);n=nx}}
- ['#swPb','#swPbu','#swPu'].forEach(id=>{const e=$(id);hide(e&&e.closest('.setrow'))})})();
-frDraw();
-if(S.id&&!invite){show('home');drawHome()}
-$('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
+$('#seed').value=S.seed;$('#nick').value=S.nick;setSeed(S.seed);drawBadge();drawIcon();
+/* アドレスの最後に #nocss を付けて開くと、吹き出しのCSSをオフにして開ける */
+if(location.hash==='#nocss'&&UC.on){UC.on=false;ucSave(true);ucApply(true);toast('吹き出しのCSSをオフにしました')}
+setTimeout(()=>{olBeat();olCount()},1200);
+if(S.id){show('home');drawHome()}
+if(!store.g('wc2.seen',0)){store.s('wc2.seen',1);setTimeout(startTut,650)}
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body></html>
