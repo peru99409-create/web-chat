@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://web-chat-9ne.pages.dev/sitemap.xml
