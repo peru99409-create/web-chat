@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://ntfy.sh https://cloudflareinsights.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="google-site-verification" content="xnk1VEYvg9ky6po_ZCRu-iDmXN_7BVh-vvUU-727wmg">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ウェブチャット｜登録不要・暗号化に対応した無料チャット</title>
@@ -723,6 +724,13 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 .about nav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;padding:0 0 8px}
 .about nav a{color:var(--accent);font-size:13px;line-height:24px}
 .about noscript p{color:var(--text)}
+
+/* ===== 吹き出し：全員共通の固定デザイン（送信者・受信者に関わらず同一） ===== */
+.row .bub,.row.mine .bub,.row:not(.mine) .bub{background:var(--bg3)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:16px!important;box-shadow:none!important;opacity:1!important;font:inherit!important;padding:8px 16px!important;background-image:none!important;animation:none!important}
+.row .bub a{color:var(--accent)!important}
+.row .bub.wh{border-style:dashed!important}
+.row.r.first .bub{border-top-right-radius:4px!important}
+.row:not(.r).first .bub{border-top-left-radius:4px!important}
 </style></head><body>
 
 <!-- ===== ホーム ===== -->
@@ -740,6 +748,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    <span class="new" id="newBadge" hidden>NEW</span>
   </button>
   <p class="xs faint rise" style="--d:5;text-align:center"><button class="lnk" data-terms>利用規約とプライバシー</button></p>
+  <p class="xs faint rise" style="--d:6;text-align:center;font-size:11px;line-height:16px;margin-top:-8px" id="online" hidden></p>
  </div>
 </section>
 
@@ -1010,6 +1019,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:31,date:'2026-11-17',title:'ホームに、利用者数の目安を表示しました',body:'ホームの下に、いまウェブチャットを開いている人数の目安を、小さく表示します。端末ごとのランダムな匿名の印を2分おきに送って数えています（部屋名・ID・表示名は含みません）。誰でも書き込めるしくみなので、正確な人数ではありません。\n吹き出しは、送った人・見る人に関わらず、全員が同じ固定デザインで、同じ側に表示されるようにしました。\n利用規約の第9条を更新しました。'},
  {id:30,date:'2026-11-17',title:'メッセージが送れなくなる不具合を直しました',body:'ひとりのときは在室の合図を送らないようにし、合図の間隔も2分に伸ばしました。\n中継サービスの「短い間に使える回数」を使い切ると、メッセージが送れなくなることがありました。入力中の合図や在室の合図を減らし、残りが少ないときは送らないようにしました。受信を取りにいく間隔も長くしました。\n送れなかったときは、自動で2回までやり直します。それでも混み合っているときは、そう表示します（タップで再送できます）。\n連投の注意に出る待ち時間を、実際の残り時間にそろえました。'},
  {id:29,date:'2026-11-17',title:'アイコン・途中参加・吹き出し・連投の判定を直しました',body:'アイコン画像が左上だけに見える不具合を直しました。テーマの指定に上書きされて、画像の大きさが戻されていたためです。\n途中から入った人にも、いまいる人のアイコンが届くようにしました。人が入ってきたら、在室の人がアイコンを送り直します。\n自分の吹き出しの色・背景・左右は、これまでどおり相手の画面にも出ます。相手の吹き出しは、送った人の設定がそのまま出て、こちらからは変えられません。設定の「見た目」に「相手の吹き出しを表示」を増やし、オフにすると相手の発言は文字だけになります。\n連投の判定を、部屋ごとに数えるように直しました。別の部屋で送った分や、読み込み直す前の記録で止められることがなくなりました。練習の部屋では、間隔を気にせず送れます。'},
  {id:28,date:'2026-11-17',title:'メンション・入力中の合図・送信の取り消しを追加しました',body:'入力欄の左の「@」を押すか、「@」と打つと、いまいる人の名前が出ます。選ぶと「@名前」が入り、相手に「あなた宛て」と伝わります（吹き出しが縁取りされます）。\n設定の「通知」で、通知する相手を「全員／登録した人だけ／メンションだけ／登録した人かメンション」から選べます。\n誰かが書いている間は、上の帯のその人の名前が光ります。設定の「自分」で、自分の入力中を知らせない設定もできます。\n送って1分以内なら、メッセージをタップして「送信を取り消す」で、相手の画面からも消せます。\n「ここから新着」の線に、件数も出ます。入口では、公式部屋のボタンを部屋名のカードの中に移しました。伝言板は、読み込みに失敗したときの表示と再読み込みボタンを付けました。'},
@@ -1060,7 +1070,7 @@ const COLS={mint:['#4cc09a','#1c9a74'],indigo:['#8b93ff','#4f56d6'],sky:['#4fb3f
 const CNAME={mint:'ミント',indigo:'インディゴ',sky:'スカイ',pink:'ピンク',orange:'オレンジ',gold:'ゴールド'};
 const THM=Object.assign({style:'classic',mode:'auto',color:'mint',custom:'#4cc09a'},store.g('wc2.theme2',{}));
 const mqDark=matchMedia('(prefers-color-scheme: dark)');
-const RT=store.g('wc2.roomTheme',{});
+const RT=Object.assign(Object.create(null),store.g('wc2.roomTheme',{}));
 const eff=room=>{const o=room&&!room.practice&&RT[room.norm];return o?Object.assign({},THM,o):THM};
 const tgt=()=>(S.room&&!S.room.practice&&RT[S.room.norm])||THM;
 const isDark=th=>th.style==='neon'||th.mode==='dark'||(th.mode==='auto'&&mqDark.matches);
@@ -1099,7 +1109,7 @@ const UCMAX=500000;
 const UC=Object.assign({on:true,css:''},store.g('wc2.ucss',{}));
 if(typeof UC.css!=='string')UC.css='';UC.css=UC.css.slice(0,UCMAX);
 let ucLast=null,ucAT=0,ucST=0,ucArm=0;
-const ucActive=()=>!!(UC.on&&UC.css.trim()&&location.hash!=='#nocss');
+const ucActive=()=>false; /* 吹き出しの見た目は全員共通の固定デザイン。端末ごとのCSSは使わない */
 const UC_EX=`/* 自分の吹き出し */
 .row.mine .bub{
   background:linear-gradient(135deg,#ff9a9e,#fad0c4);
@@ -1233,7 +1243,12 @@ const STY=Object.assign({bg:'',tx:'',side:'auto',bgv:''},(()=>{const o=store.g('
 const saveSty=()=>store.s('wc2.style',STY);
 const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function autoText(bg){const n=parseInt(bg.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#111111':'#ffffff'}
-function styleOf(m){const mine=m.u===S.id,src=mine?{c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side}:{c:m.c,k:m.k,s:m.s};
+/* 吹き出しの位置は送信者IDだけで決める。誰が見ても同じ。
+   既定では全員の吹き出しを同じ側（右）に出す。送信者ごとに分けたいときは、sideOf だけを変える。 */
+const BUB_SIDE_DEFAULT='r';
+function sideOf(senderId){return BUB_SIDE_DEFAULT!=='l'}
+function styleOf(m){return {right:sideOf(m.u),mine:false,bg:'',tx:''}}
+function styleOfOld(m){const mine=m.u===S.id,src=mine?{c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side}:{c:m.c,k:m.k,s:m.s};
  const right=src.s==='r'?true:src.s==='l'?false:mine;
  /* 相手の吹き出しは、送った人の設定（色・文字色・左右）がそのまま出る。こちらからは変えられない。
     設定「相手の吹き出しを表示」をオフにすると、装飾を出さず文字だけになる */
@@ -1241,7 +1256,7 @@ function styleOf(m){const mine=m.u===S.id,src=mine?{c:STY.bg,k:STY.tx,s:STY.side
  const bg=hexOk(src.c)?src.c:'',tx=hexOk(src.k)?src.k:(bg?autoText(bg):'');return {right,mine,bg,tx}}
 /* 自分の吹き出しの色は、端末のCSSを使っている間は使わない（これまでどおり）。
    相手の吹き出しの色は、こちらのCSS設定に関係なく、送った人の設定をそのまま出す */
-const bubAttr=sy=>(((sy.mine?!ucActive():true)&&(sy.bg||sy.tx)))?` cu" style="${sy.bg?`background:${sy.bg};border-color:${sy.bg};`:''}${sy.tx?`color:${sy.tx}`:''}`:'';
+const bubAttr=sy=>false?` cu" style="${sy.bg?`background:${sy.bg};border-color:${sy.bg};`:''}${sy.tx?`color:${sy.tx}`:''}`:'';
 function drawColors(skip){
  const eb=STY.bg||cssv('--accent'),et=STY.tx||(STY.bg?autoText(STY.bg):cssv('--on'));
  if(skip!=='cBg'&&hexOk(eb))$('#cBg').value=eb;if(skip!=='cTx'&&hexOk(et))$('#cTx').value=et;
@@ -1375,7 +1390,7 @@ function drawHome(still){
  if(rec.length)h+=`<div class="lab hs">最近の部屋</div>`+rec.map(n=>row(n,'タップして入る',`<button class="ib" data-del="${esc(n)}" aria-label="一覧から外す"><svg class="ic"><use href="#i-x"/></svg></button>`,'',`data-n="${esc(n)}"`)).join('');
  if(!open.length&&!rec.length)h+=`<div class="hint" style="padding:20px 16px"><b style="color:var(--text)">まだ部屋に入っていません</b><br>「部屋に入る」から、部屋名を入れて始めましょう（同時に${MAXR}つまで）。</div>`;
  hr.innerHTML=h;$('#hlab').textContent=S.rooms.length?'部屋':'部屋';
- drawBadge()}
+ drawBadge();drawOnline();if(typeof OLN!=='undefined'&&Date.now()-OLN.t>60000)olCount()}
 $('#hrooms').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){const n=d.dataset.del;store.s('wc2.recent',store.g('wc2.recent',[]).filter(x=>x!==n));drawHome();return}
  const lv=e.target.closest('[data-lv]');if(lv){const r=S.rooms.find(x=>x.norm===lv.dataset.lv);if(r){const wasCur=S.room===r&&drawerOpen();if(wasCur){leaveTab(r);if(S.room&&!$('#chat').hidden)openDrawer()}else{dropRoom(r);drawTabs();drawHome();toast(dispRoom(r)+'から退室しました')}}return}
  const r=e.target.closest('.hrow');if(r)openRoom(r.dataset.n)});
@@ -1406,7 +1421,7 @@ function noticeBack(){if(noticeFrom==='chat'&&S.room&&!S.room.dead){show('chat',
    内容を変えたら TERMS_VER を1つ増やすと、もう一度同意を確認します。
    連絡先を載せたいときは TERMS_CONTACT に書いてください。
    ===================================================== */
-const TERMS_VER=3,TERMS_DATE='2026年11月15日',TERMS_CONTACT='';
+const TERMS_VER=4,TERMS_DATE='2026年11月15日',TERMS_CONTACT='';
 const TERMS=[
  {s:'前文',h:'はじめに',b:[
   'この利用規約（以下「本規約」）は、「ウェブチャット」（以下「本サービス」）の使い方のルールと、データの取り扱いを定めるものです。本サービスを使う人（以下「利用者」）は、本規約に同意したうえで利用してください。',
@@ -1493,7 +1508,8 @@ const TERMS=[
   'ID・表示名：暗号化されません。中継のための封筒に書かれて、そのまま送られます。',
   '入室・退室・在室の合図（1分おき）と、いま部屋にいる人の一覧：同じ部屋の人に届きます。',
   'アイコン：小さな画像（最大96px四方）は暗号化して送ります。大きな画像（最大512px四方）は、暗号化した添付として、短い時間だけ預けます。',
-  '伝言板の書き込みと削除の合図：暗号化して送ります。']},
+  '伝言板の書き込みと削除の合図：暗号化して送ります。',
+  '利用者数の集計：端末ごとのランダムな匿名の印を、2分おきに共通の部屋へ送ります（部屋名・ID・表示名は含みません）。ホームに、直近3分の印の数が、目安として表示されます。']},
   '部屋名そのものは送りません。部屋名から作った識別用の記号だけが、中継サービスに見えます。',
   'IPアドレスやブラウザの種類などの通信情報は、通信するだけで、中継サービス（ntfy.sh）に届きます。その扱いは、同サービスのルールによります。',
   '本ページには、広告や、利用者の行動を追いかけるためのしくみは入れていません。運営者が、利用者のメッセージや個人情報を集めて分析することはありません。',
@@ -1599,7 +1615,7 @@ const CD_CHAT=1500,CD_BOARD=10000;
    以前は全部屋で1つの記録を共有し、さらに「連投ロック」を端末に保存していたため、
    別の部屋で送った分や、読み込み直す前の記録まで数えて、連投していないのに止められていた。 */
 const CDS=Object.assign({name:0,icon:0,room:0,rm:{}},store.g('wc2.cd',{}));
-CDS.rm=(CDS.rm&&typeof CDS.rm==='object')?CDS.rm:{};
+CDS.rm=Object.assign(Object.create(null),(CDS.rm&&typeof CDS.rm==='object')?CDS.rm:{});
 ['chat','board','lock','hist','oh','lh','bh','bt'].forEach(k=>{delete CDS[k]});
 (()=>{const n=Date.now();['name','icon','room'].forEach(k=>{if(!(CDS[k]<=n))CDS[k]=0});
  for(const k in CDS.rm){const s=CDS.rm[k];
@@ -1649,7 +1665,7 @@ function drop(room,u){const n=Date.now(),d=room.drops||(room.drops=new Map());le
 function tempMute(room,u){const n=Date.now(),o=TM.get(u)||{lv:0,until:0},dur=(room.official?[900,3600,21600]:[300,900,3600])[Math.min(o.lv,2)]*1000;TM.set(u,{lv:o.lv+1,until:n+dur});
  addMsg(room,{id:'tm'+uid(),u:'',su:'',sys:true,t:n,x:(nameOf(u)||u)+'が連投・荒らしの疑いで、'+(dur>=3600000?Math.round(dur/3600000)+'時間':Math.round(dur/60000)+'分間')+' 非表示になりました'});drawPbar();if(S.room===room){render();drawBoard()}}
 /* 受信側：鍵で復号できた(=部屋の人の)投稿にだけ、種類ごとの流量制限をかける */
-const KB={c:[8,1000],ev:[6,4000],av:[4,10000],bd:[2,8000],bdd:[4,4000],rx:[6,3000],ty:[4,2500],del:[4,4000]};
+const KB={c:[6,1500],ev:[6,4000],av:[4,10000],bd:[2,8000],bdd:[4,4000],rx:[6,3000],ty:[4,2500],del:[4,4000]};
 const KBO={c:[3,5000],ev:[4,6000],av:[2,15000],bd:[1,20000],bdd:[3,6000],rx:[2,8000],ty:[2,4000],del:[2,6000]};
 function guardIn(room,u,k,hist){
  if(u===S.id)return true;
@@ -1878,7 +1894,7 @@ async function onIncoming(room,d,hist){
  const cx=cleanText(m.x,room.official?200:500,room.official?5:10);if(!cx||linkN(cx)>(room.official?0:2))return;
  {const ld=room.lastTx||(room.lastTx=new Map()),q=ld.get(d.u),now=Date.now();if(q&&q.x===cx&&now-q.t<(room.official?60000:8000))return;ld.set(d.u,{x:cx,t:now})}
  const ct=Math.abs(m.t-Date.now())>3e5?Date.now():m.t;
- addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:hexOk(m.c)?m.c:'',k:hexOk(m.k)?m.k:'',s:(m.s==='r'||m.s==='l')?m.s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),ub:cleanBg(m.ub),mn:parseMn(m.mn)})}
+ addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),ub:'',mn:parseMn(m.mn)})}
 /* ntfyから届いた1件を処理（SSEでもポーリングでも共通） */
 function gotNtfy(room,d,hist){
  if(!d||d.event!=='message'||typeof d.message!=='string'||d.message.length>9000)return;if(hist&&!(Array.isArray(d.tags)&&d.tags.includes('bd')))return;
@@ -1952,11 +1968,11 @@ function render(first){
   if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
-  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=m.w?'':(me?cleanBg(STY.bgv):(SET.peerBub===false?'':peerBg(room,m.ub)));
+  const me=m.u===S.id,sy=styleOf(m),first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub='';
   let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row ${sy.right?'r':''} ${me?'mine':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}${mentionsMe(m)?' mnme':''}${bubAttr(sy)}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
+  h+=`<div class="row ${sy.right?'r':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
   if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
   prev=m}
  box.innerHTML=h;applyUbg(box);
@@ -1983,11 +1999,11 @@ function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){s
  const off=!!room.official;
  const x=cleanText(raw,off?200:500,off?5:10);if(!x){toast('送れない文字だけが含まれています');return}
  if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは送れません':'リンクは1通に2つまでです');return}
- {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side,rp:room.rpTo||undefined,ub:cleanBg(STY.bgv),mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
+ {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,ub:'',mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
  /* 練習の部屋では、送信の間隔を気にせず試せるようにする */
  const bad=room.practice?'':gateChat(x,off,room.norm);if(bad){toast(bad);return}
  const sb=$('#send');sb.classList.add('cool','fly');setTimeout(()=>sb.classList.remove('cool'),off?5000:CD_CHAT);setTimeout(()=>sb.classList.remove('fly'),450);if(coarse&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
- const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:STY.bg,k:STY.tx,s:STY.side==='auto'?'':STY.side,mn:mnFromText(room,x),rp:room.rpTo||null,ub:(()=>{const b=cleanBg(STY.bgv);return room.official&&/url\(/i.test(b)?'':b})(),pending:true,fresh:true};
+ const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,ub:'',pending:true,fresh:true};
  room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m);ta.focus()}
 /* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
 async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&(room.pres.size<=1||Date.now()-(room.avT||0)<300000))return;room.avT=Date.now();
@@ -2184,6 +2200,26 @@ const tutSeen=store.g('wc2.tut2',false)||store.g('wc2.tut',false)||!!S.id;
 if(!tutSeen){store.s('wc2.tut2',true);setTimeout(startTut,700)}
 else if(!S.id)setTimeout(()=>{if(!coarse)$('#room').focus()},500);
 else if($('#room').value&&!coarse)setTimeout(()=>$('#room').focus(),500);
+/* ---------- 利用者数（目安） ----------
+   共通の公開トピックに、ランダムな匿名の印を2分おきに送り、直近3分の印の数を数える。
+   部屋名・ID・表示名は含まない。誰でも書き込めるので、あくまで目安。 */
+const OLN={topic:'wc2-online-v1',oid:store.g('wc2.oid',''),n:0,ok:false,t:0};
+if(!/^[A-Z0-9]{8}$/.test(OLN.oid||'')){OLN.oid=[...crypto.getRandomValues(new Uint8Array(8))].map(v=>AL[v%32]).join('');store.s('wc2.oid',OLN.oid)}
+function drawOnline(){const el=$('#online');if(!el)return;el.hidden=!OLN.ok;el.textContent='いま、約'+OLN.n+'人がウェブチャットを開いています'}
+async function olPing(){if(document.hidden||nqBusy(25))return;try{nqUse();const r=await fetch(NTFY+OLN.topic,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({o:OLN.oid})});nqHit(r)}catch(e){}}
+async function olCount(){if(document.hidden||nqBusy(25))return;OLN.t=Date.now();
+ try{nqUse();const r=await fetch(NTFY+OLN.topic+'/json?poll=1&since=3m',{cache:'no-store'});nqHit(r);if(!r.ok)throw 0;const txt=await r.text(),set=new Set([OLN.oid]),lim=Date.now()/1000-190;
+  for(const ln of txt.split('\n').slice(0,3000)){if(!ln||ln.length>2000)continue;let d;try{d=JSON.parse(ln)}catch(e){continue}
+   if(!d||d.event!=='message'||typeof d.message!=='string'||(d.time&&d.time<lim))continue;let e;try{e=JSON.parse(d.message)}catch(x){continue}
+   if(e&&typeof e.o==='string'&&/^[A-Z0-9]{8}$/.test(e.o))set.add(e.o)}
+  OLN.n=set.size;OLN.ok=true}catch(e){OLN.ok=false}
+ drawOnline()}
+setTimeout(()=>{olPing();setTimeout(()=>{if(!$('#home').hidden)olCount()},1500)},2500);
+setInterval(()=>{olPing();if(!$('#home').hidden)olCount()},120000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#home').hidden&&Date.now()-OLN.t>60000)olCount()});
+/* 吹き出しの見た目を端末ごとに変える設定は使わないので、設定画面から隠す */
+(()=>{const hide=e=>{if(e)e.hidden=true};const b=$('#sBb');if(b){let n=b;while(n){const nx=n.nextElementSibling;hide(n);n=nx}}
+ ['#swPb','#swPu','#swPbu'].forEach(id=>{const e=$(id);hide(e&&e.closest('.setrow'))})})();
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
