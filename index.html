@@ -1022,7 +1022,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
- {id:34,date:'2026-11-17',title:'公式部屋でも吹き出しの背景が出ます。白を重ねる濃さを変えられます',body:'公式部屋で、吹き出しの背景が表示されない不具合を直しました（背景は画像を読み込まず、埋め込みの値だけなので、公式部屋でも使えます）。\n設定の「自分」の「吹き出しの背景」の下に、「白を重ねる濃さ」（0〜90%）を追加しました。0%なら画像そのままで、数字を上げるほど文字が読みやすくなります。相手の画面にも、同じ濃さで反映されます。値に白の重ねを入れていた場合は、重ねが二重になるので、0%にするか、重ねを外した値を使ってください。'},
+ {id:34,date:'2026-11-17',title:'公式部屋でも吹き出しの背景が出ます。白を重ねる濃さを変えられます',body:'公式部屋で、吹き出しの背景が表示されない不具合を直しました（背景は画像を読み込まず、埋め込みの値だけなので、公式部屋でも使えます）。\n設定の「自分」の「吹き出しの背景」の下に、「白を重ねる濃さ」（0〜90%）を追加しました。初期値は0%で、画像そのままです。数字を上げるほど文字が読みやすくなります。相手の画面にも、同じ濃さで反映されます。値に白の重ねを入れていた場合は、重ねが二重になるので、重ねを外した値を使ってください。'},
  {id:33,date:'2026-11-17',title:'吹き出しの背景が、5,000文字まで使えるようになりました',body:'設定の「吹き出しの背景（相手にも見える）」に、5,000文字まで書けます（url(data:image/webp;base64,…) の埋め込み画像も入ります）。背景の値は長いので、メッセージとは別に、2,200文字ずつ分けて暗号化して送り、受け取った人の画面で組み立てて、全員に同じように表示します。メッセージには、指紋（16桁）だけを載せます。値を持っていない人が頼むと、持っている人が代わりに送ります。公式部屋では使えません。'},
  {id:32,date:'2026-11-17',title:'背景画像をなくしました。CSS欄は5,000文字までになりました',body:'吹き出しの「背景画像」の機能をなくしました。背景画像の預かり・取得も行いません（グラデーションなどの背景の値は、これまでどおり使えます）。\n吹き出しのCSS欄の上限を、50万文字から5,000文字にしました。'},
  {id:31,date:'2026-11-17',title:'ホームに、利用者数の目安を表示しました',body:'ホームの下に、いまウェブチャットを開いている人数の目安を、小さく表示します。端末ごとのランダムな匿名の印を2分おきに送って数えています（部屋名・ID・表示名は含みません）。誰でも書き込めるしくみなので、正確な人数ではありません。\n吹き出しは、送った人・見る人に関わらず、同じ側に同じデザインで表示されます。自分の吹き出しの背景（グラデーションなど・1,000文字まで）と、背景画像（設定のボタンから）は、全員の画面で同じように見えます。\n利用規約の第9条を更新しました。'},
@@ -1245,7 +1245,7 @@ $('#avBig').addEventListener('click',hideBig);
 document.addEventListener('click',e=>{const pu=e.target.closest&&e.target.closest('[data-pu]');if(pu&&!$('#setDlg').contains(pu)){e.stopPropagation();openPerson(pu.dataset.pu);return}const t=e.target.closest&&e.target.closest('[data-av]');if(t&&!$('#setDlg').contains(t)||t&&t.id==='icPrev'){e.stopPropagation();showBig(t.dataset.av)}},true);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#avBig').classList.contains('show')){hideBig();e.stopImmediatePropagation()}},true);
 const hexOk=v=>/^#[0-9a-f]{6}$/i.test(v||'');
-const STY=Object.assign({bg:'',tx:'',side:'auto',bgv:'',bgo:40},(()=>{const o=store.g('wc2.style',null);if(o)return o;const t=store.g('wc2.theme',{});return {bg:hexOk(t.meBg)?t.meBg:'',tx:hexOk(t.meTx)?t.meTx:''}})());
+const STY=Object.assign({bg:'',tx:'',side:'auto',bgv:'',bgo:0},(()=>{const o=store.g('wc2.style',null);if(o)return o;const t=store.g('wc2.theme',{});return {bg:hexOk(t.meBg)?t.meBg:'',tx:hexOk(t.meTx)?t.meTx:''}})());
 const saveSty=()=>store.s('wc2.style',STY);
 const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function autoText(bg){const n=parseInt(bg.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#111111':'#ffffff'}
@@ -2235,7 +2235,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#home
    受け取る側は、全部そろったら指紋を確かめて、メモリにだけ持つ（ページを閉じると消える）。
    持っていない人は「ください」(bgq)と頼み、持っている人が代わりに送る。公式部屋では使えない。 */
 const BGV=new Map(),BGC=2200;
-function myBo(){const n=+STY.bgo;return isFinite(n)?Math.max(0,Math.min(90,Math.round(n))):40}
+function myBo(){const n=+STY.bgo;return isFinite(n)?Math.max(0,Math.min(90,Math.round(n))):0}
 function bgApply(v,bo){const a=Math.max(0,Math.min(90,Math.round(+bo||0)))/100;return a>0?'linear-gradient(rgba(255,255,255,'+a+'),rgba(255,255,255,'+a+')),'+v:v}
 const bgHash=v=>hex(sha256('bg:'+v)).slice(0,16);
 let bgMy={v:'',h:''};
