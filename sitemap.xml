@@ -2,5 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://web-chat-9ne.pages.dev/</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://web-chat-9ne.pages.dev/howto</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://web-chat-9ne.pages.dev/encryption</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://web-chat-9ne.pages.dev/faq</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://web-chat-9ne.pages.dev/terms</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://web-chat-9ne.pages.dev/news</loc>
+    <lastmod>2026-11-17</lastmod>
   </url>
 </urlset>

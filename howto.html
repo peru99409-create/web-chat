@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111413">
+<title>ウェブチャットの使い方｜部屋の入り方・ID・通知・設定</title>
+<meta name="description" content="ウェブチャットの使い方を、はじめての人向けに説明します。部屋名を決めて入る手順、IDと表示名、返信・リアクション、通知、複数の部屋の切り替えまで。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://web-chat-9ne.pages.dev/howto">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ウェブチャット">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ウェブチャットの使い方｜部屋の入り方・ID・通知・設定">
+<meta property="og:description" content="ウェブチャットの使い方を、はじめての人向けに説明します。部屋名を決めて入る手順、IDと表示名、返信・リアクション、通知、複数の部屋の切り替えまで。">
+<meta property="og:url" content="https://web-chat-9ne.pages.dev/howto">
+<meta property="og:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ウェブチャットの使い方｜部屋の入り方・ID・通知・設定">
+<meta name="twitter:description" content="ウェブチャットの使い方を、はじめての人向けに説明します。部屋名を決めて入る手順、IDと表示名、返信・リアクション、通知、複数の部屋の切り替えまで。">
+<meta name="twitter:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://web-chat-9ne.pages.dev/howto#page","url":"https://web-chat-9ne.pages.dev/howto","name":"ウェブチャットの使い方｜部屋の入り方・ID・通知・設定","description":"ウェブチャットの使い方を、はじめての人向けに説明します。部屋名を決めて入る手順、IDと表示名、返信・リアクション、通知、複数の部屋の切り替えまで。","inLanguage":"ja","dateModified":"2026-11-17","isPartOf":{"@id":"https://web-chat-9ne.pages.dev/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ウェブチャット","item":"https://web-chat-9ne.pages.dev/"},{"@type":"ListItem","position":2,"name":"ウェブチャットの使い方","item":"https://web-chat-9ne.pages.dev/howto"}]}]}</script>
+<style>
+:root{--bg:#111413;--bg2:#171a19;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--accent:#4cc09a;--link:#6fd4b2;--on:#0c1f18;color-scheme:dark}
+@media(prefers-color-scheme:light){:root{--bg:#eef1ee;--bg2:#ffffff;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--accent:#1c9a74;--link:#0f7a5a;--on:#ffffff;color-scheme:light}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 16px/1.9 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+.w{width:min(720px,100%);margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);background:var(--bg2)}
+header.top .w{display:flex;align-items:center;gap:12px;min-height:64px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-weight:700;font-size:18px;margin-right:auto}
+.logo{width:36px;height:36px;border-radius:12px;background:var(--accent);color:var(--on);display:grid;place-items:center}
+.logo svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cta{display:inline-block;background:var(--accent);color:var(--on);text-decoration:none;font-weight:700;font-size:14px;padding:6px 18px;border-radius:999px;line-height:1.9}
+nav.site{display:flex;flex-wrap:wrap;gap:4px 16px;padding:12px 0;font-size:14px;border-bottom:1px solid var(--line)}
+nav.site a{color:var(--text2);text-decoration:none}
+nav.site a[aria-current]{color:var(--text);font-weight:700;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:6px}
+nav.site a:hover{color:var(--text)}
+main{padding:32px 0 56px}
+h1{font-size:26px;line-height:1.5;margin-bottom:16px}
+h2{font-size:20px;line-height:1.6;margin:40px 0 12px;padding-top:8px}
+h3{font-size:16px;margin:24px 0 8px}
+p{margin:0 0 16px}
+.lead{color:var(--text2);font-size:17px}
+.meta{color:var(--text2);font-size:13px}
+ul,ol{margin:0 0 16px;padding-left:24px}
+li{margin-bottom:6px}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:0 0 20px}
+.box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
+.note{background:var(--bg2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:8px;margin:0 0 16px}
+.toc{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px 8px;margin:0 0 24px}
+.toc b{display:block;margin-bottom:6px;font-size:14px;color:var(--text2)}
+.toc ol,.toc ul{columns:2;column-gap:24px;font-size:14px}
+@media(max-width:520px){.toc ol,.toc ul{columns:1}}
+table{border-collapse:collapse;width:100%;margin:0 0 20px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;line-height:1.7}
+th{background:var(--bg2)}
+dt{font-weight:700;margin-top:20px}
+dd{margin:6px 0 0}
+article.n{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+article.n h2{font-size:17px;margin:12px 0 4px}
+.next{display:flex;flex-wrap:wrap;gap:8px 20px;margin:32px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+footer.bot{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:var(--text2)}
+footer.bot a{color:var(--text2)}
+footer.bot p{margin:0 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="w"><a class="brand" href="/"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg></span>ウェブチャット</a><a class="cta" href="/">チャットを開く</a></div></header>
+<div class="w"><nav class="site" aria-label="サイト内のページ"><a href="/howto" aria-current="page">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a></nav></div>
+<main><div class="w">
+
+<h1>ウェブチャットの使い方</h1>
+<p class="lead">ウェブチャットは、会員登録なしで使える無料のチャットです。このページでは、はじめて使う人向けに、部屋に入るところから、通知や設定まで順番に説明します。</p>
+
+<div class="toc"><b>このページの内容</b><ol>
+<li><a href="#start">はじめる：3ステップ</a></li>
+<li><a href="#id">IDと表示名</a></li>
+<li><a href="#send">メッセージの送り方</a></li>
+<li><a href="#rooms">複数の部屋と公式部屋</a></li>
+<li><a href="#board">伝言板</a></li>
+<li><a href="#notify">通知</a></li>
+<li><a href="#friends">お友達とミュート</a></li>
+<li><a href="#settings">設定</a></li>
+<li><a href="#leave">退室とデータ</a></li>
+</ol></div>
+
+<h2 id="start">はじめる：3ステップ</h2>
+<ol>
+<li><b>部屋名を入れる。</b>入口の「部屋名」に、好きな名前を入れます（30文字まで。例：ひみつ基地）。同じ部屋名を知っている人なら、誰でも同じ部屋に入れます。大文字と小文字、全角と半角、余分な空白は区別されません。</li>
+<li><b>IDと表示名を決める（どちらも任意）。</b>「あなたのID」に適当な文字を入れると、自分用のIDが決まります。「表示名」には、チャットで見せたい名前を入れます。どちらも空のままでも入れます。</li>
+<li><b>「入る」を押す。</b>初めて部屋に入るときは、利用規約の確認が出ます。同意すると、チャット画面が開きます。</li>
+</ol>
+<p>相手にも同じ部屋名を伝えて、同じ手順で入ってもらえば、会話を始められます。部屋に入ったり出たりすると、同じ部屋の人に伝わります。</p>
+<div class="note">入口の「使い方」を押すと、実際に操作しながら、IDづくりから部屋に入って送信するところまで練習できます。練習の内容は、外には送られません。</div>
+
+<h2 id="id">IDと表示名</h2>
+<p>IDは、入れた文字から自動で作られる6文字の記号です。同じ文字を入れれば、いつでも同じIDになります。入れた文字そのものは、他の人には送られません。ただし、同じ文字を知っている人は同じIDを名乗れるので、パスワードのように秘密にしてください。</p>
+<p>表示名は12文字まで付けられ、チャット中も変えられます。IDを作らずに入った場合は、部屋を出ると消える仮のIDになります。</p>
+<div class="note">会員登録がないため、運営者がIDや設定を復元することはできません。端末のデータを消した場合は、同じ文字を入れ直せば、同じIDに戻れます。</div>
+
+<h2 id="send">メッセージの送り方</h2>
+<p>文字を入れて送信するだけで、同じ部屋の人に届きます。このほかに、次の機能があります。</p>
+<ul>
+<li><b>返信とリアクション：</b>メッセージをタップすると、返信と、リアクション（👍❤️😂😮😢🙏）が選べます。リアクションは、メッセージの下の丸をタップして付けたり外したりできます。</li>
+<li><b>メンション：</b>入力欄の左の「@」を押すか、「@」と打つと、いまいる人の名前が出ます。選ぶと「@名前」が入り、相手に「あなた宛て」と伝わります。</li>
+<li><b>ささやき：</b>特定の人に向けて送る機能です。</li>
+<li><b>送信の取り消し：</b>送って1分以内なら、メッセージをタップして「送信を取り消す」を選ぶと、相手の画面からも消せます。</li>
+<li><b>入力中の合図：</b>誰かが書いている間は、上の帯のその人の名前が光ります。自分の入力中を知らせない設定もあります。</li>
+<li><b>「ここから新着」の線：</b>部屋に戻ったとき、読んでいないところの境目に線と件数が出ます。</li>
+</ul>
+<p>荒らしを防ぐため、送れる回数や文字数には制限があります（チャットは1.5秒に1回まで、1通は500文字・10行まで、リンクは2つまで）。くわしくは<a href="/terms#t7">利用規約の第7条</a>を見てください。</p>
+
+<h2 id="rooms">複数の部屋と公式部屋</h2>
+<p>最大3つの部屋に同時に入れます。チャット画面の下のバーで部屋を切り替え、「＋」で別の部屋に入ります。見ていない部屋の新着は、ボタンに数字で出ます。</p>
+<p>戻るボタンを押すと、横からホームが半分だけ出ます。部屋には入ったままなので、部屋の切り替え・入室・退室がここからできます。</p>
+<p>「公式」という名前の部屋は、公式部屋です。入口の「公式部屋に入る」から、部屋名を入れずに入れます。荒らし対策が強めで、チャットは5秒に1回・200文字・リンク不可です。</p>
+
+<h2 id="board">伝言板</h2>
+<p>部屋の上の「伝言板」から、いま部屋にいない人にも伝言を残せます。1回100文字・3行まで、10秒に1回までです。1人が残せるのは3件まで、部屋全体で40件までで、古いものから消えます。</p>
+
+<h2 id="notify">通知</h2>
+<p>Web通知を許可すると、このページを開いたまま別のタブやアプリを見ている間も、端末の通知で新着が届きます。通知音は、初めはオフです。設定の「通知」で、次のことを選べます。</p>
+<ul>
+<li>通知する相手：全員／登録した人だけ／メンションだけ／登録した人かメンション</li>
+<li>通知ポップアップの位置：上・下と、左・中央・右</li>
+<li>通知を止める時間帯（夜は鳴らさない、など）</li>
+</ul>
+<p>通知には、送った人の名前、本文の最初の部分、部屋名が出ます。画面がロックされていても見えることがあるので、人に見られたくないときは通知を切ってください。</p>
+
+<h2 id="friends">お友達とミュート</h2>
+<p>部屋の中で、相手のアイコンか名前をタップすると、お友達に登録できます。登録した人には、自分用のあだ名を付けられます。迷惑な人は、ミュートすると、その人の発言が自分の画面だけに出なくなります。</p>
+
+<h2 id="settings">設定</h2>
+<p>設定は、見た目・自分（アイコンと吹き出し）・お友達・通知・規約の5つのタブに分かれています。表示名の変更もここからできます。</p>
+<ul>
+<li>見た目：雰囲気や色、「この部屋だけ別の見た目」、「部屋名を伏せる」</li>
+<li>自分：アイコン画像、吹き出しの色・位置、吹き出しのCSS（自分の画面にだけ効きます）</li>
+</ul>
+
+<h2 id="leave">退室とデータ</h2>
+<p>退室するには、いまの部屋のボタンから「この部屋から退室する」を押すか、ホームの「退室」を押します。通信が切れた状態が30秒ほど続くと、自動で退室します。</p>
+<p>部屋のメッセージは、画面に最大30件までです。部屋を出る、またはページを閉じると、端末には履歴が残りません。設定やお友達の登録などは、このブラウザの中に保存されます。共用の端末では、使い終わったらブラウザのデータを消してください。</p>
+
+<div class="next"><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a></div>
+
+</div></main>
+<footer class="bot"><div class="w">
+<p><a href="/">ウェブチャット</a>　登録不要・暗号化に対応した無料チャット</p>
+<p><a href="/howto">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a></p>
+</div></footer>
+</body></html>

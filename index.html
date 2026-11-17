@@ -2,7 +2,28 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="google-site-verification" content="xnk1VEYvg9ky6po_ZCRu-iDmXN_7BVh-vvUU-727wmg">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ウェブチャット</title>
+<title>ウェブチャット｜登録不要・暗号化に対応した無料チャット</title>
+<meta name="description" content="ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://web-chat-9ne.pages.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ウェブチャット">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ウェブチャット｜登録不要・暗号化に対応した無料チャット">
+<meta property="og:description" content="ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。">
+<meta property="og:url" content="https://web-chat-9ne.pages.dev/">
+<meta property="og:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ウェブチャット｜登録不要・暗号化に対応した無料チャット">
+<meta name="twitter:description" content="ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。">
+<meta name="twitter:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://web-chat-9ne.pages.dev/#website","url":"https://web-chat-9ne.pages.dev/","name":"ウェブチャット","inLanguage":"ja"},{"@type":"WebApplication","@id":"https://web-chat-9ne.pages.dev/#app","name":"ウェブチャット","url":"https://web-chat-9ne.pages.dev/","description":"ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて、同じ部屋名を知っている人と会話できます。メッセージ本文は、部屋名から作った鍵で暗号化して送ります。","applicationCategory":"CommunicationApplication","operatingSystem":"Web（Chrome・Safari・Edge・Firefox）","browserRequirements":"JavaScriptが使える最新のブラウザ","inLanguage":"ja","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"isPartOf":{"@id":"https://web-chat-9ne.pages.dev/#website"}}]}</script>
 <meta name="theme-color" content="#111413">
 <style>
 :root{--bg:#111413;--bg2:#171a19;--bg3:#202523;--bg4:#2b3230;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--text3:#69756f;--accent:#4cc09a;--on:#0c1f18;--danger:#e0716a;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);color-scheme:dark}
@@ -693,6 +714,15 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
  .setnav{padding:6px 12px}
  .setnav button{height:36px}
 }
+
+.about{display:flex;flex-direction:column;gap:24px;margin-top:8px}
+.about h2{font-size:16px;line-height:24px;font-weight:700}
+.about p,.about li{font-size:14px;line-height:24px;color:var(--text2)}
+.about ul,.about ol{padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.about li b{color:var(--text)}
+.about nav{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;padding:0 0 8px}
+.about nav a{color:var(--accent);font-size:13px;line-height:24px}
+.about noscript p{color:var(--text)}
 </style></head><body>
 
 <!-- ===== ホーム ===== -->
@@ -716,7 +746,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 <!-- ===== 入口 ===== -->
 <section class="screen" id="entry">
  <div class="wrap">
-  <div class="brand rise" style="--d:0"><button class="ib" id="eBack" aria-label="ホームに戻る" hidden><svg class="ic"><use href="#i-left"/></svg></button><span class="logo" id="logo"></span><b style="flex:1">ウェブチャット</b><button class="ib" id="nBtn" aria-label="お知らせ"><svg class="ic"><use href="#i-bell"/></svg><i class="dotn" id="nDot" hidden></i></button><button class="ib setbtn" id="setBtn" aria-label="通知などの設定"><svg class="ic"><use href="#i-set"/></svg></button><button class="chip" id="help" aria-label="使い方を見る">使い方</button></div>
+  <div class="brand rise" style="--d:0"><button class="ib" id="eBack" aria-label="ホームに戻る" hidden><svg class="ic"><use href="#i-left"/></svg></button><span class="logo" id="logo"></span><h1 style="display:contents;font:inherit;margin:0"><b style="flex:1">ウェブチャット</b></h1><button class="ib" id="nBtn" aria-label="お知らせ"><svg class="ic"><use href="#i-bell"/></svg><i class="dotn" id="nDot" hidden></i></button><button class="ib setbtn" id="setBtn" aria-label="通知などの設定"><svg class="ic"><use href="#i-set"/></svg></button><button class="chip" id="help" aria-label="使い方を見る">使い方</button></div>
 
   <div class="card rise" style="--d:2" id="cRoom">
    <div class="lab">部屋名　<span class="faint">同じ部屋名を知っている人と会話できます</span></div>
@@ -739,6 +769,37 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   </div>
 
   <p class="xs faint rise" style="--d:4;text-align:center">登録は不要です。メッセージは部屋名から作った鍵で暗号化して送られます。<br><button class="lnk" data-terms>利用規約とプライバシー</button></p>
+
+  <div class="about" id="about">
+   <noscript><section class="card"><p>ウェブチャットは JavaScript を使って動きます。JavaScript を有効にしてから、もう一度開いてください。</p></section></noscript>
+   <section class="card">
+    <h2>ウェブチャットとは</h2>
+    <p>ウェブチャットは、会員登録なしで使える無料のチャットです。部屋名を決めて入り、同じ部屋名を知っている人とだけ会話できます。メッセージの本文は、部屋名から作った鍵で暗号化して送られます。アプリのインストールは要らず、ブラウザで開くだけで使えます。</p>
+   </section>
+   <section class="card">
+    <h2>ウェブチャットの特徴</h2>
+    <ul>
+     <li><b>登録不要。</b>メールアドレスもパスワードも要りません。適当な文字を入れると、自分用のIDが決まります。</li>
+     <li><b>メッセージ本文を暗号化。</b>部屋名から作った鍵（AES-GCM）で暗号化します。範囲と限界は<a href="/encryption" style="color:var(--accent)">暗号化のしくみ</a>で説明しています。</li>
+     <li><b>部屋名が合言葉。</b>同じ部屋名を知っている人どうしだけで話せます。</li>
+     <li><b>最大3つの部屋に同時に参加。</b>下のバーで切り替えられます。</li>
+     <li><b>返信・リアクション・メンション。</b>送って1分以内なら、送信の取り消しもできます。</li>
+     <li><b>伝言板。</b>いまいない人にも、伝言を残せます。</li>
+     <li><b>荒らし対策。</b>連投の制限や、迷惑な人を見えなくするミュートがあります。</li>
+    </ul>
+   </section>
+   <section class="card">
+    <h2>使い方は、かんたんな3ステップ</h2>
+    <ol>
+     <li>部屋名を入れる（例：ひみつ基地）。</li>
+     <li>表示名とIDを決める（どちらも任意）。</li>
+     <li>「入る」を押して、同じ部屋名を知っている人と話す。</li>
+    </ol>
+   </section>
+   <nav aria-label="ウェブチャットの説明ページ">
+    <a href="/howto">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a>
+   </nav>
+  </div>
  </div>
 </section>
 

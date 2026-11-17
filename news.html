@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111413">
+<title>更新履歴・お知らせ｜ウェブチャット</title>
+<meta name="description" content="ウェブチャットの更新履歴です。メンション、送信の取り消し、複数の部屋、伝言板、通知、吹き出しの見た目など、追加した機能と変更点を日付順に載せています。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://web-chat-9ne.pages.dev/news">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ウェブチャット">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="更新履歴・お知らせ｜ウェブチャット">
+<meta property="og:description" content="ウェブチャットの更新履歴です。メンション、送信の取り消し、複数の部屋、伝言板、通知、吹き出しの見た目など、追加した機能と変更点を日付順に載せています。">
+<meta property="og:url" content="https://web-chat-9ne.pages.dev/news">
+<meta property="og:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="更新履歴・お知らせ｜ウェブチャット">
+<meta name="twitter:description" content="ウェブチャットの更新履歴です。メンション、送信の取り消し、複数の部屋、伝言板、通知、吹き出しの見た目など、追加した機能と変更点を日付順に載せています。">
+<meta name="twitter:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://web-chat-9ne.pages.dev/news#page","url":"https://web-chat-9ne.pages.dev/news","name":"更新履歴・お知らせ｜ウェブチャット","description":"ウェブチャットの更新履歴です。メンション、送信の取り消し、複数の部屋、伝言板、通知、吹き出しの見た目など、追加した機能と変更点を日付順に載せています。","inLanguage":"ja","dateModified":"2026-11-17","isPartOf":{"@id":"https://web-chat-9ne.pages.dev/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ウェブチャット","item":"https://web-chat-9ne.pages.dev/"},{"@type":"ListItem","position":2,"name":"更新履歴・お知らせ","item":"https://web-chat-9ne.pages.dev/news"}]}]}</script>
+<style>
+:root{--bg:#111413;--bg2:#171a19;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--accent:#4cc09a;--link:#6fd4b2;--on:#0c1f18;color-scheme:dark}
+@media(prefers-color-scheme:light){:root{--bg:#eef1ee;--bg2:#ffffff;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--accent:#1c9a74;--link:#0f7a5a;--on:#ffffff;color-scheme:light}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 16px/1.9 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+.w{width:min(720px,100%);margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);background:var(--bg2)}
+header.top .w{display:flex;align-items:center;gap:12px;min-height:64px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-weight:700;font-size:18px;margin-right:auto}
+.logo{width:36px;height:36px;border-radius:12px;background:var(--accent);color:var(--on);display:grid;place-items:center}
+.logo svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cta{display:inline-block;background:var(--accent);color:var(--on);text-decoration:none;font-weight:700;font-size:14px;padding:6px 18px;border-radius:999px;line-height:1.9}
+nav.site{display:flex;flex-wrap:wrap;gap:4px 16px;padding:12px 0;font-size:14px;border-bottom:1px solid var(--line)}
+nav.site a{color:var(--text2);text-decoration:none}
+nav.site a[aria-current]{color:var(--text);font-weight:700;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:6px}
+nav.site a:hover{color:var(--text)}
+main{padding:32px 0 56px}
+h1{font-size:26px;line-height:1.5;margin-bottom:16px}
+h2{font-size:20px;line-height:1.6;margin:40px 0 12px;padding-top:8px}
+h3{font-size:16px;margin:24px 0 8px}
+p{margin:0 0 16px}
+.lead{color:var(--text2);font-size:17px}
+.meta{color:var(--text2);font-size:13px}
+ul,ol{margin:0 0 16px;padding-left:24px}
+li{margin-bottom:6px}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:0 0 20px}
+.box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
+.note{background:var(--bg2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:8px;margin:0 0 16px}
+.toc{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px 8px;margin:0 0 24px}
+.toc b{display:block;margin-bottom:6px;font-size:14px;color:var(--text2)}
+.toc ol,.toc ul{columns:2;column-gap:24px;font-size:14px}
+@media(max-width:520px){.toc ol,.toc ul{columns:1}}
+table{border-collapse:collapse;width:100%;margin:0 0 20px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;line-height:1.7}
+th{background:var(--bg2)}
+dt{font-weight:700;margin-top:20px}
+dd{margin:6px 0 0}
+article.n{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+article.n h2{font-size:17px;margin:12px 0 4px}
+.next{display:flex;flex-wrap:wrap;gap:8px 20px;margin:32px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+footer.bot{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:var(--text2)}
+footer.bot a{color:var(--text2)}
+footer.bot p{margin:0 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="w"><a class="brand" href="/"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg></span>ウェブチャット</a><a class="cta" href="/">チャットを開く</a></div></header>
+<div class="w"><nav class="site" aria-label="サイト内のページ"><a href="/howto">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news" aria-current="page">更新履歴</a></nav></div>
+<main><div class="w">
+
+<h1>更新履歴・お知らせ</h1>
+<p class="lead">ウェブチャットに追加した機能や、変えたところの記録です。新しいものが上にあります。アプリ内の「お知らせ」と同じ内容です。</p>
+<article class="n" id="n29">
+<h2>アイコン・途中参加・吹き出し・連投の判定を直しました</h2>
+<p class="meta"><time datetime="2026-11-17">2026年11月17日</time></p>
+<p>アイコン画像が左上だけに見える不具合を直しました。テーマの指定に上書きされて、画像の大きさが戻されていたためです。</p>
+<p>途中から入った人にも、いまいる人のアイコンが届くようにしました。人が入ってきたら、在室の人がアイコンを送り直します。</p>
+<p>自分の吹き出しの色・背景・左右は、これまでどおり相手の画面にも出ます。相手の吹き出しは、送った人の設定がそのまま出て、こちらからは変えられません。設定の「見た目」に「相手の吹き出しを表示」を増やし、オフにすると相手の発言は文字だけになります。</p>
+<p>連投の判定を、部屋ごとに数えるように直しました。別の部屋で送った分や、読み込み直す前の記録で止められることがなくなりました。練習の部屋では、間隔を気にせず送れます。</p>
+</article>
+<article class="n" id="n28">
+<h2>メンション・入力中の合図・送信の取り消しを追加しました</h2>
+<p class="meta"><time datetime="2026-11-17">2026年11月17日</time></p>
+<p>入力欄の左の「@」を押すか、「@」と打つと、いまいる人の名前が出ます。選ぶと「@名前」が入り、相手に「あなた宛て」と伝わります（吹き出しが縁取りされます）。</p>
+<p>設定の「通知」で、通知する相手を「全員／登録した人だけ／メンションだけ／登録した人かメンション」から選べます。</p>
+<p>誰かが書いている間は、上の帯のその人の名前が光ります。設定の「自分」で、自分の入力中を知らせない設定もできます。</p>
+<p>送って1分以内なら、メッセージをタップして「送信を取り消す」で、相手の画面からも消せます。</p>
+<p>「ここから新着」の線に、件数も出ます。入口では、公式部屋のボタンを部屋名のカードの中に移しました。伝言板は、読み込みに失敗したときの表示と再読み込みボタンを付けました。</p>
+</article>
+<article class="n" id="n27">
+<h2>吹き出しの背景を、相手にも見せられるようになりました</h2>
+<p class="meta"><time datetime="2026-11-17">2026年11月17日</time></p>
+<p>設定の「自分」に、「吹き出しの背景（相手にも見える）」を追加しました。background に入れる値だけを、1,000文字まで書けます。url(…) も使えます（https:// か data:image/ のみ）。自分の吹き出しだけに効きます。</p>
+<p>見る側の設定（「見た目」）で、相手の背景を表示するか、背景の画像（url）を読み込むかを選べます。画像を読み込むと、置き場所にIPアドレスが届くことがあります。公式部屋では、画像は読み込みません。</p>
+</article>
+<article class="n" id="n26">
+<h2>吹き出しのCSS・通知の初期位置・公式部屋の履歴を直しました</h2>
+<p class="meta"><time datetime="2026-11-17">2026年11月17日</time></p>
+<p>設定の「自分」に、吹き出しのCSS欄を追加しました。自分で書いたCSSで見た目を自由に変えられます（50万文字まで。この端末の画面にだけ効きます）。アニメーションや背景画像も使えます。</p>
+<p>通知ポップアップの初期位置を、右上にしました（設定で変えられます）。</p>
+<p>公式部屋に何度も入ると、「最近の部屋」が公式だらけになる不具合を直しました。</p>
+<p>チャット画面の背景を、ホームと同じ色にそろえました。</p>
+</article>
+<article class="n" id="n25">
+<h2>配置を見直しました。退室と設定が分かりやすくなりました</h2>
+<p class="meta"><time datetime="2026-11-17">2026年11月17日</time></p>
+<p>チャットの右上に「退室」ボタンを置きました。下の部屋タブにも、それぞれ ✕ があります（押すと確認が出ます）。左上の「部屋」で、部屋の一覧を開けます。</p>
+<p>設定は、見た目・自分（アイコンと吹き出し）・お友達・通知・規約の5つのタブに分けました。パソコンでは左に一覧が出ます。表示名の変更も、設定の「自分」にあります。</p>
+<p>ホームは、部屋の一覧を先頭にして、「部屋に入る」を画面の下に固定しました。</p>
+</article>
+<article class="n" id="n24">
+<h2>使い方を、新しい機能に合わせました</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>使い方の練習に、リアクション・返信、お友達のあだ名、「ここから新着」の線、通知の細かい設定の説明を足しました。入口の「使い方」から、いつでもやり直せます。</p>
+</article>
+<article class="n" id="n23">
+<h2>返信・リアクション・未読の境目など、いろいろ追加</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>メッセージをタップすると、リアクション（👍❤️😂😮😢🙏）と返信ができます。リアクションは、メッセージの下の丸をタップして付けたり外したりできます。ささやきには付けられません。</p>
+<p>部屋に戻ったとき、「ここから新着」の線が出ます。</p>
+<p>設定の「見た目」に、「この部屋だけ別の見た目」（部屋ごとに雰囲気・色を覚えます）と「部屋名を伏せる」（部屋名をぼかします）を追加しました。</p>
+<p>お友達に登録した人には、自分用のあだ名を付けられます。ホームには、いま入っている部屋にいるお友達が出ます。</p>
+<p>設定の「通知」に、「通知を止める時間帯」を追加しました（夜は鳴らさない、など）。</p>
+</article>
+<article class="n" id="n22">
+<h2>通知を、登録した人だけにできます。ポップアップの位置も変えられます</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>設定の「通知」に、「登録した人だけ通知」を追加しました。オンにすると、お友達に登録した人のメッセージだけ、通知（ポップアップ・音）が出ます。</p>
+<p>通知ポップアップの位置は、上・下と、左・中央・右から選べます。選ぶと、その位置にテスト通知が出ます。</p>
+</article>
+<article class="n" id="n21">
+<h2>戻る画面を横から半分に。公式部屋の名前は「公式」に</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>チャットの戻るボタンを押すと、画面の横からホームが半分だけ出てきます。部屋の切り替え・入室・退室ができ、チャット側をタップすると閉じます。</p>
+<p>公式部屋の名前を「公式」にしました。</p>
+<p>通信が切れた状態が30秒ほど続くと、その部屋から自動で退室します（放置しているだけでは退室しません）。画面を離れていても接続は保たれます。</p>
+<p>部屋のリンクのコピーと、ホーム画面への追加は、なくしました。設定ボタンを大きくし、設定画面も見やすくしました。</p>
+</article>
+<article class="n" id="n20">
+<h2>部屋の切り替えを画面の下に移しました</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>部屋のボタンを、入力欄の下に大きく並べました。タップで移動、＋で別の部屋に入れます。新しい部屋に入るときは、チャットの上に入力ウィンドウが出るので、いまの部屋から抜けたように見えません。</p>
+<p>退室は、いまの部屋のボタンをタップして「この部屋から退室する」を押します。入口とホームから公式部屋にワンタップで入れるようにもなりました。公式部屋でもささやけます。</p>
+</article>
+<article class="n" id="n19">
+<h2>複数の部屋（タブ）と公式部屋</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>最大3つの部屋に同時に入れます。チャット画面の下のバーで切り替え、＋で別の部屋に入れます。見ていない部屋の新着は、ボタンに数字で出ます。</p>
+<p>戻るボタンでホームに戻っても、部屋には入ったままです（ホームの「入室中」から戻れます。退室は「退室」ボタンか、いまの部屋のボタンから）。</p>
+<p>公式部屋「official」を追加しました。ホームの先頭にあります。荒らし対策が強めで、5秒に1回・200文字・リンク不可です。利用規約も更新しました。</p>
+</article>
+<article class="n" id="n18">
+<h2>見た目を変えられるようになりました</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>設定の「見た目」から、雰囲気（標準・ミニマル・ポップ・ネオン）、明るさ（端末に合わせる・ライト・ダーク）、メインの色（6色・好きな色・部屋ごとに自動）を選べます。切り替えると、色や形がなめらかに変わります。</p>
+<p>設定の上に、アイコン・吹き出し・お友達などへ飛べる見出しを付けました。パソコンの広い画面では、チャットを中央に寄せて見やすくしました。</p>
+</article>
+<article class="n" id="n17">
+<h2>利用規約とプライバシーを追加</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>本サービスを使い始めた時点で、規約に同意したものとみなします（規約はいつでも読めます）。入口・ホーム・設定の「利用規約とプライバシー」から、全文を読めます。見出しから読みたい所へ移れます。</p>
+<p>初めて部屋に入るときに、大事な点の確認が出ます。同意した記録は、規約のページの下から取り消せます。</p>
+<p>暗号化できる範囲、端末に保存される情報、中継サービスに送られる情報、荒らし対策の制限の数字も、細かく書いています。</p>
+</article>
+<article class="n" id="n16">
+<h2>動きを追加。入口を分かりやすく。使い方を詳しく</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>入口では、IDと部屋名が決まると ✓ が付き、最近の部屋はワンタップで入れます。部屋名が空のまま「入る」を押すと、入力欄が揺れてお知らせします。送信・新着・入退室・一覧に動きを付けました。</p>
+<p>使い方に、メンバー一覧（ささやく・ミュート・登録）、伝言板、設定（アイコン・吹き出し・通知）、荒らし防止のルールの説明を足しました。練習の部屋で実際に開いて試せます。</p>
+</article>
+<article class="n" id="n15">
+<h2>伝言板を追加。荒らし対策を大幅に強化</h2>
+<p class="meta"><time datetime="2026-11-15">2026年11月15日</time></p>
+<p>部屋の上の「伝言板」から、いない人にも伝言を残せます（100文字まで・10秒に1回）。サーバーが保管している間（12時間ほど）は、あとから入った人にも見えます。自分の伝言は消せます。</p>
+<p>チャットは1.5秒に1回までです。連投・同じ内容の連続・長すぎる繰り返し・見えない文字・リンクの多い投稿を止めます。連投する人は、自動で一時的に非表示になります。外部リンクは、開く前に確認が出ます。表示名の変更・アイコンの変更・部屋の出入りにも間隔が入りました。</p>
+</article>
+<article class="n" id="n14">
+<h2>通知をWeb通知に変更。メンバー一覧と、途中参加のアイコンを修正</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>新着メッセージは、端末のWeb通知で届きます。設定の「Web通知」をオンにして、通知を許可してください。通知は、このページを開いたまま別のタブや別のアプリを見ている間に届きます（ページを閉じると届きません）。</p>
+<p>一度部屋を出て入り直したとき、メンバー一覧が空になることがある不具合を直しました。退室した人が一覧に残ってしまう不具合も直しました。</p>
+<p>途中から入った人にも、いまいる人のアイコンが届くようになりました。</p>
+</article>
+<article class="n" id="n13">
+<h2>お友達の登録と参加者の一覧を追加</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>部屋の中で、相手のアイコンか名前をタップすると、お友達に登録できます。登録した名前とIDが同じ人に ✓、同じ名前で別のIDの人に ✕ が付きます。登録は、この端末にだけ保存されます。登録した一覧は、設定の「お友達の登録」から見たり、削除したりできます。</p>
+<p>上の帯には、いま入っている人が全員並びます。退室のお知らせは、アプリを閉じて連絡が途絶えた場合にも出ます。</p>
+<p>名前は、自分のメッセージも含め、すべてのメッセージに表示されます。アイコンも自分のメッセージに出ます。同じ人が続けて話した間は省略され、別の人が挟まると出ます。</p>
+</article>
+<article class="n" id="n11">
+<h2>IDなしで入れます。入退室・メンバー表示・ささやき・ミュートを追加</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>IDを作らなくても、部屋名だけで入れます（その間だけ仮のIDになります）。表示名が空のときは、入るたびに春・夏・秋・冬のどれかになります。入退室はチャットに表示され、上の帯から、いま入っている人を見られます。人を選んで「ささやく」と、その人の画面にだけ届きます。ミュートした人の発言は、自分の画面に出なくなります。</p>
+</article>
+<article class="n" id="n10">
+<h2>アイコンをタップすると大きく見られます</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>アイコンは512pxまで保存でき、アイコンをタップすると大きく表示します。画像は端末の中で暗号化して一時的に預けます。通常の表示用の小さなアイコンは、これまでどおり軽く、ずっと残ります。</p>
+</article>
+<article class="n" id="n9">
+<h2>メッセージは部屋を出ると消えるようになりました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>部屋のメッセージは最大30件までで、超えると古いものから消えます。部屋を出ると、この端末にも履歴は残りません。あわせて通信を減らし、接続は入っている部屋の1本だけにしました。そのため、入っていない部屋の通知や未読の数は出なくなります。</p>
+</article>
+<article class="n" id="n8">
+<h2>アイコン画像を設定できるようになりました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>設定の「アイコン」から画像を選べます。丸く切り抜いて小さく縮め、相手へ届きます。以前よりくっきり縮めるようにしました。外すと元の文字アイコンに戻ります。</p>
+</article>
+<article class="n" id="n7">
+<h2>吹き出しの色と位置を変えられるようになりました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>設定から、自分の吹き出しの色・文字の色・表示する側（右／左）を選べます。カラーピッカーで自由に決められます。選んだ見た目は、あなたのメッセージとして相手の画面にも反映されます。</p>
+</article>
+<article class="n" id="n6">
+<h2>ホーム画面を追加しました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>お知らせ、最近入った部屋、未読の数を、ひと目で見られるホーム画面を追加しました。部屋の一覧から外したいときは、右の×を押してください。</p>
+</article>
+<article class="n" id="n5">
+<h2>通知とホーム画面に対応しました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>新着メッセージをポップアップで表示できます（初期設定はオン）。通知音は初期設定ではオフで、入口右上の設定から、オン・オフと音の種類を変えられます。ホーム画面への追加方法も同じ画面にあります。</p>
+</article>
+<article class="n" id="n4">
+<h2>使い方が「一緒に進める」形になりました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>実際に操作しながら、IDづくりから部屋に入って送信するところまで練習できます。練習中のメッセージは外には送られません。入口の「使い方」からいつでも始められます。</p>
+</article>
+<article class="n" id="n3">
+<h2>表示名と使い方ガイドを追加しました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>IDとは別に、好きな表示名を付けられるようになりました。入口でも、チャット右上のIDをタップしても変えられます。</p>
+<p>入口の「使い方」から、いつでもガイドを見返せます。</p>
+</article>
+<article class="n" id="n2">
+<h2>部屋の入り方</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>部屋名を決めて「入る」を押すだけです。同じ部屋名を知っている人なら、誰でも同じ部屋に入れます。</p>
+<p>部屋名は大文字・小文字や全角・半角を区別しません。</p>
+</article>
+<article class="n" id="n1">
+<h2>ウェブチャットを公開しました</h2>
+<p class="meta"><time datetime="2026-11-14">2026年11月14日</time></p>
+<p>登録なしで使えます。適当な文字を入れるとIDが決まり、同じ文字なら次回も同じIDになります。</p>
+</article>
+<div class="next"><a href="/howto">使い方</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a></div>
+
+</div></main>
+<footer class="bot"><div class="w">
+<p><a href="/">ウェブチャット</a>　登録不要・暗号化に対応した無料チャット</p>
+<p><a href="/howto">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a></p>
+</div></footer>
+</body></html>

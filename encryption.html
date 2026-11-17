@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111413">
+<title>ウェブチャットの暗号化｜できることと、できないこと</title>
+<meta name="description" content="ウェブチャットは、メッセージ本文を部屋名から作った鍵で暗号化（AES-GCM）して送ります。暗号化される情報、されない情報、部屋名の選び方、限界をまとめました。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://web-chat-9ne.pages.dev/encryption">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ウェブチャット">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ウェブチャットの暗号化｜できることと、できないこと">
+<meta property="og:description" content="ウェブチャットは、メッセージ本文を部屋名から作った鍵で暗号化（AES-GCM）して送ります。暗号化される情報、されない情報、部屋名の選び方、限界をまとめました。">
+<meta property="og:url" content="https://web-chat-9ne.pages.dev/encryption">
+<meta property="og:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ウェブチャットの暗号化｜できることと、できないこと">
+<meta name="twitter:description" content="ウェブチャットは、メッセージ本文を部屋名から作った鍵で暗号化（AES-GCM）して送ります。暗号化される情報、されない情報、部屋名の選び方、限界をまとめました。">
+<meta name="twitter:image" content="https://web-chat-9ne.pages.dev/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://web-chat-9ne.pages.dev/encryption#page","url":"https://web-chat-9ne.pages.dev/encryption","name":"ウェブチャットの暗号化｜できることと、できないこと","description":"ウェブチャットは、メッセージ本文を部屋名から作った鍵で暗号化（AES-GCM）して送ります。暗号化される情報、されない情報、部屋名の選び方、限界をまとめました。","inLanguage":"ja","dateModified":"2026-11-17","isPartOf":{"@id":"https://web-chat-9ne.pages.dev/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ウェブチャット","item":"https://web-chat-9ne.pages.dev/"},{"@type":"ListItem","position":2,"name":"ウェブチャットの暗号化のしくみ","item":"https://web-chat-9ne.pages.dev/encryption"}]}]}</script>
+<style>
+:root{--bg:#111413;--bg2:#171a19;--line:#2c3331;--text:#e8edeb;--text2:#9ba7a3;--accent:#4cc09a;--link:#6fd4b2;--on:#0c1f18;color-scheme:dark}
+@media(prefers-color-scheme:light){:root{--bg:#eef1ee;--bg2:#ffffff;--line:#d7dcd7;--text:#19201d;--text2:#56625d;--accent:#1c9a74;--link:#0f7a5a;--on:#ffffff;color-scheme:light}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 16px/1.9 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+.w{width:min(720px,100%);margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);background:var(--bg2)}
+header.top .w{display:flex;align-items:center;gap:12px;min-height:64px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-weight:700;font-size:18px;margin-right:auto}
+.logo{width:36px;height:36px;border-radius:12px;background:var(--accent);color:var(--on);display:grid;place-items:center}
+.logo svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cta{display:inline-block;background:var(--accent);color:var(--on);text-decoration:none;font-weight:700;font-size:14px;padding:6px 18px;border-radius:999px;line-height:1.9}
+nav.site{display:flex;flex-wrap:wrap;gap:4px 16px;padding:12px 0;font-size:14px;border-bottom:1px solid var(--line)}
+nav.site a{color:var(--text2);text-decoration:none}
+nav.site a[aria-current]{color:var(--text);font-weight:700;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:6px}
+nav.site a:hover{color:var(--text)}
+main{padding:32px 0 56px}
+h1{font-size:26px;line-height:1.5;margin-bottom:16px}
+h2{font-size:20px;line-height:1.6;margin:40px 0 12px;padding-top:8px}
+h3{font-size:16px;margin:24px 0 8px}
+p{margin:0 0 16px}
+.lead{color:var(--text2);font-size:17px}
+.meta{color:var(--text2);font-size:13px}
+ul,ol{margin:0 0 16px;padding-left:24px}
+li{margin-bottom:6px}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:0 0 20px}
+.box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
+.note{background:var(--bg2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:8px;margin:0 0 16px}
+.toc{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px 20px 8px;margin:0 0 24px}
+.toc b{display:block;margin-bottom:6px;font-size:14px;color:var(--text2)}
+.toc ol,.toc ul{columns:2;column-gap:24px;font-size:14px}
+@media(max-width:520px){.toc ol,.toc ul{columns:1}}
+table{border-collapse:collapse;width:100%;margin:0 0 20px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;line-height:1.7}
+th{background:var(--bg2)}
+dt{font-weight:700;margin-top:20px}
+dd{margin:6px 0 0}
+article.n{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+article.n h2{font-size:17px;margin:12px 0 4px}
+.next{display:flex;flex-wrap:wrap;gap:8px 20px;margin:32px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+footer.bot{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:var(--text2)}
+footer.bot a{color:var(--text2)}
+footer.bot p{margin:0 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="w"><a class="brand" href="/"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg></span>ウェブチャット</a><a class="cta" href="/">チャットを開く</a></div></header>
+<div class="w"><nav class="site" aria-label="サイト内のページ"><a href="/howto">使い方</a><a href="/encryption" aria-current="page">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a></nav></div>
+<main><div class="w">
+
+<h1>ウェブチャットの暗号化のしくみ</h1>
+<p class="lead">ウェブチャットは、メッセージの本文を、部屋名から作った鍵で暗号化して送ります。このページでは、何が暗号化されて何がされないのか、そして暗号化でできないことを、正直にまとめます。</p>
+
+<h2 id="how">どう暗号化しているか</h2>
+<ol>
+<li>入力した部屋名から、ブラウザの中で、暗号化の鍵を作ります。</li>
+<li>メッセージの本文を、その鍵で暗号化（AES-GCM）します。</li>
+<li>暗号化したデータを、中継サービスを通して、同じ部屋の人に届けます。</li>
+<li>届いた側は、同じ部屋名から同じ鍵を作り、本文を元に戻して表示します。</li>
+</ol>
+<p>中継には、第三者が公開している通知配信サービス（ntfy.sh）を使っています。運営者の専用サーバーではありません。部屋名そのものは送られず、部屋名から作った識別用の記号だけが、中継サービスに見えます。</p>
+
+<h2 id="table">暗号化されるもの、されないもの</h2>
+<table>
+<tr><th>情報</th><th>暗号化</th></tr>
+<tr><td>メッセージの本文、時刻、吹き出しの設定、返信の元の文、リアクション</td><td>される</td></tr>
+<tr><td>伝言板の書き込みと削除の合図</td><td>される</td></tr>
+<tr><td>小さいアイコン画像（最大96px四方）</td><td>される</td></tr>
+<tr><td>大きいアイコン画像（最大512px四方）</td><td>暗号化した添付として、短い時間だけ預ける</td></tr>
+<tr><td>ID・表示名</td><td>されない</td></tr>
+<tr><td>入室・退室・在室の合図、いま部屋にいる人の一覧</td><td>されない</td></tr>
+<tr><td>IPアドレスやブラウザの種類などの通信情報</td><td>通信するだけで、中継サービスに届く</td></tr>
+</table>
+<div class="note">IDと表示名は暗号化されません。本名や、個人が特定できる名前を、表示名にしないでください。</div>
+
+<h2 id="key">部屋名は「合言葉」です</h2>
+<p>鍵は部屋名から作られるので、部屋名を知っている人は、同じ鍵を作れます。つまり、部屋名を知っている人は全員、その部屋の会話を読めます。入室の承認や、管理者、パスワードの機能はありません。</p>
+<p>反対に、部屋名を知らない人や中継サービスが読むのは難しくなります。ただし、短い名前やよくある名前など、推測しやすい部屋名だと、知らない人が入ってきたり、総当たりで読まれたりするおそれがあります。</p>
+<h3>部屋名を決めるときの目安</h3>
+<ul>
+<li>見られたくない会話には、長くて、推測されにくい部屋名を使う。</li>
+<li>部屋名やリンクは、信頼できる人にだけ伝える。</li>
+<li>「test」「chat」のような、ありふれた名前は避ける。</li>
+</ul>
+
+<h2 id="limit">暗号化でできないこと</h2>
+<ul>
+<li><b>「絶対に読まれない」とは保証できません。</b>部屋名が推測された場合などは、読まれる可能性があります。</li>
+<li><b>相手の端末や画面を見られること、スクリーンショットを撮られることは、防げません。</b></li>
+<li><b>暗号の機能が使えない環境では、暗号化されません。</b>安全でない接続の古い環境などでは、文字を変換しただけの状態で送られます。チャット画面の上に「暗号化」と出ているか、確かめてください。</li>
+<li><b>IDや表示名、入退室の情報は、中継サービスの内容を見られる人には分かります。</b></li>
+</ul>
+
+<h2 id="keep">メッセージはどれくらい残るか</h2>
+<p>中継サービスは、メッセージを一定の時間（12時間ほど）預かり、あとから入った人にも渡すことがあります。運営者は、中継サービスに預けられた内容を、ひとつずつ消すことができません。</p>
+<p>端末では、部屋のメッセージは画面に最大30件までで、部屋を出る、またはページを閉じると、履歴は残りません。ただし、他の人の端末に届いた内容は、その人の端末に残ることがあります。</p>
+
+<p>データの取り扱いの全文は、<a href="/terms#t9">利用規約の第9条（送られる情報と、見える人）</a>と<a href="/terms#t10">第10条（暗号化について）</a>にあります。</p>
+
+<div class="next"><a href="/howto">使い方</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a></div>
+
+</div></main>
+<footer class="bot"><div class="w">
+<p><a href="/">ウェブチャット</a>　登録不要・暗号化に対応した無料チャット</p>
+<p><a href="/howto">使い方</a><a href="/encryption">暗号化のしくみ</a><a href="/faq">よくある質問</a><a href="/terms">利用規約とプライバシー</a><a href="/news">更新履歴</a></p>
+</div></footer>
+</body></html>
