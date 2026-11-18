@@ -724,7 +724,6 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    <span class="new" id="newBadge" hidden>NEW</span>
   </button>
   <p class="xs faint rise" style="--d:5;text-align:center"><button class="lnk" data-terms>利用規約とプライバシー</button></p>
-  <p class="xs faint rise" style="--d:6;text-align:center;font-size:11px;line-height:16px;margin-top:-8px" id="online" hidden></p>
  </div>
 </section>
 
@@ -972,6 +971,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:40,date:'2026-11-18',title:'送信上限への対策を入れました。利用者数の表示をなくしました',body:'中継サービス（ntfy.sh）には、1日に送れる回数の上限があります。上限に達すると、メッセージが送れなくなります。\n・上限に当たったときは、「今日の送信上限に達したため、送れませんでした」と表示し、1時間は送信を試しません。入力した文字は消えません。上の表示に「送信停止中」が出ます（受信はできます）。\n・回数を減らすため、ホームの利用者数の表示（2分おきの送信）をなくしました。\n・退室の合図は、1回に戻しました。\n規約の第9条・第13条を更新しました。'},
  {id:39,date:'2026-11-18',title:'退室した人の古い表示が残らないようにしました',body:'IDや名前を変えて入り直したとき、前のIDや名前の表示が、自分と相手の一覧に残ることがありました。入室・退室の合図に、部屋ごとに別の値になる「端末の印」を（暗号化して）添え、同じ端末から新しく入ってきたら、古い表示を消すようにしました。入ってから1〜2秒で入れ替わります。\n退室の合図も、念のため2回送るようにしました。\n規約の第9条・第12条を更新しました。'},
  {id:38,date:'2026-11-18',title:'表示名の変更に制限を付けました。非表示の誤爆を減らしました',body:'部屋に入っている間は、表示名を変えられません。変えるには、すべての部屋から退室します（入口・設定・部屋の画面、どこからでも同じです）。\n連投・同じ内容のくり返しで止められると、10分間、表示名とIDを変えられません。この端末に保存されるので、読み込み直したり、入り直したりしても残ります。\n連投の疑いで一時的に非表示にする判定は、ゆるめにしました。接続が戻ったときなど、少し遅れてまとめて届いた分は数えません。使い方と規約も合わせて更新しました。'},
  {id:37,date:'2026-11-18',title:'いる人の一覧を入った順に。自分の入室も表示します',body:'上の帯と一覧は、部屋に入った順に並びます。自分は「あなた」ではなく、自分の名前を色付きで強調して表示します。自分が入室したときの「入室しました」も、自分の画面に出ます。'},
@@ -1279,7 +1279,7 @@ function drawHome(still){
  if(rec.length)h+=`<div class="lab hs">最近の部屋</div>`+rec.map(n=>row(n,'タップして入る',`<button class="ib" data-del="${esc(n)}" aria-label="一覧から外す"><svg class="ic"><use href="#i-x"/></svg></button>`,'',`data-n="${esc(n)}"`)).join('');
  if(!open.length&&!rec.length)h+=`<div class="hint" style="padding:20px 16px"><b style="color:var(--text)">まだ部屋に入っていません</b><br>「部屋に入る」から、部屋名を入れて始めましょう（同時に${MAXR}つまで）。</div>`;
  hr.innerHTML=h;$('#hlab').textContent=S.rooms.length?'部屋':'部屋';
- drawBadge();drawOnline();if(typeof OLN!=='undefined'&&Date.now()-OLN.t>60000)olCount()}
+ drawBadge()}
 $('#hrooms').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){const n=d.dataset.del;store.s('wc2.recent',store.g('wc2.recent',[]).filter(x=>x!==n));drawHome();return}
  const lv=e.target.closest('[data-lv]');if(lv){const r=S.rooms.find(x=>x.norm===lv.dataset.lv);if(r){const wasCur=S.room===r&&drawerOpen();if(wasCur){leaveTab(r);if(S.room&&!$('#chat').hidden)openDrawer()}else{dropRoom(r);drawTabs();drawHome();toast(dispRoom(r)+'から退室しました')}}return}
  const r=e.target.closest('.hrow');if(r)openRoom(r.dataset.n)});
@@ -1400,7 +1400,6 @@ const TERMS=[
   '入室・退室・在室の合図（1分おき）と、いま部屋にいる人の一覧：同じ部屋の人に届きます。',
   'アイコン：小さな画像（最大96px四方）は暗号化して送ります。大きな画像（最大512px四方）は、暗号化した添付として、短い時間だけ預けます。',
   '伝言板の書き込みと削除の合図：暗号化して送ります。',
-  '利用者数の集計：端末ごとのランダムな匿名の印を、2分おきに共通の部屋へ送ります（部屋名・ID・表示名は含みません）。ホームに、直近3分の印の数が、目安として表示されます。',
 ]},
   '部屋名そのものは送りません。部屋名から作った識別用の記号だけが、中継サービスに見えます。',
   'IPアドレスやブラウザの種類などの通信情報は、通信するだけで、中継サービス（ntfy.sh）に届きます。その扱いは、同サービスのルールによります。',
@@ -1436,7 +1435,8 @@ const TERMS=[
   'Web通知を許可すると、このページを開いたまま別のタブやアプリを見ている間、端末の通知で知らせます。通知には、送った人の名前、本文の最初の部分、部屋名が出ます。画面がロックされていても見えることがあるので、人に見られたくないときは、通知を切ってください。',
   '通知音は、初期設定ではオフです。端末によっては、小さく振動することがあります。',
   '外部リンクは、開く前に確認が出ますが、リンク先の安全性は保証しません。リンク先は、そのサービスの規約とプライバシーのルールに従います。',
-  'ntfy.sh は、第三者のサービスです。障害、仕様の変更、利用の制限、規約の変更などで、本サービスが使えなくなったり、内容が失われたりすることがあります。']]},
+  'ntfy.sh は、第三者のサービスです。障害、仕様の変更、利用の制限、規約の変更などで、本サービスが使えなくなったり、内容が失われたりすることがあります。',
+  'ntfy.sh には、1日に送れる回数の上限があります。上限に達すると、しばらくメッセージを送れなくなります（受信はできます）。']]},
  {s:'14 変更・終了',h:'第14条（サービスの変更・中断・終了）',b:[[
   '運営者は、予告なく、機能の追加・変更・制限・中断・終了をすることがあります。',
   '点検、障害、通信会社や中継サービスの都合で、使えない、遅れる、届かない、重複する、順番が入れ替わる、といったことが起きることがあります。',
@@ -1600,6 +1600,12 @@ const envelope=(room,b,n)=>JSON.stringify({u:S.id,n:n||'',b});
    入力中の合図・在室の合図・読み取り(ポーリング)で使い切ると、メッセージが送れなくなる(429)ので、
    ここで残りを見積もり、大事でない合図は余裕があるときだけ送ります。 */
 const NQ={v:60,t:Date.now()},OUT={until:0};
+/* 中継サービスの「今日の送信上限」に当たったら、1時間は送信を試さない（再送の連打で回数を使わない）。reloadしても残す */
+const DAILY={until:(v=>(typeof v==='number'&&v>Date.now()&&v<Date.now()+36e5+6e4)?v:0)(store.g('wc2.dly',0))};
+const dailyBlocked=()=>DAILY.until>Date.now();
+OUT.until=Math.max(OUT.until,DAILY.until);
+function dailyHit(){DAILY.until=Date.now()+36e5;store.s('wc2.dly',DAILY.until);OUT.until=Math.max(OUT.until,DAILY.until);if(S.room)setStatus(S.room.st[0],S.room.st[1])}
+setInterval(()=>{if(S.room&&!$('#chat').hidden)setStatus(S.room.st[0],S.room.st[1])},5000);
 const nq=()=>{const n=Date.now();NQ.v=Math.min(60,NQ.v+(n-NQ.t)/5000);NQ.t=n;return NQ.v};
 const nqUse=()=>{nq();NQ.v=Math.max(0,NQ.v-1)};
 const nqBusy=need=>Date.now()<OUT.until||nq()<need;
@@ -1729,8 +1735,8 @@ const dkOk=v=>typeof v==='string'&&/^[0-9a-f]{10}$/.test(v);
 function dedupDk(room,u,dk){if(!dk)return;const now=Date.now();for(const [k,v] of [...room.pres]){if(k===u||k===S.id||v.dk!==dk)continue;room.pres.delete(k);room.gone=room.gone||new Map();room.gone.set(k,now)}}
 async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid(),dk:room.dk||undefined,ja:Math.max(0,Date.now()-(room.openT||Date.now()))},extra||{}))}catch(e){}}
 async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid(),dk:room.dk||undefined},room.key),nickFor(room))}catch(e){}}
-function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{const body=room.leaveBody,f=()=>{try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body,keepalive:true}).catch(()=>{})}catch(e){}};f();setTimeout(f,1200)}catch(e){}}
-addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}));navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
+function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true}).catch(()=>{})}catch(e){}}
+addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
 function addSys(room,id,text,u){addMsg(room,{id:'ev'+String(id).slice(0,24),u:'',su:u,sys:true,t:Date.now(),x:text})}
 const presList=room=>[...room.pres].slice(0,40).map(([u,v])=>[u,v.n||'',u===S.id?0:Math.max(0,Date.now()-v.t),u===S.id?Math.max(0,Date.now()-(v.j||v.t)):Math.max(0,Date.now()-(v.j||v.t)),u===S.id?(room.dk||''):(v.dk||'')]);
 function schedReply(room){clearTimeout(room.repT);room.repT=setTimeout(()=>{if(!room.dead)sendEv(room,'pres',{list:presList(room)})},300+Math.random()*1700)}
@@ -1792,7 +1798,7 @@ function dropRoom(r){if(r.practice){const i=MUTE.indexOf('MIO');if(i>=0){MUTE.sp
  if(S.guest&&!S.rooms.length&&!S.room){S.guest=false;S.id=null;S.hue=0;drawId();upd()}}
 /* 画面から部屋を隠す（練習の部屋だけは、ここで退室する）。ほかの部屋は入ったままで、ホームから戻れる */
 function closeRoom(){const r=S.room;if(r&&r.practice)dropRoom(r);else if(r){r.draft=ta.value;r.firstUnread=''}S.room=null;applyTheme();$('#memDlg').hidden=true;$('#bdDlg').hidden=true;$('#lkDlg').hidden=true;$('#nameDlg').hidden=true;$('#jnDlg').hidden=true;$('#rmDlg').hidden=true}
-function setStatus(k,t){const d=$('#dot');d.className='dot '+(k==='on'?'on':'wait');$('#stxt').textContent=t+(S.room&&S.room.key?'　暗号化':'')}
+function setStatus(k,t){const d=$('#dot');d.className='dot '+(k==='on'?'on':'wait');$('#stxt').textContent=t+(S.room&&S.room.key?'　暗号化':'')+(dailyBlocked()?'　送信停止中':'')}
 function stat(room,k,t){room.st=[k,t];if(k==='on')room.badSince=0;else if(!room.badSince)room.badSince=Date.now();if(S.room===room)setStatus(k,t)}
 /* 受け取った1件を処理する。srv: サーバーが付けた vf（ok=登録と一致 / ng=同じ名前で別ID / 空=未登録）を使う。ntfy: 認証なし(vf空) */
 async function onIncoming(room,d,hist,late){
@@ -1872,7 +1878,7 @@ function addMsg(room,m){if(room.del&&room.del.has(m.id))return;const old=room.ms
  trim30(room);schedule()}
 /* 部屋のメッセージは30件まで。超えたら古い順に消す */
 function trim30(room){const all=[...room.msgs.values()].sort((x,y)=>x.t-y.t),ch=all.filter(x=>!x.sys),sy=all.filter(x=>x.sys);for(let i=0;i<ch.length-30;i++)room.msgs.delete(ch[i].id);for(let i=0;i<sy.length-12;i++)room.msgs.delete(sy[i].id)}
-try{Object.keys(localStorage).filter(k=>k.startsWith('wc2.h.')).forEach(k=>localStorage.removeItem(k))}catch(e){}
+try{Object.keys(localStorage).filter(k=>k.startsWith('wc2.h.')).forEach(k=>localStorage.removeItem(k));localStorage.removeItem('wc2.oid')}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)document.title='ウェブチャット'});
 addEventListener('online',()=>{for(const r of S.rooms)stat(r,'wait','再接続中…')});
 let rq=0;function schedule(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;render()})}
@@ -1892,7 +1898,7 @@ function render(first){
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
   const me=m.u===S.id,first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m);
-  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
+  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">${m.daily?'今日の送信上限に達したため、送れませんでした。しばらくたってから、タップで再送':'送信できませんでした'+(m.err?'（'+esc(m.err)+'）':'')+'。タップで再送'}</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
   h+=`<div class="row r ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
@@ -1921,6 +1927,7 @@ $('#mnList').addEventListener('click',e=>{const b=e.target.closest('[data-mn]');
 $('#mnBtn').addEventListener('pointerdown',e=>e.preventDefault());
 $('#mnBtn').onclick=()=>{const c=ta.selectionStart==null?ta.value.length:ta.selectionStart,v=ta.value,pre=v.slice(0,c),sp=pre&&!/\s$/.test(pre)?' ':'';ta.value=pre+sp+'@'+v.slice(c);const pos=c+sp.length+1;ta.focus();try{ta.setSelectionRange(pos,pos)}catch(e){}autosize();drawMn()};
 function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){shake($('.compbox'));ta.focus();return}
+ if(!room.practice&&dailyBlocked()){toast('いまは送れません（今日の送信上限）。受信はできます');return}
  const off=!!room.official;
  const x=cleanText(raw,off?200:500,off?5:10);if(!x){toast('送れない文字だけが含まれています');return}
  if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは送れません':'リンクは1通に2つまでです');return}
@@ -1935,17 +1942,18 @@ async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)retu
  try{const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}catch(e){room.avT=0}}
 async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
- m.failed=false;m.pending=true;m.err='';
+ if(dailyBlocked()){m.failed=true;m.pending=false;m.err='';m.daily=true;toast('いまは送れません（今日の送信上限）。受信はできます');schedule();return}
+ m.failed=false;m.pending=true;m.err='';m.daily=false;
  try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
-    r=await relayRaw(room,body,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;if(st===429){let t='';try{t=await r.text()}catch(x){}if(/42908|daily|quota|1日/i.test(t)){er='HTTP 429 今日の送信上限';OUT.until=Date.now()+36e5;r=null;break}}r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
+    r=await relayRaw(room,body,m.n||'');st=r.status;if(r.ok)break;er='HTTP '+r.status;if(st===429){let t='';try{t=await r.text()}catch(x){}if(/42908|daily|quota|1日/i.test(t)){er='HTTP 429 今日の送信上限';dailyHit();r=null;break}}r=null}catch(e){er=String(e&&e.message||e).slice(0,40);r=null}
    if(i<2)await new Promise(ok=>setTimeout(ok,1500*(i+1)))}
   if(!r)throw 0;m.pending=false;
   try{const j=await r.json();m.vf=j.vf==='ok'||j.vf==='ng'?j.vf:''}catch(e){}
   postAv(room);setTimeout(()=>{if(m.pending&&!room.dead){m.pending=false;schedule()}},4000)}
- catch(e){if(!er&&e&&e.message)er=String(e.message).slice(0,40);m.pending=false;m.failed=true;m.err=er;toast(st===429?'中継サービスの送信制限です（'+er+'）。しばらくしてからタップで再送してください':'送信できませんでした'+(er?'（'+er+'）':''))}
+ catch(e){if(!er&&e&&e.message)er=String(e.message).slice(0,40);m.pending=false;m.failed=true;m.err=er;m.daily=/今日の送信上限/.test(er);if(m.daily){toast('今日の送信上限に達しました。受信はできます');if(!room.dlyShown){room.dlyShown=true;addSys(room,'dly'+uid(),'今日の送信上限に達しました。しばらく送れません（受信はできます）','')}}else toast(st===429?'中継サービスの送信制限です（'+er+'）。しばらくしてからタップで再送してください':'送信できませんでした'+(er?'（'+er+'）':''))}
  if(S.room===room)schedule()}
 
 /* ---------- 返信・リアクション ---------- */
@@ -2125,23 +2133,6 @@ const tutSeen=store.g('wc2.tut2',false)||store.g('wc2.tut',false)||!!S.id;
 if(!tutSeen){store.s('wc2.tut2',true);setTimeout(startTut,700)}
 else if(!S.id)setTimeout(()=>{if(!coarse)$('#room').focus()},500);
 else if($('#room').value&&!coarse)setTimeout(()=>$('#room').focus(),500);
-/* ---------- 利用者数（目安） ----------
-   共通の公開トピックに、ランダムな匿名の印を2分おきに送り、直近3分の印の数を数える。
-   部屋名・ID・表示名は含まない。誰でも書き込めるので、あくまで目安。 */
-const OLN={topic:'wc2-online-v1',oid:store.g('wc2.oid',''),n:0,ok:false,t:0};
-if(!/^[A-Z0-9]{8}$/.test(OLN.oid||'')){OLN.oid=[...crypto.getRandomValues(new Uint8Array(8))].map(v=>AL[v%32]).join('');store.s('wc2.oid',OLN.oid)}
-function drawOnline(){const el=$('#online');if(!el)return;el.hidden=!OLN.ok;el.textContent='いま、約'+OLN.n+'人がウェブチャットを開いています'}
-async function olPing(){if(document.hidden||nqBusy(25))return;try{nqUse();const r=await fetch(NTFY+OLN.topic,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({o:OLN.oid})});nqHit(r)}catch(e){}}
-async function olCount(){if(document.hidden||nqBusy(25))return;OLN.t=Date.now();
- try{nqUse();const r=await fetch(NTFY+OLN.topic+'/json?poll=1&since=3m',{cache:'no-store'});nqHit(r);if(!r.ok)throw 0;const txt=await r.text(),set=new Set([OLN.oid]),lim=Date.now()/1000-190;
-  for(const ln of txt.split('\n').slice(0,3000)){if(!ln||ln.length>2000)continue;let d;try{d=JSON.parse(ln)}catch(e){continue}
-   if(!d||d.event!=='message'||typeof d.message!=='string'||(d.time&&d.time<lim))continue;let e;try{e=JSON.parse(d.message)}catch(x){continue}
-   if(e&&typeof e.o==='string'&&/^[A-Z0-9]{8}$/.test(e.o))set.add(e.o)}
-  OLN.n=set.size;OLN.ok=true}catch(e){OLN.ok=false}
- drawOnline()}
-setTimeout(()=>{olPing();setTimeout(()=>{if(!$('#home').hidden)olCount()},1500)},2500);
-setInterval(()=>{olPing();if(!$('#home').hidden)olCount()},120000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#home').hidden&&Date.now()-OLN.t>60000)olCount()});
 /* ---------- 吹き出しの背景（5,000文字まで・全員の画面に同じように出る） ----------
    背景の値は長いので、チャットのメッセージには「指紋(bh・16桁)」だけを載せる。
    値そのものは、メッセージとは別の通知(bgc)に2,200文字ずつ分けて、部屋の鍵で暗号化して送る。
