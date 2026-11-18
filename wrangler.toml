@@ -1,0 +1,15 @@
+name = "wc-relay"
+main = "src/index.js"
+compatibility_date = "2025-11-01"
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "Room"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]
+
+[vars]
+# ウェブチャットを開くサイトのURL（カンマで区切って複数指定できます）。ここにないサイトからの接続は断ります
+ALLOWED_ORIGINS = "https://web-chat-9ne.pages.dev"
