@@ -1,15 +1,16 @@
-name = "wc-relay"
+name = "web-chat-relay"
 main = "src/index.js"
-compatibility_date = "2025-11-01"
+compatibility_date = "2026-11-01"
+
+[vars]
+# 接続を許可するサイトのURL（カンマ区切り）。https://*.example.pages.dev のように書くと、サブドメインも許可します
+ALLOWED_ORIGINS = "https://web-chat-9ne.pages.dev"
 
 [[durable_objects.bindings]]
-name = "ROOMS"
+name = "ROOM"
 class_name = "Room"
 
+# 無料プランでは、SQLite方式のDurable Objectsだけが使えます
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Room"]
-
-[vars]
-# ウェブチャットを開くサイトのURL（カンマで区切って複数指定できます）。ここにないサイトからの接続は断ります
-ALLOWED_ORIGINS = "https://web-chat-9ne.pages.dev"
