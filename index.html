@@ -699,7 +699,11 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 .row .bub,.row.mine .bub,.row:not(.mine) .bub{background:var(--bg3)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:16px!important;box-shadow:none!important;opacity:1!important;font:inherit!important;padding:8px 16px!important;background-image:none!important;animation:none!important}
 .row .bub[data-ubg]{color:#111!important;border-color:transparent!important}
 .row .bub a{color:var(--accent)!important}
-.row .bub.wh{border-style:dashed!important}
+.row .bub.wh{border-style:dashed!important;border-width:1.5px!important;border-color:var(--accent)!important;background:color-mix(in srgb,var(--accent) 13%,var(--bg3))!important}
+.whl{display:inline-flex;align-items:center;gap:4px;font-size:11px;line-height:16px;font-weight:700;color:var(--accent);margin:0 0 4px;letter-spacing:.04em}
+.row .bub.wh[data-ubg] .whl{color:#111}
+.tobar.whb{height:40px;border:1.5px dashed var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--bg2));font-weight:700}
+.compbox.whs{border-color:var(--accent);border-style:dashed}
 .row.r.first .bub{border-top-right-radius:4px!important}
 .row:not(.r).first .bub{border-top-left-radius:4px!important}
 </style></head><body>
@@ -1741,7 +1745,9 @@ function drawTy(){const r=S.room,el=$('#tyb');if(!r||r.practice){el.hidden=true;
  el.innerHTML=l.slice(0,3).map(x=>avHtml(x.u,x.n,' ty-av',true)).join('')+`<span class="ell1">${esc(names)}が入力中</span><span class="tyd"><i></i><i></i><i></i></span>`;el.hidden=false}
 function drawPbar(){const r=S.room,b=$('#prow');drawTy();if(!r){b.hidden=true;return}b.hidden=false;bdBadge();const l=memList();
  $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc${x.ty?' ty':''}${x.u===S.id?' me':''}">${esc(x.u===S.id?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))+(x.u!==S.id&&isMuted(x.u)?'（'+(MUTE.includes(x.u)?'ミュート':'一時非表示')+'）':'')}${vfHtml(x.vf)}</span>`).join('')}
-function drawTo(){const r=S.room;$('#toBar').hidden=!(r&&r.to);if(r&&r.to)$('#toTx').textContent=(r.to.n||r.to.u)+'さんだけに送ります'}
+function drawTo(){const r=S.room,on=!!(r&&r.to),nm=on?(aliasOf(r.to.u)||r.to.n||r.to.u):'';$('#toBar').hidden=!on;$('#toBar').classList.toggle('whb',on);$('.compbox').classList.toggle('whs',on);
+ ta.placeholder=on?'ささやきを入力（'+nm+'さんだけに届きます）':'メッセージを入力';
+ if(on)$('#toTx').textContent='ささやき中：'+nm+'さんだけに届きます（ほかの人には見えません）'}
 function openMem(){const r=S.room;if(!r)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
  $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow${me?' me':''}">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
  $('#memDlg').hidden=false}
@@ -1864,7 +1870,7 @@ function render(first){
   let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">送信できませんでした${m.err?'（'+esc(m.err)+'）':''}。タップで再送</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row r ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
+  h+=`<div class="row r ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
   if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
   prev=m}
  box.innerHTML=h;applyUbg(box);
