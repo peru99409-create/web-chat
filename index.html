@@ -968,7 +968,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 'use strict';
 /* 中継先。空のままなら、これまでどおり ntfy.sh を使います。
    Cloudflare の中継（relay/ フォルダ）を公開したら、そのURLをここに入れます（例：'https://wc-relay.あなたの名前.workers.dev/'） */
-const RELAY_URL='';
+const RELAY_URL='https://wc-relay.peru99409.workers.dev/';
 const WSR=!!RELAY_URL;
 const NTFY=WSR?RELAY_URL.replace(/\/*$/,'/'):'https://ntfy.sh/';
 /* =====================================================
