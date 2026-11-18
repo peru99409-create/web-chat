@@ -176,6 +176,7 @@ a{color:var(--accent)}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,24px);padding:8px 24px;background:var(--bg4);border:1px solid var(--line);border-radius:var(--r2);opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--spring);z-index:10;max-width:calc(100vw - 32px)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 /* tutorial / name dialog */
+input:disabled{opacity:.5;cursor:not-allowed}
 .tut{position:fixed;inset:0;z-index:20;background:rgb(0 0 0/.55);display:grid;place-items:center;padding:16px;animation:fade .25s both}
 @keyframes fade{from{opacity:0}}
 .tcard{width:min(400px,100%);background:var(--bg2);border:1px solid var(--line);border-radius:var(--r3);padding:24px;display:flex;flex-direction:column;gap:16px;animation:tpop .4s var(--spring) both}
@@ -742,14 +743,16 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   </div>
 
   <div class="card rise" style="--d:1" id="cNick">
-   <div class="lab nl">表示名　<span class="faint">任意・チャット中も変えられます</span></div>
+   <div class="lab nl">表示名　<span class="faint">任意・部屋に入っている間は変えられません</span></div>
    <input id="nick" maxlength="12" autocomplete="off" spellcheck="false" placeholder="例：ねこ（空ならIDだけ表示）" aria-label="表示名">
-  </div>
+  
+   <p class="xs faint" id="nickLock" hidden></p></div>
   <div class="card rise" style="--d:3" id="cId">
    <div class="lab idl">あなたのID　<span class="faint">適当な文字を入れるとIDが決まります</span></div>
    <div class="idbox"><span class="av big" id="eav" hidden></span><div class="idtxt none" id="eid"><span style="--i:0">—</span></div></div>
    <input id="seed" maxlength="40" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="例：ねこ、abc123、なんでもOK" aria-label="IDのもとになる文字">
    <p class="xs faint">同じ文字ならいつでも同じIDになります。入れた文字は他の人には見えません。</p>
+   <p class="xs faint" id="seedLock" hidden></p>
   </div>
 
   <p class="xs faint rise" style="--d:4;text-align:center">登録は不要です。メッセージは部屋名から作った鍵で暗号化して送られます。<br><button class="lnk" data-terms>利用規約とプライバシー</button></p>
@@ -969,6 +972,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:38,date:'2026-11-18',title:'表示名の変更に制限を付けました。非表示の誤爆を減らしました',body:'部屋に入っている間は、表示名を変えられません。変えるには、すべての部屋から退室します（入口・設定・部屋の画面、どこからでも同じです）。\n連投・同じ内容のくり返しで止められると、10分間、表示名とIDを変えられません。この端末に保存されるので、読み込み直したり、入り直したりしても残ります。\n連投の疑いで一時的に非表示にする判定は、ゆるめにしました。接続が戻ったときなど、少し遅れてまとめて届いた分は数えません。使い方と規約も合わせて更新しました。'},
  {id:37,date:'2026-11-18',title:'いる人の一覧を入った順に。自分の入室も表示します',body:'上の帯と一覧は、部屋に入った順に並びます。自分は「あなた」ではなく、自分の名前を色付きで強調して表示します。自分が入室したときの「入室しました」も、自分の画面に出ます。'},
  {id:36,date:'2026-11-18',title:'入力中の表示を、分かりやすくしました',body:'誰かが書いている間、入力欄の上に「〇〇が入力中」と、アイコンと動く点で表示します（人が多いときは「ほか○人」）。メッセージが届くと消えます。上の帯の名前は、光らず、色だけが変わります。'},
  {id:35,date:'2026-11-18',title:'通信が切れたときの自動退室を、5秒にしました',body:'通信が切れた状態が5秒ほど続くと、その部屋から自動で退室します（以前は30秒ほど）。放置しているだけでは退室しません。あわせて、使われていない古い機能の処理を整理しました。'},
@@ -1209,7 +1213,7 @@ function openSet(){drawSet();setPane(setCur);$('#setDlg').hidden=false}
 $('#setBtn').onclick=openSet;$('#setBtn2').onclick=openSet;$('#setBtn3').onclick=openSet;
 $('#setX').onclick=$('#setClose').onclick=()=>{$('#setDlg').hidden=true};
 $('#setDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
-$('#setNick').onclick=()=>{$('#setDlg').hidden=true;$('#meChip').click()};
+$('#setNick').onclick=()=>{if(lockReason()){toast(lockMsg());return}$('#setDlg').hidden=true;$('#meChip').click()};
 $('#swPop').onclick=async()=>{SET.popup=!SET.popup;saveSet();drawSet();if(SET.popup&&sysState()==='default'){try{await Notification.requestPermission()}catch(e){}drawSet()}};
 $('#swSnd').onclick=()=>{SET.sound=!SET.sound;saveSet();drawSet();if(SET.sound)playSnd(true)};
 $('#sndtype').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;SET.snd=b.dataset.s;saveSet();drawSet();playSnd(true)});
@@ -1246,13 +1250,13 @@ function openDrawer(){if(!S.room||S.room.practice||$('#chat').hidden)return;cons
 function closeDrawer(anim){const h=$('#home');if(!h.classList.contains('drawer'))return;$('#hscrim').hidden=true;
  if(anim&&!h.hidden){h.classList.add('closing');setTimeout(()=>{if(h.classList.contains('closing')){h.hidden=true;h.classList.remove('drawer','closing')}},230)}
  else{h.hidden=true;h.classList.remove('drawer','closing')}}
-function show(name,back){closeDrawer(false);screens.forEach(s=>{const e=$('#'+s);e.hidden=s!==name;e.classList.toggle('back',!!back)});if(name==='entry')drawChips()}
+function show(name,back){closeDrawer(false);screens.forEach(s=>{const e=$('#'+s);e.hidden=s!==name;e.classList.toggle('back',!!back)});if(name==='entry'){drawChips();drawLock()}}
 function drawId(){
  const el=$('#eid'),av=$('#eav');$('#eBack').hidden=!S.id;$('#cId').classList.toggle('done',!!S.id);
  if(!S.id){el.className='idtxt none';el.innerHTML='<span style="--i:0">——————</span>';av.hidden=true;return}
  el.className='idtxt';el.innerHTML=[...S.id].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
  av.hidden=false;av.style.setProperty('--h',S.hue);av.textContent=S.id.slice(0,2)}
-function setSeed(v){const nid=v.trim()?idOf(v).id:null;if(S.id&&nid!==S.id&&S.rooms.length){const n=S.rooms.length;S.rooms.slice().forEach(dropRoom);S.guest=false;toast('IDが変わったので、入っていた'+n+'部屋から退室しました')}S.seed=v;if(v.trim()){const r=idOf(v);S.id=r.id;S.hue=r.hue}else S.id=null;drawId();store.s('wc2.seed',v);upd()}
+function setSeed(v){if(CDS.lk>Date.now()&&v!==S.seed){toast(lockMsg());$('#seed').value=S.seed;return}const nid=v.trim()?idOf(v).id:null;if(S.id&&nid!==S.id&&S.rooms.length){const n=S.rooms.length;S.rooms.slice().forEach(dropRoom);S.guest=false;toast('IDが変わったので、入っていた'+n+'部屋から退室しました')}S.seed=v;if(v.trim()){const r=idOf(v);S.id=r.id;S.hue=r.hue}else S.id=null;drawId();store.s('wc2.seed',v);upd()}
 const normRoom=s=>String(s||'').normalize('NFKC').trim().toLowerCase().replace(/\s+/g,' ');
 /* 部屋名が入っているときだけ「入る」を押せるようにする（IDなしでも入れる） */
 function upd(){const ok=!!normRoom($('#room').value);$('#go').classList.toggle('dim',!ok);$('#cRoom').classList.toggle('done',ok)}
@@ -1337,6 +1341,7 @@ const TERMS=[
   '会員登録がないため、運営者がIDや設定を復元することはできません。端末のデータを消すと、設定や登録は戻りません。同じ文字を入れれば、同じIDには戻れます。',
   '違う文字から同じIDができる可能性は、ゼロではありません。IDは、本人であることの証明ではありません。',
   '表示名は自由に付けられます（12文字まで）。同じ表示名を別の人が名乗ることもできます。',
+  '部屋に入っている間は、表示名を変えられません。変えるには、入っているすべての部屋から退室してください。連投などの制限（第7条）で止められたときは、10分間、表示名とIDを変えられません（この端末に保存されます）。',
   '他の人、運営者、公的機関、企業になりすます表示名やIDは使えません。',
   '「✓」「✕」は、利用者が自分の端末に登録した名前とIDを照らし合わせた目印です。本人であることや、安全であることを保証するものではありません。',
   'IDを作らずに入った場合は、仮のIDになります。部屋を出ると消えます。']]},
@@ -1374,7 +1379,7 @@ const TERMS=[
   '伝言板：1回100文字・3行まで。10秒に1回まで。リンクは2つまで。1人が残せるのは3件まで、部屋全体で40件まで（古いものから消えます）。同じ伝言は5分以内に続けて書けません。',
   '表示名の変更は10秒に1回、アイコンの変更は15秒に1回、部屋の出入りは2秒に1回までです。',
   'リアクションは、3秒に1回ほどまで（公式部屋では8秒に1回ほど）です。返信は、チャットと同じ制限です。',
-  '受け取る側でも、見えない文字や長いくり返しの除去、短い時間に多すぎる投稿の無視を行います。連投する人は、一時的に非表示になります（5分、くり返すと15分、1時間。この画面を開いている間だけ）。',
+  '受け取る側でも、見えない文字や長いくり返しの除去、短い時間に多すぎる投稿の無視を行います。連投する人は、一時的に非表示になります（5分、くり返すと15分、1時間。この画面を開いている間だけ）。接続が戻ったときなど、少し遅れてまとめて届いた分は、数えません。',
   '公式部屋（official）では、さらに強めの制限があります：チャットは5秒に1回・200文字・5行まで、リンクは使えません。30秒に3通以上送ると60秒間送れなくなります。同じ内容は2分以内に続けて送れません。伝言板は30秒に1回・60文字・2行まで、リンク不可、1人1件、部屋全体で20件までです。',
   '公式部屋では、受け取る側の制限も強めです。連投する人は、15分、くり返すと1時間、さらに6時間、一時的に非表示になります（この画面を開いている間だけ）。「公式」「運営」「管理」「official」「admin」などを含む表示名は、なりすまし防止のため、IDだけの表示になります。',
   '外部リンクは、開く前に確認が出ます。',
@@ -1498,10 +1503,11 @@ const CD_CHAT=1500,CD_BOARD=10000;
 /* 送信の間隔・連投の判定は「部屋ごと」に数える。
    以前は全部屋で1つの記録を共有し、さらに「連投ロック」を端末に保存していたため、
    別の部屋で送った分や、読み込み直す前の記録まで数えて、連投していないのに止められていた。 */
-const CDS=Object.assign({name:0,icon:0,room:0,bg:0,rm:{}},store.g('wc2.cd',{}));
+const LK_MS=600000;
+const CDS=Object.assign({name:0,icon:0,room:0,bg:0,lk:0,rm:{}},store.g('wc2.cd',{}));
 CDS.rm=Object.assign(Object.create(null),(CDS.rm&&typeof CDS.rm==='object')?CDS.rm:{});
 ['chat','board','lock','hist','oh','lh','bh','bt'].forEach(k=>{delete CDS[k]});
-(()=>{const n=Date.now();['name','icon','room','bg'].forEach(k=>{if(!(CDS[k]<=n))CDS[k]=0});
+(()=>{const n=Date.now();['name','icon','room','bg'].forEach(k=>{if(!(CDS[k]<=n))CDS[k]=0});CDS.lk=+CDS.lk||0;if(CDS.lk>n+LK_MS)CDS.lk=0;
  for(const k in CDS.rm){const s=CDS.rm[k];
   if(!s||typeof s!=='object'){delete CDS.rm[k];continue}
   ['chat','board','bt'].forEach(x=>{if(!(s[x]<=n+6e4))s[x]=0});
@@ -1512,6 +1518,15 @@ const saveCd=()=>{const ks=Object.keys(CDS.rm);
  if(ks.length>12)ks.sort((a,b)=>((CDS.rm[a].chat||0)-(CDS.rm[b].chat||0))).slice(0,ks.length-12).forEach(k=>delete CDS.rm[k]);
  store.s('wc2.cd',CDS)};
 const secs=ms=>Math.max(1,Math.ceil(ms/1000));
+/* 連投などで止められたら、10分間、表示名とIDを変えられない（端末に保存。部屋に入り直して逃げるのを防ぐ） */
+function tripLock(){CDS.lk=Date.now()+LK_MS;saveCd();drawLock()}
+function lockReason(){if(CDS.lk>Date.now())return 'rate';if(S.rooms.length)return 'room';return ''}
+function lockMsg(){const w=CDS.lk-Date.now();if(w>0)return '連投などで止められたため、あと'+Math.ceil(w/60000)+'分は、表示名とIDを変えられません';return '部屋に入っている間は、表示名を変えられません。変えるには、すべての部屋から退室してください'}
+function drawLock(){const nl=lockReason(),idl=CDS.lk>Date.now(),a=$('#nick'),b=$('#seed');if(!a||!b)return;
+ a.disabled=!!nl;b.disabled=idl;
+ const h=$('#nickLock'),g=$('#seedLock');if(h){h.hidden=!nl;h.textContent=nl?lockMsg():''}if(g){g.hidden=!idl;g.textContent=idl?lockMsg():''}
+ const sn=$('#setNick');if(sn)sn.textContent=nl?'変更不可':'変える'}
+setInterval(drawLock,2000);
 const cdSt=key=>{const k=String(key||'-');return CDS.rm[k]||(CDS.rm[k]={chat:0,board:0,hist:[],oh:[],lh:'',bh:'',bt:0})};
 const idRe=/^[A-Za-z0-9_-]{1,24}$/;
 const INV=/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f­͏؜ᅟᅠ឴឵᠎​‌‎‏‪-‮⁠-⁯⠀ㅤ︀-︎﻿ﾠ￹-￼]/g;
@@ -1545,12 +1560,12 @@ function bucket(key,cap,per){const n=Date.now();let b=RGB.get(key);if(!b){b={v:c
 const TM=new Map();
 const isTM=u=>{const o=TM.get(u);return !!o&&o.until>Date.now()};
 const isMuted=u=>!!u&&(MUTE.includes(u)||isTM(u));
-function drop(room,u){const n=Date.now(),d=room.drops||(room.drops=new Map());let r=d.get(u);if(!r||n-r.t>30000)r={n:0,t:n};r.n++;d.set(u,r);if(r.n>=(room.official?4:10)){d.delete(u);tempMute(room,u)}}
+function drop(room,u){const n=Date.now(),d=room.drops||(room.drops=new Map());let r=d.get(u);if(!r||n-r.t>30000)r={n:0,t:n};r.n++;d.set(u,r);if(r.n>=(room.official?8:25)){d.delete(u);tempMute(room,u)}}
 function tempMute(room,u){const n=Date.now(),o=TM.get(u)||{lv:0,until:0},dur=(room.official?[900,3600,21600]:[300,900,3600])[Math.min(o.lv,2)]*1000;TM.set(u,{lv:o.lv+1,until:n+dur});
  addMsg(room,{id:'tm'+uid(),u:'',su:'',sys:true,t:n,x:(nameOf(u)||u)+'が連投・荒らしの疑いで、'+(dur>=3600000?Math.round(dur/3600000)+'時間':Math.round(dur/60000)+'分間')+' 非表示になりました'});drawPbar();if(S.room===room){render();drawBoard()}}
 /* 受信側：鍵で復号できた(=部屋の人の)投稿にだけ、種類ごとの流量制限をかける */
-const KB={c:[6,1500],bgc:[8,3000],bgq:[2,20000],ev:[6,4000],av:[4,10000],bd:[2,8000],bdd:[4,4000],rx:[6,3000],ty:[4,2500],del:[4,4000]};
-const KBO={bgc:[4,6000],bgq:[2,20000],c:[3,5000],ev:[4,6000],av:[2,15000],bd:[1,20000],bdd:[3,6000],rx:[2,8000],ty:[2,4000],del:[2,6000]};
+const KB={c:[12,1000],bgc:[12,1500],bgq:[3,15000],ev:[12,2000],av:[8,5000],bd:[3,6000],bdd:[6,3000],rx:[10,2000],ty:[8,1500],del:[6,3000]};
+const KBO={bgc:[6,4000],bgq:[3,15000],c:[5,4000],ev:[8,4000],av:[4,10000],bd:[2,15000],bdd:[4,5000],rx:[4,5000],ty:[4,3000],del:[4,4000]};
 function guardIn(room,u,k,hist){
  if(u===S.id)return true;
  if(isTM(u))return false;
@@ -1564,14 +1579,14 @@ function guardIn(room,u,k,hist){
 function gateChat(x,off,key){const n=Date.now(),s=cdSt(key),cd=off?5000:CD_CHAT;
  const w=s.chat+cd-n;if(w>0)return off?'公式部屋では5秒に1回までです（あと'+secs(w)+'秒）':'送信は1.5秒に1回までです（あと'+secs(w)+'秒）';
  const h=hex(sha256('x:'+x)).slice(0,10);
- if(s.lh===h&&n-(s.chat||0)<(off?120000:30000))return '同じ内容を続けて送ることはできません';
+ if(s.lh===h&&n-(s.chat||0)<(off?120000:30000)){tripLock();return '同じ内容を続けて送ることはできません'}
  const k=off?'oh':'hist',H=(s[k]||[]).filter(t=>t<=n&&n-t<(off?30000:15000));
- if(H.length>=(off?4:8)){const cap=off?4:8,ww=H[H.length-cap]+(off?30000:15000)-n;return '連投しすぎです。あと'+secs(ww)+'秒お待ちください'}
+ if(H.length>=(off?4:8)){const cap=off?4:8,ww=H[H.length-cap]+(off?30000:15000)-n;tripLock();return '連投しすぎです。あと'+secs(ww)+'秒お待ちください'}
  H.push(n);s[k]=H;s.chat=n;s.lh=h;saveCd();return ''}
 const cdBoard=r=>r&&r.official?30000:CD_BOARD;
 function gateBoard(x,off,key){const n=Date.now(),s=cdSt(key);
  const w=s.board+(off?30000:CD_BOARD)-n;if(w>0)return '伝言板は'+(off?'30':'10')+'秒に1回までです（あと'+secs(w)+'秒）';
- const h=hex(sha256('b:'+x)).slice(0,10);if(s.bh===h&&n-(s.bt||0)<300000)return '同じ伝言は続けて書けません';
+ const h=hex(sha256('b:'+x)).slice(0,10);if(s.bh===h&&n-(s.bt||0)<300000){tripLock();return '同じ伝言は続けて書けません'}
  s.board=n;s.bh=h;s.bt=n;saveCd();return ''}
 
 /* ---------- 部屋 ---------- */
@@ -1655,7 +1670,7 @@ function switchTo(r,fromPop){
  show('chat');if(!was&&!fromPop)pushH('chat');
  render(true);drawPbar();drawTo();drawRp();drawTabs();$('#jump').hidden=!r.unseen;
  if(was){const b=$('#msgs');b.classList.remove('swap');void b.offsetWidth;b.classList.add('swap')}}
-function drawTabs(){const el=$('#tabs');if(!el)return;const L=S.room&&S.room.practice?[S.room]:S.rooms;
+function drawTabs(){drawLock();const el=$('#tabs');if(!el)return;const L=S.room&&S.room.practice?[S.room]:S.rooms;
  el.innerHTML=L.map((r,i)=>`<div class="tab${r===S.room?' on':''}${r.official?' off':''}" role="tab" tabindex="0" data-i="${i}" aria-selected="${r===S.room}"><span class="tn ell1${r.official?'':' rn'}">${esc(r.name)}</span>${r!==S.room&&r.unread?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:''}${r.practice?'':`<button class="tx" data-x="${i}" aria-label="${esc(r.name)}から退室">✕</button>`}</div>`).join('')+(!(S.room&&S.room.practice)&&L.length<MAXR?'<button class="tab add" data-add aria-label="別の部屋に入る">＋</button>':'');
  if(!$('#home').hidden)drawHome(true)}
 function openJoin(){const left=MAXR-S.rooms.length;if(left<=0){toast('同時に入れるのは'+MAXR+'部屋までです。先に、どれかを退室してください');return}
@@ -1770,7 +1785,7 @@ function closeRoom(){const r=S.room;if(r&&r.practice)dropRoom(r);else if(r){r.dr
 function setStatus(k,t){const d=$('#dot');d.className='dot '+(k==='on'?'on':'wait');$('#stxt').textContent=t+(S.room&&S.room.key?'　暗号化':'')}
 function stat(room,k,t){room.st=[k,t];if(k==='on')room.badSince=0;else if(!room.badSince)room.badSince=Date.now();if(S.room===room)setStatus(k,t)}
 /* 受け取った1件を処理する。srv: サーバーが付けた vf（ok=登録と一致 / ng=同じ名前で別ID / 空=未登録）を使う。ntfy: 認証なし(vf空) */
-async function onIncoming(room,d,hist){
+async function onIncoming(room,d,hist,late){
  if(room.dead||!d||typeof d.b!=='string'||d.b.length>8000||!idOk(d.u)||isTM(d.u))return;
  if(!hist){room.lastAct=Date.now();if(typeof d.seq==='number')room.seq=Math.max(room.seq||0,d.seq)}
  const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'';let nm=cleanNick(d.n);
@@ -1778,7 +1793,7 @@ async function onIncoming(room,d,hist){
  if(room.official&&IMP.test(nm))nm='';
  const k=['av','ev','bd','bdd','rx','ty','del','bgc','bgq'].includes(m.v)?m.v:'c';
  if(hist&&k!=='bd'&&k!=='bdd')return;
- if(!guardIn(room,d.u,k,hist))return;
+ if(!guardIn(room,d.u,k,hist||late))return;
  if(k==='bd'||k==='bdd'){gotBoard(room,d.u,nm,m,hist);return}
  if(k==='rx'){gotReact(room,d.u,m);return}
  if(k==='ty'){gotTy(room,d.u,nm);return}
@@ -1800,7 +1815,7 @@ function gotNtfy(room,d,hist){
  if(!hist)room.lastAct=Date.now();
  if(d.attachment){if(!hist)gotBigNtfy(room,d);return}
  let e;try{e=JSON.parse(d.message)}catch(x){return}
- if(e&&typeof e.b==='string')onIncoming(room,{u:e.u,n:e.n,b:e.b},hist)}
+ if(e&&typeof e.b==='string')onIncoming(room,{u:e.u,n:e.n,b:e.b},hist,!hist&&typeof d.time==='number'&&Date.now()/1000-d.time>15)}
 /* 受信方式その2：定期的に取りにいく（Windowsのセキュリティソフト・プロキシ等でSSEが通らない環境向け） */
 const pollPref=()=>{const v=store.g('wc2.poll',0);return typeof v==='number'&&Date.now()-v<216e5};
 function startPoll(room){
@@ -2035,13 +2050,13 @@ let invite=false;const m0=location.hash.match(/^#r=(.+)$/);if(m0){invite=true;tr
 upd();
 /* ---------- 表示名 ---------- */
 function cleanNick(s){return cleanText(String(s||'').replace(/[#＃]/g,''),12,1).replace(/\s+/g,' ')}
-function setNick(v){S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room)setMid(S.room);for(const r of S.rooms){r.pres.set(S.id,{n:nickFor(r),t:Date.now(),j:r.openT});prepLeave(r);sendEv(r,'hb')}if(S.room)drawPbar()}
+function setNick(v){if(lockReason())return;S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room)setMid(S.room);for(const r of S.rooms){r.pres.set(S.id,{n:nickFor(r),t:Date.now(),j:r.openT});prepLeave(r);sendEv(r,'hb')}if(S.room)drawPbar()}
 $('#nick').value=S.nick;
 $('#nick').addEventListener('input',e=>{S.nick=cleanNick(e.target.value);store.s('wc2.nick',S.nick);drawReg()});
 $('#seed').addEventListener('input',()=>drawReg());
 $('#nick').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)$('#room').focus()});
-function saveNn(){if(S.room&&!S.room.practice&&cleanNick($('#nn').value)!==S.nick){const w=CDS.name+10000-Date.now();if(w>0){toast('表示名の変更は10秒に1回までです（あと'+secs(w)+'秒）');return}CDS.name=Date.now();saveCd()}setNick($('#nn').value);$('#nick').value=S.nick;$('#nameDlg').hidden=true;toast(S.nick?'表示名を変更しました':'表示名を外しました')}
-$('#meChip').onclick=()=>{$('#nn').value=S.nick;$('#nameDlg').hidden=false;setTimeout(()=>$('#nn').focus(),60)};
+function saveNn(){if(lockReason()){$('#nameDlg').hidden=true;toast(lockMsg());return}if(S.room&&!S.room.practice&&cleanNick($('#nn').value)!==S.nick){const w=CDS.name+10000-Date.now();if(w>0){toast('表示名の変更は10秒に1回までです（あと'+secs(w)+'秒）');return}CDS.name=Date.now();saveCd()}setNick($('#nn').value);$('#nick').value=S.nick;$('#nameDlg').hidden=true;toast(S.nick?'表示名を変更しました':'表示名を外しました')}
+$('#meChip').onclick=()=>{if(lockReason()){toast(lockMsg());return}$('#nn').value=S.nick;$('#nameDlg').hidden=false;setTimeout(()=>$('#nn').focus(),60)};
 $('#nnCancel').onclick=()=>{$('#nameDlg').hidden=true};
 $('#nnSave').onclick=saveNn;
 $('#nn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)saveNn()});
@@ -2053,7 +2068,7 @@ const BOTLINES=['届きました。メッセージはこのように表示され
 function botSay(room,text){if(S.room!==room)return;addMsg(room,{id:uid(),u:'MIO',n:'ミオ',t:Date.now(),x:text})}
 const STEPS=[
  {tg:'#room',hook:'room',tx:()=>'まず部屋名です。同じ部屋名を知っている人と、同じ部屋で話せます。大文字・小文字や全角・半角は区別しません。',act:()=>({label:'「れんしゅう」と入れる',fn(){$('#room').value='れんしゅう';upd();setTimeout(tutNext,350)}})},
- {tg:'#nick',hook:'nick',next:'あとで',tx:()=>'表示名も付けてみましょう。IDの横に出ます。空のままなら、入るたびに春・夏・秋・冬のどれかになります。'},
+ {tg:'#nick',hook:'nick',next:'あとで',tx:()=>'表示名も付けてみましょう。IDの横に出ます。空のままなら、入るたびに春・夏・秋・冬のどれかになります。部屋に入っている間は変えられないので、ここで決めておきます。'},
  {tg:'#seed',hook:'seed',tx:()=>S.id?'すでにIDが決まっています。文字を書き換えると別のIDになります。試してみてください。':'最後にIDです（なくても入れます）。適当な文字を入れてみましょう。ひらがなでも英数字でもOKです。入れた文字は他の人には見えません。'},
  {tg:'#eid',next:'次へ',tx:()=>S.id?`これがあなたのIDです（${S.id}）。同じ文字を入れれば、いつでも同じIDになります。相手があなたを見分ける目印です。`:'IDがまだ決まっていません。上の欄に文字を入れてみてください。'},
  {tg:'#go',hook:'enter',noskip:true,tx:()=>'「入る」を押してみましょう。練習なので、外には送られません。IDを作らなくても入れます。'},
@@ -2064,8 +2079,8 @@ const STEPS=[
  {tg:'#pbar',next:'次へ',act:()=>({label:'開いてみる',fn:openMem}),tx:()=>'この帯は、いま部屋にいる人の一覧です。タップすると、人ごとに「ささやく」（その人の画面にだけ届く）「ミュート」（自分の画面だけ消す）「登録」を選べます。'},
  {tg:'#bdBtn',next:'次へ',act:()=>({label:'開いてみる',fn:openBoard}),tx:()=>'伝言板は、いない人にも残せるメモです。100文字まで、10秒に1回。サーバーが覚えている12時間ほどは、あとから入った人にも見えます。自分の伝言は×で消せます。'},
  {tg:'#setBtn2',next:'次へ',act:()=>({label:'開いてみる',fn:openSet}),tx:()=>'歯車では、見た目（雰囲気・明るさ・メインの色、この部屋だけ別の見た目、部屋名を伏せる）、アイコン画像、吹き出しの色と右／左、通知（登録した人だけ・ポップアップの位置・止める時間帯・音）を変えられます。あなたの吹き出しの見た目は、相手の画面にも反映されます。'},
- {tg:'#meChip',hook:'name',tx:()=>'右上のあなたのIDをタップすると、部屋の中でも表示名を変えられます。変えたら「保存」を押して閉じてください。'},
- {tg:'.comp',next:'次へ',tx:()=>'荒らし防止のため、チャットは1.5秒に1回・500文字まで、リンクは2つまでです。リアクションは3秒に1回ほどです。メッセージは暗号化され、部屋には最大30件。部屋を出ると消えます。'},
+ {tg:'#meChip',next:'次へ',tx:()=>'右上があなたの表示名です。本番の部屋に入っている間は、表示名を変えられません（変えるには、すべての部屋を退室します）。連投などで止められたときも、10分間は表示名とIDを変えられません。'},
+ {tg:'.comp',next:'次へ',tx:()=>'荒らし防止のため、チャットは1.5秒に1回・500文字まで、リンクは2つまでです。リアクションは3秒に1回ほどです。連投や同じ内容のくり返しで止められると、10分間は表示名とIDを変えられません。メッセージは暗号化され、部屋には最大30件。部屋を出ると消えます。'},
  {tg:'#cBack',hook:'back',noskip:true,tx:()=>'練習では、戻るボタンで入口に戻ります（本番の部屋では、横からホームが半分だけ出ます）。押してみましょう。'},
  {tg:null,next:'はじめる',end:true,tx:()=>'おしまいです。本番は、部屋名を入れて入るだけ。「使い方」からいつでもやり直せます。利用規約は、入口・ホーム・設定から読めます。'}
 ];
