@@ -660,6 +660,9 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 .tyd{display:inline-flex;align-items:center;gap:3px;flex:none}
 .tyd i{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:tydot 1.2s ease-in-out infinite}
 .tyd i:nth-child(2){animation-delay:.15s}.tyd i:nth-child(3){animation-delay:.3s}
+#pbt .pc.me{background:color-mix(in srgb,var(--accent) 20%,var(--bg3));box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:700}
+#pbt .pc.me::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:6px;flex:none}
+.mrow.me{background:color-mix(in srgb,var(--accent) 12%,transparent);box-shadow:inset 3px 0 0 var(--accent);padding-left:10px;border-radius:var(--r1)}
 @keyframes tydot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
 @keyframes tyin{from{opacity:0;transform:translateY(6px)}}
 #mnList{margin:0 4px 8px;gap:6px}
@@ -962,6 +965,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:37,date:'2026-11-18',title:'いる人の一覧を入った順に。自分の入室も表示します',body:'上の帯と一覧は、部屋に入った順に並びます。自分は「あなた」ではなく、自分の名前を色付きで強調して表示します。自分が入室したときの「入室しました」も、自分の画面に出ます。'},
  {id:36,date:'2026-11-18',title:'入力中の表示を、分かりやすくしました',body:'誰かが書いている間、入力欄の上に「〇〇が入力中」と、アイコンと動く点で表示します（人が多いときは「ほか○人」）。メッセージが届くと消えます。上の帯の名前は、光らず、色だけが変わります。'},
  {id:35,date:'2026-11-18',title:'通信が切れたときの自動退室を、5秒にしました',body:'通信が切れた状態が5秒ほど続くと、その部屋から自動で退室します（以前は30秒ほど）。放置しているだけでは退室しません。あわせて、使われていない古い機能の処理を整理しました。'},
  {id:34,date:'2026-11-17',title:'公式部屋でも吹き出しの背景が出ます。白を重ねる濃さを変えられます',body:'公式部屋で、吹き出しの背景が表示されない不具合を直しました（背景は画像を読み込まず、埋め込みの値だけなので、公式部屋でも使えます）。\n設定の「自分」の「吹き出しの背景」の下に、「白を重ねる濃さ」（0〜90%）を追加しました。初期値は0%で、画像そのままです。数字を上げるほど文字が読みやすくなります。相手の画面にも、同じ濃さで反映されます。値に白の重ねを入れていた場合は、重ねが二重になるので、重ねを外した値を使ってください。'},
@@ -1630,11 +1634,11 @@ async function openRoom(name,fromPop){
  const key=practice?null:await getKey(norm);
  const room={name,norm,topic,key,msgs:new Map(),ready:practice,unseen:0,unread:0,practice,official:!practice&&isOffN(norm),openT:Date.now(),season:SEASONS[Math.floor(Math.random()*4)],pres:new Map(),to:null,board:new Map(),bdel:new Set(),known:new Set(),bdNew:0,bdReady:false,dead:false,badSince:practice?0:Date.now(),es:null,st:[practice?'on':'wait',practice?'れんしゅう中（送信されません）':'接続中…']};
  if(!practice){S.rooms.push(room);if(!room.official){const rec=[name,...store.g('wc2.recent',[]).filter(n=>normRoom(n)!==norm&&!isOffN(normRoom(n)))].slice(0,6);store.s('wc2.recent',rec)}}
- room.pres.set(S.id,{n:nickFor(room),t:Date.now()});if(practice)room.pres.set('MIO',{n:'ミオ',t:Date.now()});
+ room.pres.set(S.id,{n:nickFor(room),t:Date.now(),j:room.openT});if(practice)room.pres.set('MIO',{n:'ミオ',t:Date.now()});
  if(room.official)addMsg(room,{id:'off0',u:'',su:'',sys:true,t:Date.now(),x:'ここは公式部屋です。荒らし対策が強めです：送信は5秒に1回・200文字まで、リンクは使えません。'});
  switchTo(room,fromPop);
  if(practice){setTimeout(()=>botSay(room,'ようこそ。ここは練習用の部屋です。何か送ってみてください。'),800);tutHook('enter')}
- else{connect(room);prepLeave(room);setTimeout(()=>{if(!room.dead)sendEv(room,'ask')},1200);setTimeout(()=>{if(!room.dead)loadBoard(room)},500);setTimeout(()=>{if(!room.dead&&room.bdState!=='ok')loadBoard(room)},6000);setTimeout(()=>{if(!room.dead&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(!room.dead)room.ready=true},1200);setTimeout(()=>{if(room.dead)return;postAv(room,true);upBig(room);prepLeave(room);sendEv(room,'join');ensureBg(room);room.hbT=setInterval(()=>{if(!room.dead&&room.es){sendEv(room,'hb')}},120000)},1500);room.pbT=setInterval(()=>{if(!room.dead){prunePres(room);if(S.room===room)drawPbar()}},60000)}
+ else{addSys(room,'self'+uid(),(nickFor(room)||S.id)+'が入室しました',S.id);connect(room);prepLeave(room);setTimeout(()=>{if(!room.dead)sendEv(room,'ask')},1200);setTimeout(()=>{if(!room.dead)loadBoard(room)},500);setTimeout(()=>{if(!room.dead&&room.bdState!=='ok')loadBoard(room)},6000);setTimeout(()=>{if(!room.dead&&room.pres.size<=1)sendEv(room,'ask')},6000);setTimeout(()=>{if(!room.dead)room.ready=true},1200);setTimeout(()=>{if(room.dead)return;postAv(room,true);upBig(room);prepLeave(room);sendEv(room,'join');ensureBg(room);room.hbT=setInterval(()=>{if(!room.dead&&room.es){sendEv(room,'hb')}},120000)},1500);room.pbT=setInterval(()=>{if(!room.dead){prunePres(room);if(S.room===room)drawPbar()}},60000)}
  if(!coarse)setTimeout(()=>$('#ta').focus(),340)}
 /* 部屋の表示を切り替える（接続は部屋ごとに保たれる） */
 function switchTo(r,fromPop){
@@ -1696,12 +1700,12 @@ const rndId=()=>[...crypto.getRandomValues(new Uint8Array(6))].map(v=>AL[v%32]).
 const nickFor=room=>S.nick||(room&&room.season)||'';
 const idOk=u=>typeof u==='string'&&/^[A-Z0-9]{1,6}$/.test(u);
 const MUTE=store.g('wc2.mute',[]);const saveMute=()=>store.s('wc2.mute',MUTE.slice(-100));
-async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid()},extra||{}))}catch(e){}}
+async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid(),ja:Math.max(0,Date.now()-(room.openT||Date.now()))},extra||{}))}catch(e){}}
 async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid()},room.key),nickFor(room))}catch(e){}}
 function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true}).catch(()=>{})}catch(e){}}
 addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
 function addSys(room,id,text,u){addMsg(room,{id:'ev'+String(id).slice(0,24),u:'',su:u,sys:true,t:Date.now(),x:text})}
-const presList=room=>[...room.pres].slice(0,40).map(([u,v])=>[u,v.n||'',u===S.id?0:Math.max(0,Date.now()-v.t)]);
+const presList=room=>[...room.pres].slice(0,40).map(([u,v])=>[u,v.n||'',u===S.id?0:Math.max(0,Date.now()-v.t),u===S.id?Math.max(0,Date.now()-(v.j||v.t)):Math.max(0,Date.now()-(v.j||v.t))]);
 function schedReply(room){clearTimeout(room.repT);room.repT=setTimeout(()=>{if(!room.dead)sendEv(room,'pres',{list:presList(room)})},300+Math.random()*1700)}
 /* 途中から入った人にアイコンを届ける：いる人が、自分のアイコンをもう一度送る（20秒に1回まで） */
 function schedAv(room,force){if(!MYAV||!room||room.dead)return;
@@ -1710,22 +1714,24 @@ function schedAv(room,force){if(!MYAV||!room||room.dead)return;
  if(!force&&Date.now()-(room.avForce||0)<20000)return;
  if(!bucket('avR|'+room.topic,force?4:2,8000))return;
  clearTimeout(room.avRT);room.avRT=setTimeout(()=>{if(room.dead)return;room.avForce=Date.now();postAv(room,true)},force?300+Math.random()*900:700+Math.random()*2500)}
-function handleEv(room,m){if(!idOk(m.u)||m.u===S.id)return;const n=cleanNick(m.n),vf=m.vf||'',now=Date.now(),nm=n||m.u,id=typeof m.id==='string'&&idRe.test(m.id)?m.id:uid();
+const jOf=(room,u,ja,now)=>{const p=room.pres.get(u);return(Number.isFinite(ja)&&ja>=0&&ja<6048e5)?now-ja:(p&&p.j?p.j:now)};
+function handleEv(room,m){if(!idOk(m.u)||m.u===S.id)return;const n=cleanNick(m.n),vf=m.vf||'',now=Date.now(),jj=jOf(room,m.u,+m.ja,now),nm=n||m.u,id=typeof m.id==='string'&&idRe.test(m.id)?m.id:uid();
  room.gone=room.gone||new Map();room.sysT=room.sysT||new Map();const cap=room.pres.has(m.u)||room.pres.size<60;if(!cap&&m.k!=='leave')return;const sys=t=>{if(now-(room.sysT.get(m.u)||0)<(room.official?30000:8000))return;room.sysT.set(m.u,now);addSys(room,id,t,m.u)};
  if(m.k==='leave'){room.pres.delete(m.u);room.gone.set(m.u,now);sys(nm+'が退室しました')}
- else if(m.k==='join'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});sys(nm+'が入室しました');schedReply(room);schedAv(room,true);schedBg(room)}
- else if(m.k==='ask'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});schedReply(room);schedAv(room,true);schedBg(room)}
- else if(m.k==='hb'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf})}
- else if(m.k==='pres'){clearTimeout(room.repT);room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf});
+ else if(m.k==='join'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf,j:jj});sys(nm+'が入室しました');schedReply(room);schedAv(room,true);schedBg(room)}
+ else if(m.k==='ask'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf,j:jj});schedReply(room);schedAv(room,true);schedBg(room)}
+ else if(m.k==='hb'){room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf,j:jj})}
+ else if(m.k==='pres'){clearTimeout(room.repT);room.gone.delete(m.u);room.pres.set(m.u,{n,t:now,vf,j:jj});
   /* 一覧の人は「最後に確認した時刻」付き。退室した人や古い情報では復活させない */
-  (Array.isArray(m.list)?m.list:[]).slice(0,40).forEach(x=>{if(!Array.isArray(x)||!idOk(x[0])||x[0]===S.id||room.pres.has(x[0])||room.pres.size>=60)return;
+  (Array.isArray(m.list)?m.list:[]).slice(0,40).forEach(x=>{if(Array.isArray(x)&&idOk(x[0])&&x[0]!==S.id&&room.pres.has(x[0])){const a=+x[3],q=room.pres.get(x[0]);if(Number.isFinite(a)&&a>=0&&a<6048e5)q.j=Math.min(q.j||Infinity,now-a)}
+   if(!Array.isArray(x)||!idOk(x[0])||x[0]===S.id||room.pres.has(x[0])||room.pres.size>=60)return;
    const age=Math.max(0,+x[2]||0);if(age>=PTTL)return;const seen=now-age;if((room.gone.get(x[0])||0)>=seen)return;
-   room.pres.set(x[0],{n:cleanNick(x[1]),t:seen})})
+   room.pres.set(x[0],{n:cleanNick(x[1]),t:seen,j:(Number.isFinite(+x[3])&&+x[3]>=0&&+x[3]<6048e5)?now-+x[3]:seen})})
   /* 一覧に、まだアイコンを知らない人がいたら、自分のアイコンを送り直す（途中参加の人に届かせる） */
   if(MYAV&&[...room.pres.keys()].some(u=>u!==S.id&&!AVC[u]))schedAv(room,true)}
  drawPbar();if(!$('#home').hidden)drawHome(true)}
 function prunePres(room){const now=Date.now();for(const [u,v] of [...room.pres]){if(u===S.id||now-v.t<=PTTL)continue;room.pres.delete(u);addSys(room,'x'+u+now,(v.n||u)+'が退室しました',u)}}
-function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<PTTL).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||'')),ty:u!==S.id&&!!v.ty&&now-v.ty<(r.official?10000:6000)}))}
+function memList(){const r=S.room;if(!r)return[];const now=Date.now();return [...r.pres].filter(([u,v])=>u===S.id||now-v.t<PTTL).map(([u,v])=>({u,n:u===S.id?nickFor(r):(v.n||''),vf:u===S.id?'':fvf(u,u===S.id?'':(v.n||'')),ty:u!==S.id&&!!v.ty&&now-v.ty<(r.official?10000:6000),j:v.j||v.t})).sort((a,b)=>a.j-b.j)}
 function drawTy(){const r=S.room,el=$('#tyb');if(!r||r.practice){el.hidden=true;el.dataset.k='';return}
  const l=memList().filter(x=>x.ty&&!isMuted(x.u));
  if(!l.length){el.hidden=true;el.dataset.k='';return}
@@ -1734,10 +1740,10 @@ function drawTy(){const r=S.room,el=$('#tyb');if(!r||r.practice){el.hidden=true;
  const names=l.length<=2?l.map(nm).join('、'):nm(l[0])+'、'+nm(l[1])+' ほか'+(l.length-2)+'人';
  el.innerHTML=l.slice(0,3).map(x=>avHtml(x.u,x.n,' ty-av',true)).join('')+`<span class="ell1">${esc(names)}が入力中</span><span class="tyd"><i></i><i></i><i></i></span>`;el.hidden=false}
 function drawPbar(){const r=S.room,b=$('#prow');drawTy();if(!r){b.hidden=true;return}b.hidden=false;bdBadge();const l=memList();
- $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc${x.ty?' ty':''}">${x.u===S.id?'あなた':esc(aliasOf(x.u)||x.n||x.u)+(isMuted(x.u)?'（'+(MUTE.includes(x.u)?'ミュート':'一時非表示')+'）':'')}${vfHtml(x.vf)}</span>`).join('')}
+ $('#pbt').innerHTML=`<span class="pn">いま${l.length}人</span>`+l.map(x=>`<span class="pc${x.ty?' ty':''}${x.u===S.id?' me':''}">${esc(x.u===S.id?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))+(x.u!==S.id&&isMuted(x.u)?'（'+(MUTE.includes(x.u)?'ミュート':'一時非表示')+'）':'')}${vfHtml(x.vf)}</span>`).join('')}
 function drawTo(){const r=S.room;$('#toBar').hidden=!(r&&r.to);if(r&&r.to)$('#toTx').textContent=(r.to.n||r.to.u)+'さんだけに送ります'}
 function openMem(){const r=S.room;if(!r)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
- $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}${me?'（あなた）':''}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
+ $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow${me?' me':''}">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
  $('#memDlg').hidden=false}
 $('#pbar').onclick=openMem;
 $('#memClose').onclick=()=>{$('#memDlg').hidden=true};
@@ -1877,6 +1883,8 @@ ta.addEventListener('input',()=>{if(ta.value.trim())sendTy(S.room);drawMn()});
 ta.addEventListener('click',drawMn);ta.addEventListener('keyup',e=>{if(e.key.startsWith('Arrow'))drawMn()});
 ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!coarse){e.preventDefault();send()}});
 $('#send').onclick=send;
+/* 送信ボタンを押しても入力欄からフォーカスを外さない（外れると、スマホで2通目の入力ができなくなる） */
+['pointerdown','mousedown'].forEach(t=>$('#send').addEventListener(t,e=>e.preventDefault()));
 $('#mnList').addEventListener('pointerdown',e=>e.preventDefault());
 $('#mnList').addEventListener('click',e=>{const b=e.target.closest('[data-mn]');if(b)insMn(b.dataset.mn)});
 $('#mnBtn').addEventListener('pointerdown',e=>e.preventDefault());
@@ -2021,7 +2029,7 @@ let invite=false;const m0=location.hash.match(/^#r=(.+)$/);if(m0){invite=true;tr
 upd();
 /* ---------- 表示名 ---------- */
 function cleanNick(s){return cleanText(String(s||'').replace(/[#＃]/g,''),12,1).replace(/\s+/g,' ')}
-function setNick(v){S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room)setMid(S.room);for(const r of S.rooms){r.pres.set(S.id,{n:nickFor(r),t:Date.now()});prepLeave(r);sendEv(r,'hb')}if(S.room)drawPbar()}
+function setNick(v){S.nick=cleanNick(v);store.s('wc2.nick',S.nick);drawReg();if(S.room)setMid(S.room);for(const r of S.rooms){r.pres.set(S.id,{n:nickFor(r),t:Date.now(),j:r.openT});prepLeave(r);sendEv(r,'hb')}if(S.room)drawPbar()}
 $('#nick').value=S.nick;
 $('#nick').addEventListener('input',e=>{S.nick=cleanNick(e.target.value);store.s('wc2.nick',S.nick);drawReg()});
 $('#seed').addEventListener('input',()=>drawReg());
