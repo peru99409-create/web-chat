@@ -1138,9 +1138,10 @@ function makeIcon(file){return new Promise((ok,ng)=>{const fr=new FileReader();
     c.width=c.height=N;g.imageSmoothingQuality='high';g.fillStyle='#fff';g.fillRect(0,0,N,N);g.drawImage(cur,0,0,N,N)};
    const enc1=(t,q)=>{const u=c.toDataURL(t,q);return u.startsWith('data:'+t)?u.split(',')[1]:''};
    const best=t=>{let lo=.3,hi=.95,got='',gq=0;if(!enc1(t,.5))return null;for(let i=0;i<7;i++){const q=(lo+hi)/2,d=enc1(t,q);if(d&&d.length<=8800){got=d;gq=q;lo=q}else hi=q}return got?{d:got,q:gq}:null};
-   for(const N of [160,128,112,96,88,80,72,64,56,48]){
+   /* 128px・JPEG画質0.8を基本にする（入りきらなければ画質→大きさの順に下げる） */
+   for(const N of [128,112,96,80,64,48]){
     if(N>BN)continue;shrink(N);
-    for(const t of ['image/webp','image/jpeg']){const r=best(t);if(r&&r.q>=.72)return ok({s:r.d,big})}}
+    for(let q=.8;q>=.5;q-=.05){const d=enc1('image/jpeg',q);if(d&&d.length<=8800)return ok({s:d,big})}}
    for(const N of [48,40,32]){shrink(N);const r=best('image/jpeg');if(r)return ok({s:r.d,big})}
    ng('size')}catch(e){ng('canvas')}};
   im.src=fr.result};
@@ -1980,7 +1981,7 @@ function gotAvChunk(room,u,m){if(!/^[0-9a-f]{16}$/.test(m.h||''))return;const i=
  if(r.n!==n)return;if(r.parts[i]===undefined){r.parts[i]=m.p;r.c++}if(r.c<n)return;as.delete(k);
  const v=r.parts.join('');if(!b64ok(v)||avHash(v)!==m.h)return;setAvc(u,v);schedule();if(S.room===room)drawPbar()}
 /* 起動時：以前の小さい(荒い)アイコンを、端末内の大きい画像から作り直す */
-(async()=>{try{if(!MYAV||store.g('wc2.icv',0)>=2)return;const big=await IDB.get('me');if(!big)return;const ic=await makeIcon(new Blob([big],{type:'image/jpeg'}));if(ic&&ic.s&&ic.s.length>MYAV.length){MYAV=ic.s;store.s('wc2.icv',2);drawIcon();S.rooms.forEach(r=>postAv(r,true))}else store.s('wc2.icv',2)}catch(e){}})();
+(async()=>{try{if(!MYAV||store.g('wc2.icv',0)>=3)return;const big=await IDB.get('me');if(!big)return;const ic=await makeIcon(new Blob([big],{type:'image/jpeg'}));if(ic&&ic.s&&ic.s){MYAV=ic.s;store.s('wc2.icv',3);drawIcon();S.rooms.forEach(r=>postAv(r,true))}else store.s('wc2.icv',3)}catch(e){}})();
 async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
  if(dailyBlocked()){m.failed=true;m.pending=false;m.err='';m.daily=true;toast('いまは送れません（今日の送信上限）。受信はできます');schedule();return}
