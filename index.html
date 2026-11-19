@@ -707,6 +707,11 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 .compbox.whs{border-color:var(--accent);border-style:dashed}
 .row.r.first .bub{border-top-right-radius:4px!important}
 .row:not(.r).first .bub{border-top-left-radius:4px!important}
+/* アイコン・文字の大きさ（設定で変えられる） */
+.row>.av,.row>.sp{width:var(--avs,44px);height:var(--avs,44px)}
+.row>.av{font-size:calc(var(--avs,44px)*.35)}
+.row .bub.bub,.row:not(.mine) .bub.bub{font-size:var(--fs,16px)!important;line-height:1.6!important}
+.row .who,.row .meta{font-size:var(--ns,13px)!important}
 </style></head><body>
 
 <!-- ===== ホーム ===== -->
@@ -866,6 +871,13 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="lab">メインの色</div>
   <div class="swatches" id="colSel"></div>
   <p class="xs faint" style="margin-top:-8px">虹色の丸で、好きな色を選べます。「部屋ごとに自動」は、部屋名から色が決まります。</p>
+  <div class="lab">アイコンの大きさ</div>
+  <div class="setrow"><input type="range" id="avsR" min="28" max="72" step="1" style="flex:1;padding:0;height:32px" aria-label="アイコンの大きさ"><span id="avsV" class="xs mute" style="width:44px;text-align:right"></span></div>
+  <div class="lab">メッセージの文字の大きさ（自分・相手とも同じ）</div>
+  <div class="setrow"><input type="range" id="fsR" min="12" max="24" step="1" style="flex:1;padding:0;height:32px" aria-label="メッセージの文字の大きさ（自分・相手とも同じ）"><span id="fsV" class="xs mute" style="width:44px;text-align:right"></span></div>
+  <div class="lab">名前・ID・時刻の大きさ（自分・相手とも同じ）</div>
+  <div class="setrow"><input type="range" id="nsR" min="9" max="24" step="1" style="flex:1;padding:0;height:32px" aria-label="名前・ID・時刻の大きさ（自分・相手とも同じ）"><span id="nsV" class="xs mute" style="width:44px;text-align:right"></span></div>
+  <button class="chip" id="szReset" style="align-self:flex-start">初期の大きさに戻す</button>
   <div class="cprev"><div class="row first"><span class="av" style="--h:200">ミ</span><div class="col"><div class="who">ミオ<span class="idc">#MIO</span></div><div class="bub">こんにちは。この見た目になります</div></div></div><div class="row r mine"><div class="col"><div class="bub">いい感じ</div></div></div></div></section>
 <section class="spane" data-pane="sIc" hidden><div class="setrow"><span class="pcol"><b>表示名</b><span class="xs mute">部屋の中で、あなたの名前として出ます</span></span><button class="chip" id="setNick">変える</button></div>
 <div class="setrow"><span class="pcol"><b>入力中を相手に知らせる</b><span class="xs mute">書いている間、相手の画面に「あなたが入力中」と表示されます</span></span><button class="sw" id="swTy" role="switch" aria-label="入力中を相手に知らせる"></button></div>
@@ -1172,8 +1184,15 @@ function hideBig(){$('#avBig').classList.remove('show');$('#avBig').setAttribute
 $('#avBig').addEventListener('click',hideBig);
 document.addEventListener('click',e=>{const pu=e.target.closest&&e.target.closest('[data-pu]');if(pu&&!$('#setDlg').contains(pu)){e.stopPropagation();openPerson(pu.dataset.pu);return}const t=e.target.closest&&e.target.closest('[data-av]');if(t&&!$('#setDlg').contains(t)||t&&t.id==='icPrev'){e.stopPropagation();showBig(t.dataset.av)}},true);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#avBig').classList.contains('show')){hideBig();e.stopImmediatePropagation()}},true);
-const STY=Object.assign({bgv:'',bgo:0},store.g('wc2.style',{}));
+const STY=Object.assign({bgv:'',bgo:0,avs:44,fs:16,ns:13},store.g('wc2.style',{}));
 const saveSty=()=>store.s('wc2.style',STY);
+/* 大きさ（自分の画面だけ）：アイコン avs・メッセージの文字 fs・名前/ID/時刻 ns・入力欄の文字 fi */
+const clampN=(v,a,b,d)=>{v=+v;return isFinite(v)?Math.max(a,Math.min(b,Math.round(v))):d};
+const SZ={avs:[28,72,44],fs:[12,24,16],ns:[9,24,13]};
+const szv=k=>clampN(STY[k],SZ[k][0],SZ[k][1],SZ[k][2]);
+function applySz(){const r=document.documentElement.style;for(const k in SZ)r.setProperty('--'+k,szv(k)+'px')}
+function szDraw(){for(const k in SZ){$('#'+k+'R').value=szv(k);$('#'+k+'V').textContent=szv(k)+'px'}}
+applySz();
 function autoText(bg){const n=parseInt(bg.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#111111':'#ffffff'}
 function drawColors(){const v=cleanBg(STY.bgv);
  $('#cprev').innerHTML=`<div class="row mine r"><div class="col"><div${v?` data-ubg="${esc(bgApply(v,myBo()))}"`:''} class="bub">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
@@ -1192,7 +1211,7 @@ function playSnd(force){if(!force&&!SET.sound)return;const c=ac();if(!c)return;t
 /* ポップアップ */
 const sysState=()=>('Notification' in window)?Notification.permission:'unsupported';
 let popT;
-function showPop(room,m){const p=$('#pop');const who=m.n?esc(m.n)+'<span class="idc">#'+esc(m.u)+'</span>':esc(m.u);
+function showPop(room,m){const p=$('#pop');const who=m.n?esc(m.n)+(isGst(m.u)?'':'<span class="idc">#'+esc(m.u)+'</span>'):(isGst(m.u)?'':esc(m.u));
  p.innerHTML=`${avHtml(m.u,m.n,'',true)}<span class="pcol"><span class="xs mute ell1">${who} ・ ${esc(dispRoom(room))}</span><span class="ell1">${esc(m.x)}</span></span>`;
  p.dataset.name=room.name;p.dataset.pv=SET.pv;p.dataset.ph=SET.ph;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),4500)}
 $('#pop').onclick=()=>{const p=$('#pop');p.classList.remove('show');const n=p.dataset.name;if(n&&n!=='テスト部屋'&&!T.on&&S.id&&!(S.room&&S.room.name===n))openRoom(n)};
@@ -1215,7 +1234,7 @@ function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz
 let ICON='';
 try{ICON=mkIcon(192).toDataURL('image/png')}catch(e){}
 function drawSet(){
- drawColors();drawIcon();frDraw();drawTheme();
+ drawColors();drawIcon();frDraw();drawTheme();szDraw();
  const sw=(id,on)=>{const e=$(id);e.classList.toggle('on',on);e.setAttribute('aria-checked',on)};
  sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);bgvDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
  $$s('#posV .chip').forEach(b=>b.classList.toggle('on',b.dataset.pv===SET.pv));$$s('#posH .chip').forEach(b=>b.classList.toggle('on',b.dataset.ph===SET.ph));
@@ -1280,7 +1299,7 @@ function drawChips(){const r=store.g('wc2.recent',[]).filter(n=>!isOffN(normRoom
 $('#recChips').addEventListener('click',e=>{const b=e.target.closest('[data-rc]');if(!b)return;$('#room').value=b.dataset.rc;upd();$('#room').focus()});
 function drawHome(still){
  const hp=$('#hprof'),hr=$('#hrooms');if(!hp||!hr)return;
- if(!still){if(S.id){hp.innerHTML=`<div class="row2">${avHtml(S.id,S.nick,' big')}<span class="pcol"><b class="ell1"${S.nick?'':' style="color:var(--text3)"'}>${S.nick?esc(S.nick):'表示名なし'}</b><span class="mono hid">ID　${S.id}${S.guest?'（仮）':''}</span></span><button class="chip" id="hEdit">変更</button></div>`;
+ if(!still){if(S.id){hp.innerHTML=`<div class="row2">${avHtml(S.id,S.nick,' big')}<span class="pcol"><b class="ell1"${S.nick?'':' style="color:var(--text3)"'}>${S.nick?esc(S.nick):'表示名なし'}</b>${S.guest?'':'<span class="mono hid">ID　'+S.id+'</span>'}</span><button class="chip" id="hEdit">変更</button></div>`;
   $('#hEdit').onclick=()=>{show('entry');if(!coarse)setTimeout(()=>$('#seed').focus(),350)}}}
  hr.classList.toggle('still',!!still);
  const open=S.rooms.filter(r=>!r.official),off=S.rooms.find(r=>r.official),openN=new Set(S.rooms.map(r=>r.norm));
@@ -1636,7 +1655,10 @@ function drawReg(){if(S.room){setMid(S.room);render();drawPbar()}}
 const FR=store.g('wc2.friends',{});
 const saveFr=()=>store.s('wc2.friends',FR);
 const aliasOf=u=>(FR[u]&&FR[u].alias)||'';
-const RB_ID='X49KBX',RB_IDS=['4S5QMZ','JUT8PN'];const whoHtml=(u,n)=>{const al=aliasOf(u);const h=al?esc(al)+'<span class="idc">（'+esc(n||u)+'）#'+esc(u)+'</span>':(n?esc(n)+'<span class="idc">#'+esc(u)+'</span>':esc(u));return((n==='mokyav'&&u===RB_ID)||RB_IDS.includes(u))?'<span class="rbw">'+h+'</span>':h};
+/* IDの文字を入れずに入った人（仮のID）は、IDを表示しない。相手にも、暗号化した本文の中の gs=1 で伝わる */
+const GST=new Set();const gstAdd=u=>{GST.add(u);if(GST.size>400)GST.delete(GST.values().next().value)};
+const isGst=u=>u===S.id?!!S.guest:GST.has(u);
+const RB_ID='X49KBX',RB_IDS=['4S5QMZ','JUT8PN'];const whoHtml=(u,n)=>{const g=isGst(u),al=aliasOf(u);const h=al?esc(al)+'<span class="idc">（'+esc(n||(g?'':u))+'）'+(g?'':'#'+esc(u))+'</span>':(n?esc(n)+(g?'':'<span class="idc">#'+esc(u)+'</span>'):(g?'':esc(u)));return((n==='mokyav'&&u===RB_ID)||RB_IDS.includes(u))?'<span class="rbw">'+h+'</span>':h};
 function fvf(u,n){if(!u||u===S.id)return '';const f=FR[u],nk=normRoom(n);
  if(f)return(!f.name||normRoom(f.name)===nk)?'ok':'';
  if(nk&&!SEASONS.includes(n))for(const k in FR){const g=FR[k];if(g.name&&normRoom(g.name)===nk)return 'ng'}
@@ -1646,7 +1668,7 @@ function frDraw(){const el=$('#frList');if(!el)return;const ids=Object.keys(FR);
  el.innerHTML=ids.length?ids.map(id=>`<div class="mrow">${avHtml(id,FR[id].name,'',true)}<span class="pcol"><b class="ell1">${esc(FR[id].alias||FR[id].name||id)}</b><span class="xs mute mono">ID: ${esc(id)}</span></span><button class="chip" data-frdel="${esc(id)}">削除</button></div>`).join(''):'<p class="xs mute">まだ登録していません。</p>'}
 const PER={u:''};
 function openPerson(u){const r=S.room;if(!r||u===S.id||!idOk(u))return;PER.u=u;const n=nameOf(u),f=FR[u],big=!!iconOf(u);
- $('#perBody').innerHTML=`<div class="row2">${avHtml(u,n,' big',true)}<span class="pcol"><b class="ell1" style="font-size:16px">${esc(aliasOf(u)||n||u)}${vfHtml(fvf(u,n))}</b><span class="xs mute mono">ID: ${esc(u)}</span></span></div><p class="mute" style="white-space:pre-wrap">${f?'お友達に登録しています。登録名：'+esc(f.name||'なし'):'この人をお友達に登録しますか？\n登録すると、同じ名前とIDの人に ✓、同じ名前で別のIDの人に ✕ が付きます。'}</p>`;
+ $('#perBody').innerHTML=`<div class="row2">${avHtml(u,n,' big',true)}<span class="pcol"><b class="ell1" style="font-size:16px">${esc(aliasOf(u)||n||u)}${vfHtml(fvf(u,n))}</b>${isGst(u)?'':'<span class="xs mute mono">ID: '+esc(u)+'</span>'}</span></div><p class="mute" style="white-space:pre-wrap">${f?'お友達に登録しています。登録名：'+esc(f.name||'なし'):'この人をお友達に登録しますか？\n登録すると、同じ名前とIDの人に ✓、同じ名前で別のIDの人に ✕ が付きます。'}</p>`;
  $('#perReg').textContent=f?'登録を解除する':'登録する';$('#perAlias').value=f&&f.alias||'';$('#perSave').hidden=!f;$('#perReg').classList.toggle('pri',!f);$('#perBig').hidden=!big;$('#perDlg').hidden=false}
 $('#perReg').onclick=()=>{const u=PER.u;if(!u)return;if(FR[u]){delete FR[u];toast('登録を解除しました')}else{FR[u]={name:nameOf(u),alias:cleanNick($('#perAlias').value)};toast('お友達に登録しました')}saveFr();frDraw();$('#perDlg').hidden=true;if(S.room){render();drawPbar()}};
 $('#perBig').onclick=()=>{$('#perDlg').hidden=true;showBig(PER.u)};
@@ -1750,7 +1772,7 @@ const DEV=(()=>{let v=store.g('wc2.dev','');if(typeof v!=='string'||!/^[0-9a-f]{
 const dkOf=room=>hex(sha256('dk:'+DEV+':'+room.norm)).slice(0,10);
 const dkOk=v=>typeof v==='string'&&/^[0-9a-f]{10}$/.test(v);
 function dedupDk(room,u,dk){if(!dk)return;const now=Date.now();for(const [k,v] of [...room.pres]){if(k===u||k===S.id||v.dk!==dk)continue;room.pres.delete(k);room.gone=room.gone||new Map();room.gone.set(k,now)}}
-async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,id:uid(),dk:room.dk||undefined,ja:Math.max(0,Date.now()-(room.openT||Date.now()))},extra||{}))}catch(e){}}
+async function sendEv(room,k,extra){if(room.practice||room.left)return;if(k==='hb'&&(nqBusy(20)||room.pres.size<=1))return;try{await relay(room,Object.assign({v:'ev',k,u:S.id,gs:S.guest?1:undefined,id:uid(),dk:room.dk||undefined,ja:Math.max(0,Date.now()-(room.openT||Date.now()))},extra||{}))}catch(e){}}
 async function prepLeave(room){if(!room||room.practice)return;try{room.leaveBody=envelope(room,await enc({v:'ev',k:'leave',u:S.id,id:uid(),dk:room.dk||undefined},room.key),nickFor(room))}catch(e){}}
 function leaveRoom(room){clearInterval(room.hbT);clearInterval(room.pbT);clearTimeout(room.repT);if(room.practice||room.left||!room.leaveBody)return;room.left=true;try{fetch(topicUrl(room),{method:'POST',headers:{'Content-Type':'text/plain'},body:room.leaveBody,keepalive:true}).catch(()=>{})}catch(e){}}
 addEventListener('pagehide',()=>{for(const r of S.rooms){if(r.practice||r.left||!r.leaveBody)continue;r.left=true;try{navigator.sendBeacon(topicUrl(r),new Blob([r.leaveBody],{type:'text/plain'}))}catch(e){}}});
@@ -1797,7 +1819,7 @@ function drawTo(){const r=S.room,on=!!(r&&r.to),nm=on?(aliasOf(r.to.u)||r.to.n||
  ta.placeholder=on?'ささやきを入力（'+nm+'さんだけに届きます）':'メッセージを入力';
  if(on)$('#toTx').textContent='ささやき中：'+nm+'さんだけに届きます（ほかの人には見えません）'}
 function openMem(){const r=S.room;if(!r)return;const l=memList();$('#memT').textContent=`いま入っている人（${l.length}人）`;
- $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow${me?' me':''}">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}</b><span class="xs mute mono">ID: ${esc(x.u)}</span></span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
+ $('#memList').innerHTML=l.map(x=>{const me=x.u===S.id,mu=MUTE.includes(x.u);return `<div class="mrow${me?' me':''}">${avHtml(x.u,x.n,'',true)}<span class="pcol"><b class="ell1">${esc(me?(x.n||x.u):(aliasOf(x.u)||x.n||x.u))}${vfHtml(x.vf)}</b>${isGst(x.u)?'':'<span class="xs mute mono">ID: '+esc(x.u)+'</span>'}</span>${me?'':`<button class="chip ${FR[x.u]?'on':''}" data-pr="${x.u}">${FR[x.u]?'登録済み':'登録'}</button><button class="chip ${r.to&&r.to.u===x.u?'on':''}" data-to="${x.u}">ささやく</button><button class="chip ${mu?'on':''}" data-mu="${x.u}">${mu?'ミュート中':'ミュート'}</button>`}</div>`}).join('');
  $('#memDlg').hidden=false}
 $('#pbar').onclick=openMem;
 $('#memClose').onclick=()=>{$('#memDlg').hidden=true};
@@ -1823,6 +1845,7 @@ async function onIncoming(room,d,hist,late){
  if(!hist){room.lastAct=Date.now();if(typeof d.seq==='number')room.seq=Math.max(room.seq||0,d.seq)}
  const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'';let nm=cleanNick(d.n);
  if(!m||m.u!==d.u||room.dead)return;
+ if(m.gs===1)gstAdd(d.u);
  if(room.official&&IMP.test(nm))nm='';
  const k=['av','avc','ev','bd','bdd','rx','ty','del','bgc','bgq'].includes(m.v)?m.v:'c';
  if(hist&&k!=='bd'&&k!=='bdd')return;
@@ -1934,7 +1957,7 @@ function render(first){
   let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">${m.daily?'今日の送信上限に達したため、送れませんでした。しばらくたってから、タップで再送':'送信できませんでした'+(m.err?'（'+esc(m.err)+'）':'')+'。タップで再送'}</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row r ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
+  h+=`<div class="row r${me?' mine':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
   if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
   prev=m}
  box.innerHTML=h;applyUbg(box);
@@ -1986,7 +2009,7 @@ async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
  if(dailyBlocked()){m.failed=true;m.pending=false;m.err='';m.daily=true;toast('いまは送れません（今日の送信上限）。受信はできます');schedule();return}
  m.failed=false;m.pending=true;m.err='';m.daily=false;
- try{const body=await enc({id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
+ try{const body=await enc({gs:S.guest?1:undefined,id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
@@ -2213,6 +2236,8 @@ function gotBgChunk(room,u,m){if(room.practice||!room.key||!idOk(m.o)||!/^[0-9a-
  if(r.n!==n)return;if(r.parts[i]===undefined){r.parts[i]=m.p;r.c++}
  if(r.c<n)return;as.delete(k);const v=r.parts.join('');
  if(v.length>5000||cleanBg(v)!==v||bgHash(v)!==m.h)return;bgStore(k,v);schedule()}
+for(const k in SZ)$('#'+k+'R').addEventListener('input',e=>{STY[k]=+e.target.value;saveSty();applySz();szDraw();});
+$('#szReset').onclick=()=>{for(const k in SZ)STY[k]=SZ[k][2];saveSty();applySz();szDraw();autosize()};
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
