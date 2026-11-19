@@ -8,7 +8,10 @@
  *     c  : チャット（15分・60件まで。つなぎ直したときの取りこぼし用）
  *     bd : 伝言板（12時間・200件まで）
  *     att: 大きいアイコン（暗号化済み・6時間・20件まで）
- * - IPアドレスは保存しません。連投を止めるための数え上げに、メモリの中だけで使います。
+ * - IPアドレスは保存しません。連投を止めるための数え上げに、メモリの中だけで使います（つながっている間だけ）。
+ * - 流量の上限（画面側の制限を改造した相手や、スクリプトから来る相手を止めるためのもの）：
+ *     接続ごと／IPごと／部屋ぜんたい／1通の大きさ／1つのIPの同時接続数／伝言板の書き込み。
+ *     上限を何度も超える接続は、切ります。
  *
  * 呼び方（ブラウザ側 index.html の NTFY 定数に Worker のURLを入れると使われます）
  *   GET  /<topic>/ws                 WebSocket。?since=<秒> で、その時刻以降のチャットを送り直す
@@ -25,9 +28,31 @@ const MAX_ENV = 9000;          // 封筒（JSON文字列）の最大文字数
 const MAX_ATT = 300000;        // 大きいアイコン（暗号化後）の最大バイト数
 const MAX_CONN = 120;          // 1部屋のWebSocket上限
 const BURST = 30, REFILL = 6;  // 1接続あたり：最大30通まで溜まり、1秒に6通ずつ回復
+const IP_CONN = 8;             // 1つのIPが、1部屋に同時につなげるWebSocketの数
+const IP_BURST = 40, IP_PER = 100;   // IPごと（その部屋の中で）：最大40通まで溜まり、0.1秒に1通ずつ回復
+const ROOM_BURST = 100, ROOM_REFILL = 30; // 部屋ぜんたい：最大100通まで溜まり、1秒に30通ずつ回復
+const STRIKES_MAX = 30;        // 上限超え・不正な送信がこれだけ溜まった接続は切る
+const EDGE_BURST = 100, EDGE_PER = 100;  // 入口（Worker）でのIPごとの上限。1秒に10回ずつ回復（目安。Workerが分かれていると別々に数えます）
+const ERR429 = '{"event":"error","code":429}';
 const KEEP = { c: [15 * 60e3, 60], bd: [12 * 36e5, 200] };
 const ATT_TTL = 6 * 36e5, ATT_MAX = 20;
 const DEFAULT_ORIGINS = ['https://web-chat-9ne.pages.dev'];
+
+const edge = new Map();
+function edgeOk(ip) {
+  const n = Date.now();
+  let b = edge.get(ip);
+  if (!b) {
+    b = { v: EDGE_BURST, t: n };
+    edge.set(ip, b);
+    if (edge.size > 2000) edge.delete(edge.keys().next().value);
+  }
+  b.v = Math.min(EDGE_BURST, b.v + (n - b.t) / EDGE_PER);
+  b.t = n;
+  if (b.v < 1) return false;
+  b.v -= 1;
+  return true;
+}
 
 const allowedOrigins = env =>
   DEFAULT_ORIGINS.concat(String(env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean));
@@ -56,9 +81,16 @@ export default {
     const m = /^\/(wcr-[0-9a-f]{40})(?:\/.*)?$/.exec(url.pathname);
     if (!m || !TOPIC.test(m[1])) return new Response('not found', { status: 404, headers: h });
 
+    /* 部屋（Durable Object）を起こす前に、大きすぎる送信と、多すぎる要求を断る */
+    const ip = req.headers.get('CF-Connecting-IP') || '';
+    const clen = +req.headers.get('Content-Length') || 0;
+    if (req.method === 'POST' && clen > MAX_ENV * 4) return new Response('{"error":"large"}', { status: 413, headers: h });
+    if (req.method === 'PUT' && clen > MAX_ATT) return new Response('{"error":"large"}', { status: 413, headers: h });
+    if (!edgeOk(ip)) return new Response('{"error":"rate"}', { status: 429, headers: h });
+
     const stub = env.ROOMS.get(env.ROOMS.idFromName(m[1]));
     const fwd = new Headers(req.headers);
-    fwd.set('X-Client-Ip', req.headers.get('CF-Connecting-IP') || '');
+    fwd.set('X-Client-Ip', ip);
     const res = await stub.fetch(new Request(req, { headers: fwd }));
     if (res.status === 101) return res; // WebSocket
     const out = new Response(res.body, res);
@@ -76,6 +108,7 @@ export class Room extends DurableObject {
     super(ctx, env);
     this.sql = ctx.storage.sql;
     this.ipb = new Map();
+    this.rb = { v: ROOM_BURST, t: Date.now() };
     this.lastClean = 0;
     ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'));
     ctx.blockConcurrencyWhile(async () => {
@@ -100,6 +133,16 @@ export class Room extends DurableObject {
     return true;
   }
 
+  /* 部屋ぜんたいの流量制限。接続やIPをいくつ使っても、この部屋が受けるのは、1秒に30通ずつ（最大100通の溜め）まで */
+  roomOk() {
+    const n = Date.now(), b = this.rb;
+    b.v = Math.min(ROOM_BURST, b.v + (n - b.t) * ROOM_REFILL / 1000);
+    b.t = n;
+    if (b.v < 1) return false;
+    b.v -= 1;
+    return true;
+  }
+
   async fetch(req) {
     const url = new URL(req.url);
     const m = /^\/(wcr-[0-9a-f]{40})(?:\/(.*))?$/.exec(url.pathname);
@@ -110,19 +153,27 @@ export class Room extends DurableObject {
     if (sub === 'ws' && req.headers.get('Upgrade') === 'websocket') return this.openWs(url, topic, ip);
     if (req.method === 'POST' && sub === '') return this.httpPost(req, topic, ip);
     if (req.method === 'PUT' && sub === '') return this.putAtt(req, url, topic, ip);
-    if (req.method === 'GET' && sub === 'json') return this.history(url, topic);
-    if (req.method === 'GET' && sub.startsWith('att/')) return this.getAtt(sub.slice(4));
+    if (req.method === 'GET' && sub === 'json') return this.history(url, topic, ip);
+    if (req.method === 'GET' && sub.startsWith('att/')) return this.getAtt(sub.slice(4), ip);
     return new Response('not found', { status: 404 });
   }
 
   /* ---- WebSocket ---- */
   openWs(url, topic, ip) {
     if (!this.ipOk('ws|' + ip, 10, 3000)) return new Response('too many', { status: 429 });
-    if (this.ctx.getWebSockets().length >= MAX_CONN) return new Response('busy', { status: 503 });
+    const socks = this.ctx.getWebSockets();
+    if (socks.length >= MAX_CONN) return new Response('busy', { status: 503 });
+    let same = 0;
+    for (const w of socks) {
+      let at = null;
+      try { at = w.deserializeAttachment(); } catch (e) {}
+      if (at && at.ip === ip) same++;
+    }
+    if (same >= IP_CONN) return new Response('too many', { status: 429 });
     const pair = new WebSocketPair();
     const [client, server] = Object.values(pair);
     this.ctx.acceptWebSocket(server);
-    server.serializeAttachment({ v: BURST, t: Date.now(), p: topic });
+    server.serializeAttachment({ v: BURST, t: Date.now(), p: topic, ip, s: 0 });
     const since = Math.floor(+url.searchParams.get('since') || 0);
     if (since > 0) {
       const from = Math.max(since * 1000, Date.now() - KEEP.c[0]);
@@ -134,20 +185,28 @@ export class Room extends DurableObject {
   }
 
   async webSocketMessage(ws, msg) {
-    if (typeof msg !== 'string' || msg.length > MAX_ENV + 200) return;
     const now = Date.now();
-    const a = ws.deserializeAttachment() || { v: BURST, t: now, p: '' };
+    const a = ws.deserializeAttachment() || { v: BURST, t: now, p: '', ip: '-', s: 0 };
     if (!TOPIC.test(a.p || '')) return;
+    /* 終わりに状態を保存。違反が溜まった接続は切る */
+    const fin = notify => {
+      if (notify) { try { ws.send(ERR429); } catch (e) {} }
+      if ((a.s || 0) >= STRIKES_MAX) { try { ws.close(1008, 'too many requests'); } catch (e) {} return; }
+      try { ws.serializeAttachment(a); } catch (e) {}
+    };
+    if (typeof msg !== 'string' || msg.length > MAX_ENV + 200) { a.s = (a.s || 0) + 5; return fin(false); }
     const v = Math.min(BURST, a.v + (now - a.t) * REFILL / 1000);
-    if (v < 1) {
-      try { ws.send('{"event":"error","code":429}'); } catch (e) {}
-      return;
-    }
-    ws.serializeAttachment({ v: v - 1, t: now, p: a.p });
+    a.t = now;
+    if (v < 1) { a.v = v; a.s = (a.s || 0) + 1; return fin(true); }
+    a.v = v - 1;
+    if (!this.ipOk('m|' + a.ip, IP_BURST, IP_PER)) { a.s = (a.s || 0) + 1; return fin(true); }
     let o;
-    try { o = JSON.parse(msg); } catch (e) { return; }
-    if (!o || typeof o.m !== 'string') return;
-    this.accept(a.p, o.m, o.g);
+    try { o = JSON.parse(msg); } catch (e) { a.s = (a.s || 0) + 2; return fin(false); }
+    if (!o || typeof o.m !== 'string') { a.s = (a.s || 0) + 2; return fin(false); }
+    const id = this.accept(a.p, o.m, o.g, a.ip);
+    if (id === 0) return fin(true);                       // 部屋ぜんたい・伝言板の上限
+    a.s = id ? Math.max(0, (a.s || 0) - 0.2) : (a.s || 0) + 2; // 正しい送信は、違反を少しずつ減らす
+    fin(false);
   }
 
   webSocketClose(ws, code) {
@@ -158,13 +217,16 @@ export class Room extends DurableObject {
   }
 
   /* 封筒を検査して、保管して、全員に配る。mはJSON文字列 {u,n,b} */
-  accept(topic, m, tag) {
+  /* 戻り値：id（成功）／null（形が正しくない）／0（上限で止めた） */
+  accept(topic, m, tag, ip) {
     if (m.length > MAX_ENV) return null;
     let e;
     try { e = JSON.parse(m); } catch (x) { return null; }
     if (!e || typeof e.b !== 'string' || e.b.length > MAX_ENV - 200 || typeof e.u !== 'string' || !UID.test(e.u)) return null;
     if (e.n != null && (typeof e.n !== 'string' || e.n.length > 60)) return null;
     const kind = tag === 'bd' || tag === 'c' ? tag : '';
+    if (!this.roomOk()) return 0;
+    if (kind === 'bd' && !this.ipOk('bd|' + ip, 5, 4000)) return 0; // 伝言板：1つのIPから、最大5件まで溜まり、4秒に1件ずつ回復
     const id = rid(), t = Date.now();
     if (kind) {
       this.sql.exec('INSERT INTO msgs(id,t,kind,body) VALUES(?,?,?,?)', id, t, kind, m);
@@ -204,12 +266,15 @@ export class Room extends DurableObject {
     const len = +req.headers.get('Content-Length') || 0;
     if (len > MAX_ENV * 4) return json({ error: 'large' }, 413);
     const text = await req.text();
-    const id = this.accept(topic, text, req.headers.get('Tags') || '');
+    if (text.length > MAX_ENV) return json({ error: 'large' }, 413);
+    const id = this.accept(topic, text, req.headers.get('Tags') || '', ip);
+    if (id === 0) return json({ error: 'rate' }, 429);
     return id ? json({ id, vf: '' }) : json({ error: 'bad' }, 400);
   }
 
   /* ---- HTTP: 履歴（伝言板） ---- */
-  history(url, topic) {
+  history(url, topic, ip) {
+    if (!this.ipOk('h|' + ip, 20, 2000)) return json({ error: 'rate' }, 429);
     const tag = (url.searchParams.get('tags') || 'bd').split(',')[0];
     const kind = tag === 'c' ? 'c' : 'bd';
     const ttl = KEEP[kind][0];
@@ -243,7 +308,8 @@ export class Room extends DurableObject {
     return json({ id });
   }
 
-  getAtt(id) {
+  getAtt(id, ip) {
+    if (!this.ipOk('g|' + ip, 40, 1000)) return json({ error: 'rate' }, 429);
     if (!/^[0-9a-f]{16}$/.test(id)) return new Response('not found', { status: 404 });
     const r = [...this.sql.exec('SELECT data FROM att WHERE id=?', id)][0];
     if (!r) return new Response('not found', { status: 404 });
