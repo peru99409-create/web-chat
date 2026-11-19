@@ -1109,10 +1109,10 @@ document.addEventListener('click',e=>{const n=e.target.closest&&e.target.closest
 function isQuiet(){if(!SET.qh)return false;const p=x=>{const m=/^(\d{1,2}):(\d{2})$/.exec(x||'');return m?(+m[1])*60+(+m[2]):null},a=p(SET.qf),b=p(SET.qt);if(a==null||b==null||a===b)return false;const d=new Date(),n=d.getHours()*60+d.getMinutes();return a<b?(n>=a&&n<b):(n>=a||n<b)}
 /* 自分の吹き出し（色・文字色・右左）。送るメッセージに添えて、相手にも反映される */
 /* アイコン画像：48pxに縮小したJPEGのbase64だけを持つ（メッセージに添えて送る） */
-const b64ok=v=>typeof v==='string'&&/^[A-Za-z0-9+\/=]{20,2700}$/.test(v);
+const b64ok=v=>typeof v==='string'&&/^[A-Za-z0-9+\/=]{20,8800}$/.test(v);
 let MYAV=(v=>b64ok(v)?v:'')(store.g('wc2.icon',''));
 const AVC=store.g('wc2.avc',{});
-function setAvc(u,a){if(!/^[A-Z0-9]{1,6}$/.test(u))return;if(a){if(AVC[u]===a)return;AVC[u]=a}else return;const k=Object.keys(AVC);if(k.length>80)delete AVC[k[0]];store.s('wc2.avc',AVC)}
+function setAvc(u,a){if(!/^[A-Z0-9]{1,6}$/.test(u))return;if(a){if(AVC[u]===a)return;AVC[u]=a}else return;const k=Object.keys(AVC);if(k.length>60)delete AVC[k[0]];store.s('wc2.avc',AVC)}
 function iconOf(u){return u===S.id?MYAV:(AVC[u]||'')}
 const AVFIT=';background-size:cover;background-position:center;background-repeat:no-repeat';
 function avHtml(u,n,extra,noTap){const a=iconOf(u);return `<span class="av${extra||''}${a?' img':''}"${a&&!noTap?` data-av="${u===S.id?'me':u}"`:''}${!noTap&&u!==S.id?` data-pu="${u}"`:''} style="--h:${hueOf(u)}${a?`;background-image:url(data:image/jpeg;base64,${a})${AVFIT}`:''}">${a?'':esc(n?[...n][0]:u.slice(0,2))}</span>`}
@@ -1137,10 +1137,10 @@ function makeIcon(file){return new Promise((ok,ng)=>{const fr=new FileReader();
    const shrink=N=>{let cur=src,s=BN;while(s/2>=N){const t=document.createElement('canvas');t.width=t.height=s=Math.round(s/2);const x=t.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(cur,0,0,s,s);cur=t}
     c.width=c.height=N;g.imageSmoothingQuality='high';g.fillStyle='#fff';g.fillRect(0,0,N,N);g.drawImage(cur,0,0,N,N)};
    const enc1=(t,q)=>{const u=c.toDataURL(t,q);return u.startsWith('data:'+t)?u.split(',')[1]:''};
-   const best=t=>{let lo=.3,hi=.95,got='',gq=0;if(!enc1(t,.5))return null;for(let i=0;i<7;i++){const q=(lo+hi)/2,d=enc1(t,q);if(d&&d.length<=2700){got=d;gq=q;lo=q}else hi=q}return got?{d:got,q:gq}:null};
-   for(const N of [128,112,96,88,80,72,64,56,48]){
+   const best=t=>{let lo=.3,hi=.95,got='',gq=0;if(!enc1(t,.5))return null;for(let i=0;i<7;i++){const q=(lo+hi)/2,d=enc1(t,q);if(d&&d.length<=8800){got=d;gq=q;lo=q}else hi=q}return got?{d:got,q:gq}:null};
+   for(const N of [160,128,112,96,88,80,72,64,56,48]){
     if(N>BN)continue;shrink(N);
-    for(const t of ['image/webp','image/jpeg']){const r=best(t);if(r&&r.q>=.6)return ok({s:r.d,big})}}
+    for(const t of ['image/webp','image/jpeg']){const r=best(t);if(r&&r.q>=.72)return ok({s:r.d,big})}}
    for(const N of [48,40,32]){shrink(N);const r=best('image/jpeg');if(r)return ok({s:r.d,big})}
    ng('size')}catch(e){ng('canvas')}};
   im.src=fr.result};
@@ -1581,8 +1581,8 @@ function drop(room,u){const n=Date.now(),d=room.drops||(room.drops=new Map());le
 function tempMute(room,u){const n=Date.now(),o=TM.get(u)||{lv:0,until:0},dur=(room.official?[900,3600,21600]:[300,900,3600])[Math.min(o.lv,2)]*1000;TM.set(u,{lv:o.lv+1,until:n+dur});
  addMsg(room,{id:'tm'+uid(),u:'',su:'',sys:true,t:n,x:(nameOf(u)||u)+'が連投・荒らしの疑いで、'+(dur>=3600000?Math.round(dur/3600000)+'時間':Math.round(dur/60000)+'分間')+' 非表示になりました'});drawPbar();if(S.room===room){render();drawBoard()}}
 /* 受信側：鍵で復号できた(=部屋の人の)投稿にだけ、種類ごとの流量制限をかける */
-const KB={c:[12,1000],bgc:[12,1500],bgq:[3,15000],ev:[12,2000],av:[8,5000],bd:[3,6000],bdd:[6,3000],rx:[10,2000],ty:[8,1500],del:[6,3000]};
-const KBO={bgc:[6,4000],bgq:[3,15000],c:[5,4000],ev:[8,4000],av:[4,10000],bd:[2,15000],bdd:[4,5000],rx:[4,5000],ty:[4,3000],del:[4,4000]};
+const KB={avc:[10,1500],c:[12,1000],bgc:[12,1500],bgq:[3,15000],ev:[12,2000],av:[8,5000],bd:[3,6000],bdd:[6,3000],rx:[10,2000],ty:[8,1500],del:[6,3000]};
+const KBO={avc:[4,5000],bgc:[6,4000],bgq:[3,15000],c:[5,4000],ev:[8,4000],av:[4,10000],bd:[2,15000],bdd:[4,5000],rx:[4,5000],ty:[4,3000],del:[4,4000]};
 function guardIn(room,u,k,hist){
  if(u===S.id)return true;
  if(isTM(u))return false;
@@ -1823,7 +1823,7 @@ async function onIncoming(room,d,hist,late){
  const m=await dec(d.b,room.key),vf=d.vf==='ok'||d.vf==='ng'?d.vf:'';let nm=cleanNick(d.n);
  if(!m||m.u!==d.u||room.dead)return;
  if(room.official&&IMP.test(nm))nm='';
- const k=['av','ev','bd','bdd','rx','ty','del','bgc','bgq'].includes(m.v)?m.v:'c';
+ const k=['av','avc','ev','bd','bdd','rx','ty','del','bgc','bgq'].includes(m.v)?m.v:'c';
  if(hist&&k!=='bd'&&k!=='bdd')return;
  if(!guardIn(room,d.u,k,hist||late))return;
  if(k==='bd'||k==='bdd'){gotBoard(room,d.u,nm,m,hist);return}
@@ -1833,6 +1833,7 @@ async function onIncoming(room,d,hist,late){
  if(k==='bgc'){gotBgChunk(room,d.u,m);return}
  if(k==='bgq'){gotBgReq(room,d.u,m);return}
  
+ if(k==='avc'){gotAvChunk(room,d.u,m);return}
  if(k==='av'){if(b64ok(m.a)){setAvc(d.u,m.a);schedule();if(S.room===room)drawPbar()}return}
  if(m.v==='ev'){handleEv(room,Object.assign({},m,{u:d.u,n:nm,vf}));return}
  if(typeof m.id!=='string'||!idRe.test(m.id)||typeof m.x!=='string'||typeof m.t!=='number'||!isFinite(m.t))return;
@@ -1970,7 +1971,16 @@ function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){s
  room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m);ta.focus()}
 /* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
 async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&(room.pres.size<=1||Date.now()-(room.avT||0)<300000))return;room.avT=Date.now();
- try{const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}catch(e){room.avT=0}}
+ try{if(MYAV.length<=2700){const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}
+  else{if(room.avBusy)return;room.avBusy=true;try{const a=MYAV,h=avHash(a),ch=a.match(/[\s\S]{1,2200}/g)||[];for(let i=0;i<ch.length&&!room.dead;i++){const r=await relay(room,{v:'avc',u:S.id,h,i,n:ch.length,p:ch[i]});if(!r.ok){room.avT=0;break}if(i<ch.length-1)await new Promise(ok=>setTimeout(ok,300))}}finally{room.avBusy=false}}}
+ catch(e){room.avT=0}}
+const avHash=v=>hex(sha256('av:'+v)).slice(0,16);
+function gotAvChunk(room,u,m){if(!/^[0-9a-f]{16}$/.test(m.h||''))return;const i=m.i,n=m.n;if(!Number.isInteger(i)||!Number.isInteger(n)||n<2||n>4||i<0||i>=n||typeof m.p!=='string'||m.p.length>2300)return;
+ const as=room.avAsm||(room.avAsm=new Map()),k=u+':'+m.h;let r=as.get(k);if(!r){if(as.size>=8)as.delete(as.keys().next().value);r={n,parts:[],c:0};as.set(k,r)}
+ if(r.n!==n)return;if(r.parts[i]===undefined){r.parts[i]=m.p;r.c++}if(r.c<n)return;as.delete(k);
+ const v=r.parts.join('');if(!b64ok(v)||avHash(v)!==m.h)return;setAvc(u,v);schedule();if(S.room===room)drawPbar()}
+/* 起動時：以前の小さい(荒い)アイコンを、端末内の大きい画像から作り直す */
+(async()=>{try{if(!MYAV||store.g('wc2.icv',0)>=2)return;const big=await IDB.get('me');if(!big)return;const ic=await makeIcon(new Blob([big],{type:'image/jpeg'}));if(ic&&ic.s&&ic.s.length>MYAV.length){MYAV=ic.s;store.s('wc2.icv',2);drawIcon();S.rooms.forEach(r=>postAv(r,true))}else store.s('wc2.icv',2)}catch(e){}})();
 async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
  if(dailyBlocked()){m.failed=true;m.pending=false;m.err='';m.daily=true;toast('いまは送れません（今日の送信上限）。受信はできます');schedule();return}
