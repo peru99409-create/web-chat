@@ -707,6 +707,19 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 .compbox.whs{border-color:var(--accent);border-style:dashed}
 .row.r.first .bub{border-top-right-radius:4px!important}
 .row:not(.r).first .bub{border-top-left-radius:4px!important}
+/* アイコンの形（設定で変えられる） */
+html[data-avshape=round] .av{border-radius:50%!important}
+html[data-avshape=rounded] .av{border-radius:26%!important}
+html[data-avshape=square] .av{border-radius:4px!important}
+/* 文字の色（設定で選んだときだけ） */
+html[data-tc] .row.mine .bub.bub{color:var(--tc)!important}
+html:not([data-nopc]) .row:not(.mine) .bub.bub[data-pc]{color:var(--pc)!important}
+#tcGrid,#bgGrid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;justify-items:center}
+/* 単色の背景：明るさで文字を白/黒に自動（全員の画面で同じ） */
+html:root body .row .bub.bub[data-ubg][data-ut=w]{color:#fff!important}
+html:root body .row .bub.bub[data-ubg][data-ut=b]{color:#111!important}
+.row .bub[data-ut=w] a{color:#fff!important;text-decoration:underline}
+.row .bub.wh[data-ubg][data-ut=w] .whl{color:#fff}
 /* アイコン・文字の大きさ（設定で変えられる） */
 .row>.av,.row>.sp{width:var(--avs,44px);height:var(--avs,44px)}
 .row>.av{font-size:calc(var(--avs,44px)*.35)}
@@ -871,6 +884,11 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="lab">メインの色</div>
   <div class="swatches" id="colSel"></div>
   <p class="xs faint" style="margin-top:-8px">虹色の丸で、好きな色を選べます。「部屋ごとに自動」は、部屋名から色が決まります。</p>
+  <div class="cprev" id="szPrev" style="position:sticky;top:0;z-index:3;box-shadow:0 6px 12px -8px rgb(0 0 0/.35)"><div class="day">今日</div><div class="row r first"><span class="av" style="--h:200">ミ</span><div class="col"><div class="who">ミオ<span class="idc">#MIO</span></div><div class="bub">こんにちは。この見た目になります</div><div class="meta">10:05</div></div></div><div class="row r"><span class="sp"></span><div class="col"><div class="bub">続けて送った2通目です</div><div class="meta">10:05</div></div></div><div class="row r mine"><div class="col"><div class="who">あなた</div><div class="bub">いい感じ</div><div class="meta">10:06</div></div></div></div>
+  <div class="lab">大きさ</div>
+  <div class="toc" id="szPre"><button class="chip" data-pre="s">小</button><button class="chip" data-pre="m">標準</button><button class="chip" data-pre="l">大</button></div>
+  <div class="lab">アイコンの形</div>
+  <div class="toc" id="shpSel"><button class="chip" data-shp="auto">テーマに合わせる</button><button class="chip" data-shp="round">丸</button><button class="chip" data-shp="rounded">角丸</button><button class="chip" data-shp="square">四角</button></div>
   <div class="lab">アイコンの大きさ</div>
   <div class="setrow"><input type="range" id="avsR" min="28" max="72" step="1" style="flex:1;padding:0;height:32px" aria-label="アイコンの大きさ"><span id="avsV" class="xs mute" style="width:44px;text-align:right"></span></div>
   <div class="lab">メッセージの文字の大きさ（自分・相手とも同じ）</div>
@@ -878,14 +896,25 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
   <div class="lab">名前・ID・時刻の大きさ（自分・相手とも同じ）</div>
   <div class="setrow"><input type="range" id="nsR" min="9" max="24" step="1" style="flex:1;padding:0;height:32px" aria-label="名前・ID・時刻の大きさ（自分・相手とも同じ）"><span id="nsV" class="xs mute" style="width:44px;text-align:right"></span></div>
   <button class="chip" id="szReset" style="align-self:flex-start">初期の大きさに戻す</button>
-  <div class="cprev"><div class="row first"><span class="av" style="--h:200">ミ</span><div class="col"><div class="who">ミオ<span class="idc">#MIO</span></div><div class="bub">こんにちは。この見た目になります</div></div></div><div class="row r mine"><div class="col"><div class="bub">いい感じ</div></div></div></div></section>
+  </section>
 <section class="spane" data-pane="sIc" hidden><div class="setrow"><span class="pcol"><b>表示名</b><span class="xs mute">部屋の中で、あなたの名前として出ます</span></span><button class="chip" id="setNick">変える</button></div>
 <div class="setrow"><span class="pcol"><b>入力中を相手に知らせる</b><span class="xs mute">書いている間、相手の画面に「あなたが入力中」と表示されます</span></span><button class="sw" id="swTy" role="switch" aria-label="入力中を相手に知らせる"></button></div>
+<div class="lab" style="margin-top:20px">自分が送る文字の色</div>
+<p class="xs faint" style="margin:0 0 8px">相手の画面にも、この色で出ます。下の色から選ぶか、「好きな色」でカラーコードを入れてください。</p>
+<div id="tcGrid" role="radiogroup" aria-label="文字の色"></div>
+<div class="lab" style="margin-top:12px">好きな色</div>
+<div class="setrow" style="gap:10px"><input type="color" id="tcP" value="#222222" style="width:48px;height:44px;padding:2px;flex:none" aria-label="文字の色（色を選ぶ）"><input id="tcH" maxlength="7" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="#RRGGBB" style="flex:1;min-width:0;font-family:ui-monospace,monospace" aria-label="文字の色（カラーコード）"><button class="chip" id="tcX">標準に戻す</button></div>
+<div class="setrow"><span class="pcol"><b>相手が選んだ文字の色を表示する</b><span class="xs mute">オフにすると、相手のメッセージは、いつもの色で出ます（新しい版の相手だけ、色が届きます）</span></span><button class="sw" id="swPc" role="switch" aria-label="相手が選んだ文字の色を表示する"></button></div>
 <b class="sh" id="sIc" style="font-size:16px">アイコン</b>
   <div class="icrow"><span class="av big" id="icPrev"></span><div class="btns"><label class="chip" id="icPick" for="icFile" style="cursor:pointer">画像を選ぶ</label><button class="chip" id="icDel">外す</button></div><input type="file" id="icFile" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none" tabindex="-1"></div>
   <p class="xs faint" style="margin-top:-8px;margin-bottom:16px"><span id="icMsg">画像は小さく縮めて、相手へ届きます。</span></p>
 <b class="sh" id="sBv" style="font-size:16px">吹き出しの背景（相手にも見える）</b>
-<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。5,000文字まで。画像は、埋め込みの url(data:image/webp;base64,…) などだけ使えます（外部のURLは使えません）。長い値は、メッセージとは別に、分けて暗号化して送られます。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。背景をつけた吹き出しの文字は、全員に黒で表示されます。</p>
+<p class="xs faint" style="margin-top:-8px">自分の吹き出しの <b>background に入れる値だけ</b>を書きます（例：linear-gradient(…)）。5,000文字まで。画像は、埋め込みの url(data:image/webp;base64,…) などだけ使えます（外部のURLは使えません）。長い値は、メッセージとは別に、分けて暗号化して送られます。メッセージと一緒に送られ、全員の画面で、あなたの吹き出しに同じように出ます。単色を選んだときは、背景の明るさに合わせて文字が白か黒になります。グラデーションなどのときは、黒で表示されます。</p>
+<div class="lab" style="margin-top:4px">背景の色</div>
+<div id="bgGrid" role="radiogroup" aria-label="吹き出しの背景色"></div>
+<div class="lab" style="margin-top:12px">好きな色</div>
+<div class="setrow" style="gap:10px"><input type="color" id="bgP" value="#ffffff" style="width:48px;height:44px;padding:2px;flex:none" aria-label="背景の色（色を選ぶ）"><input id="bgH" maxlength="7" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="#RRGGBB" style="flex:1;min-width:0;font-family:ui-monospace,monospace" aria-label="背景の色（カラーコード）"></div>
+<div class="lab" style="margin-top:12px">CSSで書く（グラデーションなど）</div>
 <textarea id="bgvTa" wrap="off" maxlength="5000" spellcheck="false" autocapitalize="none" autocomplete="off" autocorrect="off" aria-label="吹き出しの背景" placeholder="linear-gradient(135deg,#ff9a9e,#fad0c4)"></textarea>
 <div class="setrow"><span class="xs faint" id="bgvCnt" style="flex:1"></span><button class="chip" id="bgvEx">例を入れる</button><button class="chip" id="bgvClr">消す</button></div>
 <div class="setrow" id="bgoRow"><span class="pcol"><b>白を重ねる濃さ</b><span class="xs mute">背景の上に白を重ねて、文字を読みやすくします。0%なら画像そのままです（相手の画面にも反映されます）</span></span><input type="range" id="bgoR" min="0" max="90" step="5" style="width:140px;padding:0;height:32px;flex:none" aria-label="白を重ねる濃さ"><span id="bgoV" class="xs mute" style="width:36px;text-align:right;flex:none"></span></div>
@@ -894,6 +923,7 @@ html.hn #room,html.hn #jnRoom{-webkit-text-security:disc}
 <section class="spane" data-pane="sFr" hidden><div id="frList"></div>
   <p class="xs faint">部屋の中で、相手のアイコンか名前をタップすると登録できます。登録した名前とIDが同じ人に ✓、同じ名前で別のIDの人に ✕ が付きます。登録は、この端末にだけ保存されます。</p></section>
 <section class="spane" data-pane="sNt" hidden><div class="setrow"><span class="pcol"><b>Web通知</b><span class="xs mute">新着メッセージを、端末の通知で知らせます</span></span><button class="sw" id="swPop" role="switch" aria-label="Web通知"></button></div>
+<div class="lab" style="margin-top:20px">部屋ごとの通知</div><p class="xs faint" style="margin:0 0 4px">オンにした部屋は、通知・ポップアップ・音が出ません。メッセージは、いつもどおり届きます。</p><div id="nmList"></div>
   <div class="xs mute" id="sysrow"></div>
   <div class="lab">通知する相手</div>
   <div class="chips" id="nfSel"><button class="chip" data-nf="all">全員</button><button class="chip" data-nf="fr">登録した人だけ</button><button class="chip" data-nf="mn">メンションだけ</button><button class="chip" data-nf="both">登録した人かメンション</button></div>
@@ -988,6 +1018,7 @@ const NTFY=WSR?RELAY_URL.replace(/\/*$/,'/'):'https://ntfy.sh/';
    id は前より大きい数字にしてください（NEWの判定に使います）
    ===================================================== */
 const NOTICES=[
+ {id:42,date:'2026-11-19',title:'吹き出しの背景色を、色から選べるようになりました',body:'設定の「自分」の「吹き出しの背景」に、色の一覧（24色）、カラーピッカー、カラーコードの欄を追加しました。選ぶと、単色の背景になります。グラデーションなどは、これまでどおり下のCSS欄に書けます。\n単色の背景のときは、背景の明るさに合わせて、文字が白か黒に自動で切り替わります（全員の画面で同じです）。「白を重ねる濃さ」も反映されます。'},
  ...(WSR?[{id:41,date:'2026-11-18',title:'中継サーバーを、Cloudflareに引っ越しました',body:'メッセージの中継を、ntfy.sh から、Cloudflareの専用の中継サーバーに変えました。ntfy.sh の「1日の送信上限」で送れなくなることは、なくなります。\nつながり方も変えました。通信が切れても、すぐにつなぎ直し、切れていた間のチャット（15分以内）を受け取り直します。\n暗号化のしくみ、部屋名、ID、表示名の扱いは、これまでと同じです。規約の第1条・第9条・第11条・第13条を更新しました。'}]:[]),
  {id:40,date:'2026-11-18',title:'送信上限への対策を入れました。利用者数の表示をなくしました',body:'中継サービス（ntfy.sh）には、1日に送れる回数の上限があります。上限に達すると、メッセージが送れなくなります。\n・上限に当たったときは、「今日の送信上限に達したため、送れませんでした」と表示し、1時間は送信を試しません。入力した文字は消えません。上の表示に「送信停止中」が出ます（受信はできます）。\n・回数を減らすため、ホームの利用者数の表示（2分おきの送信）をなくしました。\n・退室の合図は、1回に戻しました。\n規約の第9条・第13条を更新しました。'},
  {id:39,date:'2026-11-18',title:'退室した人の古い表示が残らないようにしました',body:'IDや名前を変えて入り直したとき、前のIDや名前の表示が、自分と相手の一覧に残ることがありました。入室・退室の合図に、部屋ごとに別の値になる「端末の印」を（暗号化して）添え、同じ端末から新しく入ってきたら、古い表示を消すようにしました。入ってから1〜2秒で入れ替わります。\n退室の合図も、念のため2回送るようにしました。\n規約の第9条・第12条を更新しました。'},
@@ -1184,18 +1215,24 @@ function hideBig(){$('#avBig').classList.remove('show');$('#avBig').setAttribute
 $('#avBig').addEventListener('click',hideBig);
 document.addEventListener('click',e=>{const pu=e.target.closest&&e.target.closest('[data-pu]');if(pu&&!$('#setDlg').contains(pu)){e.stopPropagation();openPerson(pu.dataset.pu);return}const t=e.target.closest&&e.target.closest('[data-av]');if(t&&!$('#setDlg').contains(t)||t&&t.id==='icPrev'){e.stopPropagation();showBig(t.dataset.av)}},true);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#avBig').classList.contains('show')){hideBig();e.stopImmediatePropagation()}},true);
-const STY=Object.assign({bgv:'',bgo:0,avs:44,fs:16,ns:13},store.g('wc2.style',{}));
+const STY=Object.assign({bgv:'',bgo:0,avs:44,fs:16,ns:13,shape:'auto',tc:''},store.g('wc2.style',{}));
 const saveSty=()=>store.s('wc2.style',STY);
 /* 大きさ（自分の画面だけ）：アイコン avs・メッセージの文字 fs・名前/ID/時刻 ns・入力欄の文字 fi */
 const clampN=(v,a,b,d)=>{v=+v;return isFinite(v)?Math.max(a,Math.min(b,Math.round(v))):d};
 const SZ={avs:[28,72,44],fs:[12,24,16],ns:[9,24,13]};
 const szv=k=>clampN(STY[k],SZ[k][0],SZ[k][1],SZ[k][2]);
-function applySz(){const r=document.documentElement.style;for(const k in SZ)r.setProperty('--'+k,szv(k)+'px')}
-function szDraw(){for(const k in SZ){$('#'+k+'R').value=szv(k);$('#'+k+'V').textContent=szv(k)+'px'}}
+const PRE={s:[36,14,11],m:[44,16,13],l:[56,19,15]},SHP=['auto','round','rounded','square'];
+const hexOk=v=>{v=String(v||'').trim().replace(/^#?/,'#').toLowerCase();if(/^#[0-9a-f]{3}$/.test(v))v='#'+[...v.slice(1)].map(c=>c+c).join('');return /^#[0-9a-f]{6}$/.test(v)?v:''};
+function applyCol(){const h=document.documentElement;if(STY.hpc)h.dataset.nopc='1';else delete h.dataset.nopc;for(const k of ['tc']){const v=hexOk(STY[k]);if(v){h.style.setProperty('--'+k,v);h.dataset[k]='1'}else{h.style.removeProperty('--'+k);delete h.dataset[k]}}}
+const TCP=['#111111', '#4b5563', '#9ca3af', '#ffffff', '#e03131', '#f03e3e', '#ff6b6b', '#e64980', '#d6336c', '#be4bdb', '#9c36b5', '#7048e8', '#5f3dc4', '#4263eb', '#1c7ed6', '#1e6fd9', '#0c8599', '#12b886', '#2f9e44', '#66a80f', '#f59f00', '#f76707', '#d9480f', '#8d5524'];
+function tcGrid(){const g=$('#tcGrid');if(!g)return;const cur=hexOk(STY.tc);g.innerHTML=TCP.map(c=>`<button class="swc${c===cur?' on':''}" role="radio" aria-checked="${c===cur}" data-tc="${c}" style="--c:${c}" aria-label="${c}" title="${c}"></button>`).join('')}
+function colDraw(){tcGrid();{const e=$('#swPc');if(e){e.classList.toggle('on',!STY.hpc);e.setAttribute('aria-checked',!STY.hpc)}}for(const k of ['tc']){const v=hexOk(STY[k]);if(document.activeElement!==$('#'+k+'H'))$('#'+k+'H').value=v;if(v)$('#'+k+'P').value=v}}
+function applySz(){applyCol();document.documentElement.dataset.avshape=SHP.includes(STY.shape)?STY.shape:'auto';const r=document.documentElement.style;for(const k in SZ)r.setProperty('--'+k,szv(k)+'px')}
+function szDraw(){colDraw();$$s('#szPre .chip').forEach(b=>b.classList.toggle('on',PRE[b.dataset.pre].every((v,i)=>v===[szv('avs'),szv('fs'),szv('ns')][i])));$$s('#shpSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.shp===(SHP.includes(STY.shape)?STY.shape:'auto')));for(const k in SZ){$('#'+k+'R').value=szv(k);$('#'+k+'V').textContent=szv(k)+'px'}}
 applySz();
 function autoText(bg){const n=parseInt(bg.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#111111':'#ffffff'}
 function drawColors(){const v=cleanBg(STY.bgv);
- $('#cprev').innerHTML=`<div class="row mine r"><div class="col"><div${v?` data-ubg="${esc(bgApply(v,myBo()))}"`:''} class="bub">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
+ $('#cprev').innerHTML=`<div class="row mine r"><div class="col"><div${v?` data-ubg="${esc(bgApply(v,myBo()))}"`:''}${v&&bgUt(v,myBo())?` data-ut="${bgUt(v,myBo())}"`:''} class="bub">こんにちは。こんな見た目になります</div></div></div>`;applyUbg($('#cprev'))}
 $('#icFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;const msg=$('#icMsg');{const w=CDS.icon+15000-Date.now();if(w>0){msg.textContent='アイコンの変更は15秒に1回までです（あと'+secs(w)+'秒）';return}CDS.icon=Date.now();saveCd()}msg.textContent='読み込み中…';
  try{const ic=await makeIcon(f);MYAV=ic.s;store.s('wc2.icon',MYAV);await IDB.put('me',ic.big);drawIcon();S.rooms.forEach(r=>{postAv(r,true);upBig(r,true)});msg.textContent='アイコンを設定しました。'}
  catch(er){msg.textContent=er==='decode'?'この形式の画像は読み込めませんでした。JPEGかPNGの画像を選んでください。':'画像を設定できませんでした。別の画像でためしてください。'}});
@@ -1220,8 +1257,15 @@ function webNotify(room,m){const title=(m.n?m.n+' #'+m.u:m.u)+' ・ '+dispRoom(r
  try{if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.ready.then(r=>r.showNotification(title,opt));return true}}catch(e){}
  return false}
 /* 画面を見ていない間（別のタブ・別のアプリ）は端末のWeb通知で知らせる。見ている間は音だけ */
+/* 部屋ごとの通知オフ（この端末だけ） */
+let MUTR=(()=>{try{const v=store.g('wc2.mr',[]);return Array.isArray(v)?v.filter(x=>typeof x==='string').slice(0,50):[]}catch(e){return []}})();
+const roomMuted=r=>!!(r&&r.norm&&MUTR.includes(r.norm));
+function nmDraw(){const l=$('#nmList');if(!l)return;const rs=S.rooms.filter(r=>!r.practice);
+ l.innerHTML=rs.length?rs.map(r=>`<div class="setrow"><span class="pcol"><b class="ell1">${esc(dispRoom(r))}${S.room===r?'（いまの部屋）':''}</b><span class="xs mute">${roomMuted(r)?'通知を切っています':'通知します'}</span></span><button class="sw${roomMuted(r)?' on':''}" role="switch" aria-checked="${roomMuted(r)}" data-nm="${esc(r.norm)}" aria-label="${esc(dispRoom(r))}の通知を切る"></button></div>`).join(''):'<p class="xs faint">部屋に入ると、ここに出ます。</p>'}
+$('#nmList').addEventListener('click',e=>{const b=e.target.closest('[data-nm]');if(!b)return;const n=b.dataset.nm,i=MUTR.indexOf(n);if(i>=0)MUTR.splice(i,1);else{MUTR.push(n);if(MUTR.length>50)MUTR.shift()}store.s('wc2.mr',MUTR);nmDraw()});
 function notifyMsg(room,m,soundOnly){
  if(typeof T!=='undefined'&&T.on)return;
+ if(roomMuted(room))return;
  {const fr=!!FR[m.u],mn=mentionsMe(m);if(SET.nf==='fr'&&!fr)return;if(SET.nf==='mn'&&!mn)return;if(SET.nf==='both'&&!(fr||mn))return}
  if(isQuiet())return;
  if(SET.popup&&!soundOnly){if(document.hidden){if(sysState()==='granted')webNotify(room,m)}else showPop(room,m)}
@@ -1234,7 +1278,7 @@ function mkIcon(sz){const c=document.createElement('canvas');c.width=c.height=sz
 let ICON='';
 try{ICON=mkIcon(192).toDataURL('image/png')}catch(e){}
 function drawSet(){
- drawColors();drawIcon();frDraw();drawTheme();szDraw();
+ drawColors();drawIcon();frDraw();drawTheme();szDraw();nmDraw();
  const sw=(id,on)=>{const e=$(id);e.classList.toggle('on',on);e.setAttribute('aria-checked',on)};
  sw('#swSl',SET.skipLeave);sw('#swPop',SET.popup);sw('#swSnd',SET.sound);bgvDraw();$$s('#nfSel .chip').forEach(b=>b.classList.toggle('on',b.dataset.nf===SET.nf));sw('#swTy',SET.typ!==false);sw('#swHn',SET.hideName);sw('#swQh',SET.qh);applyHn();$('#qFrom').value=SET.qf;$('#qTo').value=SET.qt;$('#qhRow').style.opacity=SET.qh?1:.45;
  $$s('#posV .chip').forEach(b=>b.classList.toggle('on',b.dataset.pv===SET.pv));$$s('#posH .chip').forEach(b=>b.classList.toggle('on',b.dataset.ph===SET.ph));
@@ -1256,14 +1300,24 @@ $('#tstSnd').onclick=()=>playSnd(true);
 $('#swSl').onclick=()=>{SET.skipLeave=!SET.skipLeave;saveSet();drawSet()};
 $('#swHn').onclick=()=>{SET.hideName=!SET.hideName;saveSet();drawSet();if(S.room){$('#rname').textContent=S.room.name}drawTabs()};
 $('#swQh').onclick=()=>{SET.qh=!SET.qh;saveSet();drawSet()};
-function bgvDraw(){const t=$('#bgvTa');if(!t)return;if(t.value!==(STY.bgv||''))t.value=STY.bgv||'';{const r=$('#bgoR');if(r){r.value=myBo();$('#bgoV').textContent=myBo()+'%'}}const n=t.value.length,ok=!n||!!cleanBg(t.value),c=$('#bgvCnt');c.textContent=n+' / 5,000文字'+(ok?'':'　⚠ この値は使えません（送られません）');c.style.color=ok?'':'var(--danger)'}
+function bgvDraw(){const t=$('#bgvTa');if(!t)return;if(t.value!==(STY.bgv||''))t.value=STY.bgv||'';{const r=$('#bgoR');if(r){r.value=myBo();$('#bgoV').textContent=myBo()+'%'}}const n=t.value.length,ok=!n||!!cleanBg(t.value),c=$('#bgvCnt');c.textContent=n+' / 5,000文字'+(ok?'':'　⚠ この値は使えません（送られません）');c.style.color=ok?'':'var(--danger)';bgGridDraw()}
 let bgvT=0,bgvEi=0;
+const BGP=['#ffffff','#f1f3f5','#adb5bd','#495057','#212529','#ffe3e3','#ff8787','#e03131','#ffe8cc','#ffa94d','#f76707','#fff3bf','#ffd43b','#d3f9d8','#69db7c','#2f9e44','#d0ebff','#4dabf7','#1c7ed6','#e5dbff','#9775fa','#6741d9','#ffdeeb','#e64980'];
+const bgSolid=v=>{const t=String(v||'').trim();return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(t)?hexOk(t):''};
+function bgGridDraw(){const g=$('#bgGrid');if(!g)return;const cur=bgSolid(STY.bgv);
+ g.innerHTML=BGP.map(c=>`<button class="swc${c===cur?' on':''}" role="radio" aria-checked="${c===cur}" data-bgc="${c}" style="--c:${c}" aria-label="${c}" title="${c}"></button>`).join('');
+ const p=$('#bgP'),h=$('#bgH');if(cur&&p)p.value=cur;if(h&&document.activeElement!==h)h.value=cur}
+function setBgv(v){STY.bgv=v;saveSty();bgvDraw();drawColors();clearTimeout(bgvT);bgvT=setTimeout(()=>{if(S.room){render();ensureBg(S.room)}},200)}
 const BGV_EX=['linear-gradient(135deg,#ff9a9e,#fad0c4)','radial-gradient(circle at 20% 20%,rgba(255,255,255,.35) 2px,transparent 3px) 0 0/16px 16px,#6c5ce7','conic-gradient(from 45deg,#f6d365,#fda085,#f6d365)'];
 $('#bgoR').addEventListener('input',e=>{STY.bgo=+e.target.value;$('#bgoV').textContent=myBo()+'%';saveSty();drawColors();clearTimeout(window.__bgoT);window.__bgoT=setTimeout(()=>{if(S.room)render()},150)});
 $('#bgvTa').addEventListener('input',()=>{clearTimeout(window.__bgT);window.__bgT=setTimeout(()=>{if(S.room&&cleanBg(STY.bgv))ensureBg(S.room)},1500)});
 $('#bgvTa').addEventListener('input',e=>{STY.bgv=e.target.value.slice(0,5000);bgvDraw();saveSty();drawColors();clearTimeout(bgvT);bgvT=setTimeout(()=>{if(S.room)render()},200)});
 $('#bgvEx').onclick=()=>{STY.bgv=BGV_EX[bgvEi++%BGV_EX.length];saveSty();bgvDraw();drawColors();if(S.room)render()};
 $('#bgvClr').onclick=()=>{STY.bgv='';saveSty();bgvDraw();drawColors();if(S.room)render()};
+$('#bgGrid').addEventListener('click',e=>{const b=e.target.closest('[data-bgc]');if(b)setBgv(b.dataset.bgc)});
+$('#bgP').addEventListener('input',e=>setBgv(e.target.value));
+$('#bgH').addEventListener('input',e=>{const t=e.target.value.trim(),d=t.replace('#','').length;if(t===''){setBgv('');return}if(/^#?[0-9a-fA-F]+$/.test(t)&&(d===3||d===6))setBgv(hexOk(t))});
+$('#bgH').addEventListener('blur',bgGridDraw);
 $('#qFrom').addEventListener('change',e=>{SET.qf=e.target.value||'23:00';saveSet()});
 $('#qTo').addEventListener('change',e=>{SET.qt=e.target.value||'07:00';saveSet()});
 $('#nfSel').addEventListener('click',e=>{const b=e.target.closest('[data-nf]');if(!b)return;SET.nf=b.dataset.nf;SET.onlyFr=SET.nf==='fr';saveSet();drawSet();toast({all:'全員の通知を出します',fr:'登録した人だけ通知します',mn:'メンションされたときだけ通知します',both:'登録した人か、メンションのときに通知します'}[SET.nf])});
@@ -1714,7 +1768,7 @@ function switchTo(r,fromPop){
  $('#memDlg').hidden=true;$('#bdDlg').hidden=true;$('#lkDlg').hidden=true;
  S.room=r;r.unread=0;applyTheme(r);
  $('#rname').textContent=r.name;$('#exitBtn').hidden=!!r.practice;$('#offB').hidden=true;$('#chat').classList.toggle('isoff',!!r.official);setMid(r);applyAv($('#mav'),S.id,'',S.hue);
- ta.value=r.draft||'';ta.maxLength=r.official?200:500;autosize();setStatus(r.st[0],r.st[1]);
+ ta.value=r.draft!==undefined?r.draft:drGet(r.norm);ta.maxLength=r.official?200:500;autosize();setStatus(r.st[0],r.st[1]);
  show('chat');if(!was&&!fromPop)pushH('chat');
  render(true);drawPbar();drawTo();drawRp();drawTabs();$('#jump').hidden=!r.unseen;
  if(was){const b=$('#msgs');b.classList.remove('swap');void b.offsetWidth;b.classList.add('swap')}}
@@ -1864,7 +1918,7 @@ async function onIncoming(room,d,hist,late){
  const cx=cleanText(m.x,room.official?200:500,room.official?5:10);if(!cx||linkN(cx)>(room.official?0:2))return;
  {const ld=room.lastTx||(room.lastTx=new Map()),q=ld.get(d.u),now=Date.now();if(q&&q.x===cx&&now-q.t<(room.official?60000:8000))return;ld.set(d.u,{x:cx,t:now})}
  const ct=Math.abs(m.t-Date.now())>3e5?Date.now():m.t;
- addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),bh:/^[0-9a-f]{16}$/.test(m.bh||'')?m.bh:'',bo:Number.isInteger(m.bo)&&m.bo>=0&&m.bo<=90?m.bo:0,mn:parseMn(m.mn)})}
+ addMsg(room,{id:m.id.slice(0,24),u:d.u,t:ct,x:cx,n:nm,vf,c:'',k:'',s:'',w:idOk(m.w)?m.w:'',wn:cleanNick(m.wn),rp:parseRp(m.rp),bh:/^[0-9a-f]{16}$/.test(m.bh||'')?m.bh:'',bo:Number.isInteger(m.bo)&&m.bo>=0&&m.bo<=90?m.bo:0,mn:parseMn(m.mn),pc:/^#[0-9a-f]{6}$/.test(m.pc||'')?m.pc:''})}
 /* ntfyから届いた1件を処理（SSEでもポーリングでも共通） */
 function gotNtfy(room,d,hist){
  if(!d||d.event!=='message'||typeof d.message!=='string'||d.message.length>9000)return;if(hist&&!(Array.isArray(d.tags)&&d.tags.includes('bd')))return;
@@ -1940,6 +1994,7 @@ addEventListener('online',()=>{for(const r of S.rooms)stat(r,'wait','再接続�
 let rq=0;function schedule(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;render()})}
 
 const kf=x=>x.sys?'':x.u+'|'+(x.n||'');   /* 同じ人（IDと名前が同じ）が続くあいだは、アイコンを省略する */
+function failWhy(e){e=String(e||'');if(/429/.test(e))return '中継サービスが混み合っています。少し待ってください';if(/413|too large/i.test(e))return 'メッセージが長すぎます';if(/40[13]/.test(e))return 'この部屋には送れません';if(/HTTP 5\d\d/.test(e))return '中継サービスの調子が悪いようです';if(/fetch|network|load failed|abort|timeout/i.test(e))return 'ネットワークにつながっていません';return '通信に失敗しました'+(e?'（'+e+'）':'')}
 function render(first){
  const room=S.room,box=$('#msgs');if(!room)return;
  const near=first||box.scrollHeight-box.scrollTop-box.clientHeight<96;
@@ -1953,11 +2008,11 @@ function render(first){
   if(newDay)h+=`<div class="day">${fmtD(m.t)}</div>`;
   if(room.firstUnread===m.id)h+='<div class="newline">ここから新着'+(fuN?'　'+fuN+'件':'')+'</div>';
   if(m.sys){h+=`<div class="sysl${m.fresh?' in':''}">${esc(m.x)}</div>`;prev=m;m.fresh=false;continue}
-  const me=m.u===S.id,first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m);
-  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">${m.daily?'今日の送信上限に達したため、送れませんでした。しばらくたってから、タップで再送':'送信できませんでした'+(m.err?'（'+esc(m.err)+'）':'')+'。タップで再送'}</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
+  const me=m.u===S.id,first2=newDay||kf(prev)!==kf(m)||room.firstUnread===m.id,ub=bgFor(room,m),ut=ub?bgUtFor(room,m):'';
+  let meta=me?(m.failed?`<div class="meta fail" data-retry="${m.id}">${m.daily?'今日の送信上限に達したため、送れませんでした。しばらくたってから、タップで再送':'送れませんでした：'+esc(failWhy(m.err))+'。タップで再送'}</div>`:`<div class="meta">${m.pending?'送信中…':fmtT(m.t)}</div>`):`<div class="meta">${fmtT(m.t)}</div>`;
   if(m.w&&!m.failed)meta=meta.replace('class="meta">','class="meta">'+(me?esc(m.wn||m.w)+'さんだけに':'あなただけに')+' ・ ');
   const av=first2?avHtml(m.u,m.n):'<span class="sp"></span>';
-  h+=`<div class="row r${me?' mine':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
+  h+=`<div class="row r${me?' mine':''} ${first2?'first':''} ${m.fresh?'in':''} ${m.pending?'pend':''}" data-mid="${esc(m.id)}">${av}<div class="col"><div class="who"${me?'':` data-pu="${m.u}"`}>${whoHtml(m.u,m.n)}${vfHtml(me?'':fvf(m.u,m.n))}</div><div${ub?` data-ubg="${esc(ub)}"`:''}${ut?` data-ut="${ut}"`:''}${m.pc&&!me?` data-pc="1" style="--pc:${m.pc}"`:''} class="bub${m.w?' wh':''}">${m.w?`<div class="whl">ささやき${me?'（'+esc(m.wn||m.w)+'さんだけ）':'（あなただけに届きました）'}</div>`:''}${quoteHtml(room,m.rp)}${linkifyM(m.x,m.mn)}</div>${rxHtml(m)}${meta}</div></div>`;
   if(m.fresh){fresh++;if(me)mineNew=true;m.fresh=false}
   prev=m}
  box.innerHTML=h;applyUbg(box);
@@ -1971,6 +2026,10 @@ $('#msgs').addEventListener('click',e=>{const r=e.target.closest('[data-retry]')
 /* ---------- 送信 ---------- */
 const ta=$('#ta');
 function autosize(){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,136)+'px';const n=[...ta.value].length;$('#send').classList.toggle('rdy',!!ta.value.trim());const mx=S.room&&S.room.official?200:500,c=$('#cnt');c.hidden=n<mx*.9;c.textContent=n+'/'+mx}
+/* 書きかけの文字を部屋ごとに端末へ残す（再読み込みしても戻る） */
+function drGet(n){try{const d=store.g('wc2.drafts',{});return typeof d[n]==='string'?d[n].slice(0,500):''}catch(e){return ''}}
+function drSet(n,t){try{if(!n)return;const d=store.g('wc2.drafts',{}),ks=Object.keys(d);delete d[n];if(t)d[n]=t.slice(0,500);const k=Object.keys(d);while(k.length>20)delete d[k.shift()];store.s('wc2.drafts',d)}catch(e){}}
+let drT=0;ta.addEventListener('input',()=>{clearTimeout(drT);drT=setTimeout(()=>{const r=S.room;if(r&&!r.practice)drSet(r.norm,ta.value)},400)});
 ta.addEventListener('input',autosize);
 ta.addEventListener('input',()=>{if(ta.value.trim())sendTy(S.room);drawMn()});
 ta.addEventListener('click',drawMn);ta.addEventListener('keyup',e=>{if(e.key.startsWith('Arrow'))drawMn()});
@@ -1978,21 +2037,30 @@ ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposin
 $('#send').onclick=send;
 /* 送信ボタンを押しても入力欄からフォーカスを外さない（外れると、スマホで2通目の入力ができなくなる） */
 ['pointerdown','mousedown'].forEach(t=>$('#send').addEventListener(t,e=>e.preventDefault()));
+/* iPad/iPhone：送信ボタンを押しても入力欄の選択を外さない（touchendで直接送る。clickは出なくなる） */
+$('#send').addEventListener('touchend',e=>{if(e.cancelable){e.preventDefault();send()}},{passive:false});
+/* 日本語入力の変換中に欄を空にすると、iOSでは次の入力が効かなくなることがある */
+let TA_COMP=false;ta.addEventListener('compositionstart',()=>{TA_COMP=true});ta.addEventListener('compositionend',()=>{TA_COMP=false});
+function refocusTa(){
+ [30,150].forEach(ms=>setTimeout(()=>{if(S.room&&document.activeElement!==ta&&!document.querySelector('dialog[open]')&&![...document.querySelectorAll('[id$=Dlg]')].some(d=>!d.hidden))ta.focus()},ms))}
 $('#mnList').addEventListener('pointerdown',e=>e.preventDefault());
 $('#mnList').addEventListener('click',e=>{const b=e.target.closest('[data-mn]');if(b)insMn(b.dataset.mn)});
 $('#mnBtn').addEventListener('pointerdown',e=>e.preventDefault());
 $('#mnBtn').onclick=()=>{const c=ta.selectionStart==null?ta.value.length:ta.selectionStart,v=ta.value,pre=v.slice(0,c),sp=pre&&!/\s$/.test(pre)?' ':'';ta.value=pre+sp+'@'+v.slice(c);const pos=c+sp.length+1;ta.focus();try{ta.setSelectionRange(pos,pos)}catch(e){}autosize();drawMn()};
-function send(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){shake($('.compbox'));ta.focus();return}
+/* 入力欄は外さない。空にするときは、キー入力と同じ経路（selectAll→delete）で消して、iOSの日本語変換の状態を壊さない */
+function clearTa(){try{ta.focus();ta.select();if(document.execCommand&&document.execCommand('delete')&&ta.value==='')return}catch(e){}ta.value=''}
+function send(){TA_COMP=false;try{sendCore()}finally{if(document.activeElement!==ta)try{ta.focus()}catch(e){}}}
+function sendCore(){const room=S.room,raw=ta.value;if(!room)return;if(!raw.trim()){shake($('.compbox'));ta.focus();return}
  if(!room.practice&&dailyBlocked()){toast('いまは送れません（今日の送信上限）。受信はできます');return}
  const off=!!room.official;
  const x=cleanText(raw,off?200:500,off?5:10);if(!x){toast('送れない文字だけが含まれています');return}
  if(linkN(x)>(off?0:2)){toast(off?'公式部屋では、リンクは送れません':'リンクは1通に2つまでです');return}
- {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,bh:'0'.repeat(16),bo:90,mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
+ {const t=new TextEncoder().encode(JSON.stringify({id:'x'.repeat(14),u:S.id,t:Date.now(),x,w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',rp:room.rpTo||undefined,bh:'0'.repeat(16),bo:90,pc:'#000000',mn:mnFromText(room,x)})).length;if(Math.ceil((t+28)*4/3)+170>3900){toast('文と背景の合計が長すぎて送れません。文か背景を短くしてください');return}}
  /* 練習の部屋では、送信の間隔を気にせず試せるようにする */
  const bad=room.practice?'':gateChat(x,off,room.norm);if(bad){toast(bad);return}
  const sb=$('#send');sb.classList.add('cool','fly');setTimeout(()=>sb.classList.remove('cool'),off?5000:CD_CHAT);setTimeout(()=>sb.classList.remove('fly'),450);if(coarse&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
- const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,bh:myBh(room),bo:myBo(),pending:true,fresh:true};
- room.msgs.set(m.id,m);trim30(room);ta.value='';autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m);ta.focus()}
+ const m={id:uid(),u:S.id,t:Date.now(),x:x.slice(0,500),n:nickFor(room),vf:'',w:room.to?room.to.u:'',wn:room.to?(room.to.n||''):'',c:'',k:'',s:'',mn:mnFromText(room,x),rp:room.rpTo||null,bh:myBh(room),bo:myBo(),pc:hexOk(STY.tc),pending:true,fresh:true};
+ room.msgs.set(m.id,m);trim30(room);clearTa();clearTimeout(drT);if(!room.practice)drSet(room.norm,'');autosize();drawMn();room.rpTo=null;room.firstUnread='';drawRp();render();post(m)}
 /* アイコンは文字とは別の小さな通知で送る（入室時と、5分おきの送信時だけ） */
 async function postAv(room,force){if(!MYAV||room.practice||!room.key&&false)return;if(!force&&(room.pres.size<=1||Date.now()-(room.avT||0)<300000))return;room.avT=Date.now();
  try{if(MYAV.length<=2700){const r=await relay(room,{v:'av',u:S.id,a:MYAV});if(!r.ok)room.avT=0}
@@ -2009,7 +2077,7 @@ async function post(m){const room=S.room;if(!room)return;let st=0,er='';
  if(room.practice){m.failed=false;m.pending=false;schedule();const l=BOTLINES[Math.min(room._n=(room._n||0)+1,BOTLINES.length)-1];setTimeout(()=>{botSay(room,l);tutHook('sent')},900);return}
  if(dailyBlocked()){m.failed=true;m.pending=false;m.err='';m.daily=true;toast('いまは送れません（今日の送信上限）。受信はできます');schedule();return}
  m.failed=false;m.pending=true;m.err='';m.daily=false;
- try{const body=await enc({gs:S.guest?1:undefined,id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
+ try{const body=await enc({gs:S.guest?1:undefined,id:m.id,u:m.u,t:m.t,x:m.x,w:m.w||'',wn:m.wn||'',c:m.c||'',k:m.k||'',s:m.s||'',rp:m.rp||undefined,bh:m.bh||undefined,bo:m.bh?m.bo:undefined,pc:m.pc||undefined,mn:(m.mn&&m.mn.length)?m.mn:undefined},room.key);
   let r=null;
   for(let i=0;i<3&&!room.dead;i++){
    try{const w=OUT.until-Date.now();if(w>0)await new Promise(ok=>setTimeout(ok,Math.min(w,12000)));
@@ -2211,6 +2279,8 @@ let bgMy={v:'',h:''};
 function bgStore(k,v){BGV.delete(k);BGV.set(k,v);while(BGV.size>60)BGV.delete(BGV.keys().next().value)}
 function myBh(room){if(!room||room.practice||!room.key)return '';const v=cleanBg(STY.bgv);if(!v)return '';
  if(bgMy.v!==v)bgMy={v,h:bgHash(v)};bgStore(S.id+':'+bgMy.h,v);return bgMy.h}
+function bgUt(v,bo){const t=bgSolid(v);if(!t)return '';const a=Math.max(0,Math.min(90,+bo||0))/100,n=parseInt(t.slice(1),16),f=x=>x*(1-a)+255*a,r=f(n>>16),g=f((n>>8)&255),b=f(n&255);return (r*299+g*587+b*114)/1000>150?'b':'w'}
+function bgUtFor(room,m){const me=m.u===S.id,v=me?cleanBg(STY.bgv):BGV.get(m.u+':'+m.bh);return v?bgUt(v,me?myBo():m.bo):''}
 function bgFor(room,m){if(m.u===S.id){const v=cleanBg(STY.bgv);return v?bgApply(v,myBo()):''}
  if(!m.bh||room.practice||!room.key)return '';
  const k=m.u+':'+m.bh,v=BGV.get(k);if(v){const b=cleanBg(v);return b?bgApply(b,m.bo):''}askBg(room,m.u,m.bh);return ''}
@@ -2237,7 +2307,16 @@ function gotBgChunk(room,u,m){if(room.practice||!room.key||!idOk(m.o)||!/^[0-9a-
  if(r.c<n)return;as.delete(k);const v=r.parts.join('');
  if(v.length>5000||cleanBg(v)!==v||bgHash(v)!==m.h)return;bgStore(k,v);schedule()}
 for(const k in SZ)$('#'+k+'R').addEventListener('input',e=>{STY[k]=+e.target.value;saveSty();applySz();szDraw();});
-$('#szReset').onclick=()=>{for(const k in SZ)STY[k]=SZ[k][2];saveSty();applySz();szDraw();autosize()};
+$('#szPre').addEventListener('click',e=>{const b=e.target.closest('[data-pre]');if(!b)return;[STY.avs,STY.fs,STY.ns]=PRE[b.dataset.pre];saveSty();applySz();szDraw()});
+$('#shpSel').addEventListener('click',e=>{const b=e.target.closest('[data-shp]');if(!b)return;STY.shape=b.dataset.shp;saveSty();applySz();szDraw()});
+$('#swPc').onclick=()=>{STY.hpc=!STY.hpc;saveSty();applySz();colDraw();render()};
+$('#tcGrid').addEventListener('click',e=>{const b=e.target.closest('[data-tc]');if(!b)return;STY.tc=b.dataset.tc;saveSty();applySz();colDraw()});
+for(const k of ['tc']){
+ $('#'+k+'P').addEventListener('input',e=>{STY[k]=e.target.value;saveSty();applySz();colDraw()});
+ $('#'+k+'H').addEventListener('input',e=>{const t=e.target.value.trim();if(t===''){STY[k]='';saveSty();applySz();return}const v=hexOk(t);if(v&&t.replace('#','').length>=3&&(t.replace('#','').length===3||t.replace('#','').length===6)){STY[k]=v;saveSty();applySz();$('#'+k+'P').value=v}});
+ $('#'+k+'H').addEventListener('blur',colDraw);
+ $('#'+k+'X').onclick=()=>{STY[k]='';saveSty();applySz();colDraw()}}
+$('#szReset').onclick=()=>{STY.shape='auto';STY.hpc=false;for(const k in SZ)STY[k]=SZ[k][2];saveSty();applySz();szDraw();autosize()};
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
