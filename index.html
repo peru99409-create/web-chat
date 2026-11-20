@@ -725,6 +725,27 @@ html:root body .row .bub.bub[data-ubg][data-ut=b]{color:#111!important}
 .row>.av{font-size:calc(var(--avs,44px)*.35)}
 .row .bub.bub,.row:not(.mine) .bub.bub{font-size:var(--fs,16px)!important;line-height:1.6!important}
 .row .who,.row .meta{font-size:var(--ns,13px)!important}
+/* 電卓（部屋名を「電卓」にすると、部屋のタブとして開く） */
+#calcPane{display:none;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px;flex-direction:column;align-items:center}
+#chat.calcon #calcPane{display:flex}
+#chat.calcon #prow,#chat.calcon #msgs,#chat.calcon #jump,#chat.calcon .comp,#chat.calcon .top .st,#chat.calcon #exitBtn,#chat.calcon #meChip{display:none!important}
+#calcPane .calcbox{width:min(340px,100%);display:flex;flex-direction:column;gap:12px;margin:auto 0}
+.cdisp{background:var(--bg);border:1px solid var(--line);border-radius:var(--r3);padding:12px 16px;text-align:right;min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;overflow:hidden}
+.cex{font-size:13px;line-height:20px;color:var(--text2);min-height:20px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.cex::-webkit-scrollbar{display:none}
+.cres{font-size:36px;line-height:44px;font-weight:700;font-variant-numeric:tabular-nums;overflow-x:auto;white-space:nowrap;cursor:pointer;scrollbar-width:none;-webkit-user-select:none;user-select:none}
+.cres::-webkit-scrollbar{display:none}
+.cres.sm{font-size:26px}
+.cres.err{color:var(--danger)}
+.chs{display:flex;flex-direction:column;align-items:flex-end;gap:2px;max-height:62px;overflow-y:auto}
+.chs button{font-size:12px;line-height:18px;color:var(--text3);text-align:right;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chs button:hover{color:var(--accent)}
+.ckeys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ck{height:56px;border-radius:var(--r2);background:var(--bg3);border:1px solid var(--line);font-size:20px;font-weight:600;touch-action:manipulation;transition:transform .12s var(--ease),background .15s}
+.ck:hover{background:var(--bg4)}.ck:active{transform:scale(.93)}
+.ck.fn{color:var(--text2)}
+.ck.op{background:color-mix(in srgb,var(--accent) 16%,var(--bg3));color:var(--accent)}
+.ck.eq{background:var(--accent);border-color:var(--accent);color:var(--on)}
 </style></head><body>
 
 <!-- ===== ホーム ===== -->
@@ -822,6 +843,17 @@ html:root body .row .bub.bub[data-ubg][data-ut=b]{color:#111!important}
   <button class="me-chip" id="meChip" aria-label="表示名を変更"><span class="av" id="mav"></span><span id="mid"></span></button>
   <button class="exitb" id="exitBtn" aria-label="この部屋から退室する"><svg class="ic"><use href="#i-exit"/></svg><span>退室</span></button>
  </div>
+ <div id="calcPane"><div class="calcbox">
+  <div class="cdisp"><div class="chs" id="calcHist"></div><div class="cex" id="calcEx"></div><div class="cres" id="calcRes" title="タップでコピー">0</div></div>
+  <div class="ckeys" id="calcKeys">
+   <button class="ck fn" data-k="AC">AC</button><button class="ck fn" data-k="BS" aria-label="1文字消す">⌫</button><button class="ck fn" data-k="%">%</button><button class="ck op" data-k="÷">÷</button>
+   <button class="ck" data-k="7">7</button><button class="ck" data-k="8">8</button><button class="ck" data-k="9">9</button><button class="ck op" data-k="×">×</button>
+   <button class="ck" data-k="4">4</button><button class="ck" data-k="5">5</button><button class="ck" data-k="6">6</button><button class="ck op" data-k="−">−</button>
+   <button class="ck" data-k="1">1</button><button class="ck" data-k="2">2</button><button class="ck" data-k="3">3</button><button class="ck op" data-k="+">+</button>
+   <button class="ck fn" data-k="NEG">±</button><button class="ck" data-k="0">0</button><button class="ck" data-k=".">.</button><button class="ck eq" data-k="=">=</button>
+  </div>
+  <p class="xs faint" style="text-align:center">下のタブで、部屋とすぐ行き来できます。計算の途中の内容は、そのまま残ります。</p>
+ </div></div>
  <div class="prow" id="prow"><button class="pbar" id="pbar" aria-label="いま入っている人"><svg class="ic"><use href="#i-users"/></svg><span id="pbt">—</span></button><button class="bdb" id="bdBtn" aria-label="伝言板を開く"><svg class="ic"><use href="#i-note"/></svg>伝言板<span class="new" id="bdBadge" hidden></span></button></div>
  <div id="msgs"></div>
  <button class="jump" id="jump" hidden>↓ 新着</button>
@@ -1251,9 +1283,9 @@ let popT;
 function showPop(room,m){const p=$('#pop');const who=m.n?esc(m.n)+(isGst(m.u)?'':'<span class="idc">#'+esc(m.u)+'</span>'):(isGst(m.u)?'':esc(m.u));
  p.innerHTML=`${avHtml(m.u,m.n,'',true)}<span class="pcol"><span class="xs mute ell1">${who} ・ ${esc(dispRoom(room))}</span><span class="ell1">${esc(m.x)}</span></span>`;
  p.dataset.name=room.name;p.dataset.pv=SET.pv;p.dataset.ph=SET.ph;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),4500)}
-$('#pop').onclick=()=>{const p=$('#pop');p.classList.remove('show');const n=p.dataset.name;if(n&&n!=='テスト部屋'&&!T.on&&S.id&&!(S.room&&S.room.name===n))openRoom(n)};
+$('#pop').onclick=()=>{const p=$('#pop');p.classList.remove('show');const n=p.dataset.name;if(n&&n!=='テスト部屋'&&!T.on&&S.id&&!(S.room&&S.room.name===n&&!S.calcOn))openRoom(n)};
 function webNotify(room,m){const title=(m.n?m.n+' #'+m.u:m.u)+' ・ '+dispRoom(room),opt={body:m.x.slice(0,100),tag:room.topic,icon:ICON,badge:ICON,renotify:true};
- try{const n=new Notification(title,opt);n.onclick=()=>{window.focus();n.close();if(room.name!=='テスト部屋'&&!(S.room&&S.room.topic===room.topic))openRoom(room.name)};return true}catch(e){}
+ try{const n=new Notification(title,opt);n.onclick=()=>{window.focus();n.close();if(room.name!=='テスト部屋'&&!(S.room&&S.room.topic===room.topic&&!S.calcOn))openRoom(room.name)};return true}catch(e){}
  try{if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.ready.then(r=>r.showNotification(title,opt));return true}}catch(e){}
  return false}
 /* 画面を見ていない間（別のタブ・別のアプリ）は端末のWeb通知で知らせる。見ている間は音だけ */
@@ -1335,7 +1367,7 @@ const S={seed:store.g('wc2.seed',''),nick:store.g('wc2.nick',''),id:null,hue:0,r
 const MAXR=3,OFFN='official',OFFNAME='公式',isOffN=n=>n===OFFN||n===OFFNAME,IMP=/公式|運営|管理|official|admin|staff|moderator/i;
 const screens=['home','entry','notice','chat'];
 const drawerOpen=()=>!$('#home').hidden&&$('#home').classList.contains('drawer');
-function openDrawer(){if(!S.room||S.room.practice||$('#chat').hidden)return;const h=$('#home');drawHome();h.classList.remove('closing');h.classList.add('drawer');h.hidden=false;$('#hscrim').hidden=false}
+function openDrawer(){if((!S.room&&!S.calcOn)||(S.room&&S.room.practice)||$('#chat').hidden)return;const h=$('#home');drawHome();h.classList.remove('closing');h.classList.add('drawer');h.hidden=false;$('#hscrim').hidden=false}
 function closeDrawer(anim){const h=$('#home');if(!h.classList.contains('drawer'))return;$('#hscrim').hidden=true;
  if(anim&&!h.hidden){h.classList.add('closing');setTimeout(()=>{if(h.classList.contains('closing')){h.hidden=true;h.classList.remove('drawer','closing')}},230)}
  else{h.hidden=true;h.classList.remove('drawer','closing')}}
@@ -1361,6 +1393,7 @@ function drawHome(still){
  let i=0;const row=(n,sub,extra,cls,attrs)=>`<div class="hrow ${cls||''}" role="button" tabindex="0" style="--d:${i++}" ${attrs}><span class="av" style="--h:${hueOf(topicOf(isOffN(normRoom(n))?OFFN:normRoom(n)))}">${esc([...n][0])}</span><span class="pcol"><b class="ell1${isOffN(normRoom(n))?'':' rn'}">${esc(n)}</b><span class="xs faint ell1">${sub}</span></span>${extra}</div>`;
  const un=r=>r.unread?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:'';
  let h=row(OFFNAME,off?'入室中・タップで開く':'みんなが集まる公式の部屋・荒らし対策が強め',(off?un(off)+`<button class="chip" data-lv="${esc(off.norm)}">退室</button>`:''),'offc',`data-n="${OFFN}"`);
+ if(S.calcTab)h+=`<div class="hrow live" role="button" tabindex="0" style="--d:${i++}" data-n="電卓"><span class="av" style="--h:${hueOf('calc')}">電</span><span class="pcol"><b class="ell1">電卓</b><span class="xs faint ell1">開いています・タップで開く</span></span><button class="chip" data-cx>閉じる</button></div>`;
  if(open.length)h+=`<div class="lab hs">入室中（${S.rooms.length}/${MAXR}）</div>`+open.map(r=>row(r.name,'入室中・タップで開く',un(r)+`<button class="chip" data-lv="${esc(r.norm)}">退室</button>`,'live',`data-n="${esc(r.name)}"`)).join('');
  const fo=[],nw=Date.now();for(const r of S.rooms){if(r.practice)continue;for(const [u,v] of r.pres){if(u!==S.id&&FR[u]&&nw-v.t<PTTL)fo.push({u,r,n:v.n})}}
  if(fo.length)h+=`<div class="lab hs">お友達がいます</div>`+fo.map(f=>`<div class="hrow" role="button" tabindex="0" style="--d:${i++}" data-n="${esc(f.r.name)}">${avHtml(f.u,f.n,'',true)}<span class="pcol"><b class="ell1">${esc(aliasOf(f.u)||FR[f.u].name||f.n||f.u)}</b><span class="xs faint ell1${f.r.official?'':' rn'}">${esc(f.r.name)}</span></span></div>`).join('');
@@ -1368,8 +1401,9 @@ function drawHome(still){
  if(!open.length&&!rec.length)h+=`<div class="hint" style="padding:20px 16px"><b style="color:var(--text)">まだ部屋に入っていません</b><br>「部屋に入る」から、部屋名を入れて始めましょう（同時に${MAXR}つまで）。</div>`;
  hr.innerHTML=h;$('#hlab').textContent=S.rooms.length?'部屋':'部屋';
  drawBadge()}
-$('#hrooms').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){const n=d.dataset.del;store.s('wc2.recent',store.g('wc2.recent',[]).filter(x=>x!==n));drawHome();return}
- const lv=e.target.closest('[data-lv]');if(lv){const r=S.rooms.find(x=>x.norm===lv.dataset.lv);if(r){const wasCur=S.room===r&&drawerOpen();if(wasCur){leaveTab(r);if(S.room&&!$('#chat').hidden)openDrawer()}else{dropRoom(r);drawTabs();drawHome();toast(dispRoom(r)+'から退室しました')}}return}
+$('#hrooms').addEventListener('click',e=>{if(e.target.closest('[data-cx]')){closeCalcTab();return}
+ const d=e.target.closest('[data-del]');if(d){const n=d.dataset.del;store.s('wc2.recent',store.g('wc2.recent',[]).filter(x=>x!==n));drawHome();return}
+ const lv=e.target.closest('[data-lv]');if(lv){const r=S.rooms.find(x=>x.norm===lv.dataset.lv);if(r){const wasCur=S.room===r&&drawerOpen();if(wasCur){leaveTab(r);if((S.room||S.calcOn)&&!$('#chat').hidden)openDrawer()}else{dropRoom(r);drawTabs();drawHome();toast(dispRoom(r)+'から退室しました')}}return}
  const r=e.target.closest('.hrow');if(r)openRoom(r.dataset.n)});
 $('#hrooms').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('hrow'))openRoom(e.target.dataset.n)});
 $('#goJoin').onclick=()=>{if(drawerOpen()){closeDrawer(false);openJoin();return}show('entry');if(!coarse)setTimeout(()=>$('#room').focus(),350)};
@@ -1745,7 +1779,7 @@ function drawMn(){const box=$('#mnList'),r=S.room,q=r&&mnQuery();if(!q){box.hidd
 function insMn(name){const q=mnQuery();if(!q)return;const v=ta.value;ta.value=v.slice(0,q.start)+'@'+name+' '+v.slice(q.c);const pos=q.start+name.length+2;ta.focus();try{ta.setSelectionRange(pos,pos)}catch(e){}autosize();drawMn()}
 const linkify=t=>esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
 async function openRoom(name,fromPop){
- let norm=normRoom(name);if(!norm)return;if(norm==='official'||norm==='公式'){norm=OFFN;name=OFFNAME}if(!T.on){const ag=store.g('wc2.terms',null);if(!(ag&&ag.v>=TERMS_VER)){askTerms(()=>openRoom(name,fromPop));return}}
+ let norm=normRoom(name);if(!norm)return;if(isCalcN(norm)&&!T.on){openCalc();return}if(norm==='official'||norm==='公式'){norm=OFFN;name=OFFNAME}if(!T.on){const ag=store.g('wc2.terms',null);if(!(ag&&ag.v>=TERMS_VER)){askTerms(()=>openRoom(name,fromPop));return}}
  if(!T.on){const ex=S.rooms.find(r=>r.norm===norm);if(ex){switchTo(ex,fromPop);return}
   if(S.rooms.length>=MAXR){toast('同時に入れるのは'+MAXR+'部屋までです。どれかを退室してください');if(S.id&&!drawerOpen()&&$('#chat').hidden){closeRoom();show('home',true);drawHome()}return}
   const w=CDS.room+2000-Date.now();if(w>0){toast('部屋への出入りは少し間をあけてください（あと'+secs(w)+'秒）');return}CDS.room=Date.now();saveCd()}
@@ -1763,6 +1797,7 @@ async function openRoom(name,fromPop){
  if(!coarse)setTimeout(()=>$('#ta').focus(),340)}
 /* 部屋の表示を切り替える（接続は部屋ごとに保たれる） */
 function switchTo(r,fromPop){
+ S.calcOn=false;$('#chat').classList.remove('calcon');$('#rname').classList.add('rn');
  const cur=S.room;if(cur&&cur!==r&&!cur.practice)cur.draft=ta.value;if(cur&&cur!==r)cur.firstUnread='';
  const was=!$('#chat').hidden;
  $('#memDlg').hidden=true;$('#bdDlg').hidden=true;$('#lkDlg').hidden=true;
@@ -1773,7 +1808,7 @@ function switchTo(r,fromPop){
  render(true);drawPbar();drawTo();drawRp();drawTabs();$('#jump').hidden=!r.unseen;
  if(was){const b=$('#msgs');b.classList.remove('swap');void b.offsetWidth;b.classList.add('swap')}}
 function drawTabs(){drawLock();const el=$('#tabs');if(!el)return;const L=S.room&&S.room.practice?[S.room]:S.rooms;
- el.innerHTML=L.map((r,i)=>`<div class="tab${r===S.room?' on':''}${r.official?' off':''}" role="tab" tabindex="0" data-i="${i}" aria-selected="${r===S.room}"><span class="tn ell1${r.official?'':' rn'}">${esc(r.name)}</span>${r!==S.room&&r.unread?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:''}${r.practice?'':`<button class="tx" data-x="${i}" aria-label="${esc(r.name)}から退室">✕</button>`}</div>`).join('')+(!(S.room&&S.room.practice)&&L.length<MAXR?'<button class="tab add" data-add aria-label="別の部屋に入る">＋</button>':'');
+ el.innerHTML=L.map((r,i)=>`<div class="tab${r===S.room&&!S.calcOn?' on':''}${r.official?' off':''}" role="tab" tabindex="0" data-i="${i}" aria-selected="${r===S.room&&!S.calcOn}"><span class="tn ell1${r.official?'':' rn'}">${esc(r.name)}</span>${(r!==S.room||S.calcOn)&&r.unread?`<span class="new">${r.unread>9?'9+':r.unread}</span>`:''}${r.practice?'':`<button class="tx" data-x="${i}" aria-label="${esc(r.name)}から退室">✕</button>`}</div>`).join('')+(S.calcTab&&!(S.room&&S.room.practice)?calcTabHtml():'')+(!(S.room&&S.room.practice)&&L.length<MAXR?'<button class="tab add" data-add aria-label="別の部屋に入る">＋</button>':'');
  if(!$('#home').hidden)drawHome(true)}
 function openJoin(){const left=MAXR-S.rooms.length;if(left<=0){toast('同時に入れるのは'+MAXR+'部屋までです。先に、どれかを退室してください');return}
  const openN=new Set(S.rooms.map(r=>r.norm));
@@ -1799,16 +1834,18 @@ $('#exitBtn').onclick=()=>{const r=S.room;if(r&&!r.practice)openRoomMenu(r)};
 $('#rmNo').onclick=()=>{$('#rmDlg').hidden=true};
 $('#rmDlg').addEventListener('pointerdown',e=>{if(e.target===e.currentTarget)e.currentTarget.hidden=true});
 $('#tabs').addEventListener('click',e=>{const L=S.room&&S.room.practice?[S.room]:S.rooms;
+ if(e.target.closest('[data-cx]')){closeCalcTab();return}
+ if(e.target.closest('[data-calc]')){if(!S.calcOn)openCalc();return}
  if(e.target.closest('[data-add]')){openJoin();return}
  const t=e.target.closest('[data-i]');if(!t)return;const r=L[+t.dataset.i];if(!r)return;
- if(e.target.closest('[data-x]')){if(!r.practice)openRoomMenu(r);return}if(r!==S.room&&!r.practice)switchTo(r,true)});
-$('#tabs').addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.closest&&e.target.closest('[data-i]');if(t)t.click()}});
+ if(e.target.closest('[data-x]')){if(!r.practice)openRoomMenu(r);return}if((r!==S.room||S.calcOn)&&!r.practice)switchTo(r,true)});
+$('#tabs').addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.closest&&e.target.closest('[data-i],[data-calc]');if(t)t.click()}});
 function leaveTab(r){const idx=S.rooms.indexOf(r),was=S.room===r;dropRoom(r);
- if(was){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else{backToEntry()}}else drawTabs();
+ if(was&&!S.calcOn){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else if(S.calcTab)openCalc();else{backToEntry()}}else drawTabs();
  toast(dispRoom(r)+'から退室しました')}
 /* 自分の通信が切れた状態が続いたら、その部屋から退室する（放置では退室しない） */
 function lostRoom(r){if(r.dead||r.practice)return;const was=S.room===r,idx=S.rooms.indexOf(r),nm=dispRoom(r);dropRoom(r);
- if(was){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else backToEntry()}else drawTabs();
+ if(was&&!S.calcOn){const nx=S.rooms[Math.min(idx,S.rooms.length-1)];if(nx)switchTo(nx,true);else if(S.calcTab)openCalc();else backToEntry()}else drawTabs();
  if(!$('#home').hidden)drawHome(true);toast('通信が切れたので「'+nm+'」から退室しました')}
 setInterval(()=>{if(document.hidden)return;const n=Date.now();for(const r of S.rooms.slice()){if(r.dead||r.practice)continue;if(r.st[0]!=='on'&&r.badSince&&n-r.badSince>5000)lostRoom(r)}},1000);
 /* ---- 入力中の合図 ---- */
@@ -1984,7 +2021,7 @@ function addMsg(room,m){if(room.del&&room.del.has(m.id))return;const old=room.ms
  if(m.w&&m.w!==S.id&&m.u!==S.id)return;
  if(old){if(m.u===S.id&&old.vf!==m.vf){old.vf=m.vf;schedule()}if(old.pending||old.failed){old.pending=false;old.failed=false;schedule()}return}
  m.fresh=room.ready;room.msgs.set(m.id,m);if(!m.sys&&m.u!==S.id){const pp=room.pres.get(m.u);if(pp){pp.ty=0;if(S.room===room)drawTy()}}
- if(m.u!==S.id&&room.ready&&!room.practice&&!m.sys&&!isMuted(m.u)){if(!room.firstUnread&&(S.room!==room||$('#chat').hidden||document.hidden))room.firstUnread=m.id;if(document.hidden)document.title='● ウェブチャット';if(S.room!==room){room.unread=(room.unread||0)+1;drawTabs()}if(m.t>room.openT-5000)notifyMsg(room,m,document.hasFocus()&&!document.hidden&&S.room===room&&!$('#chat').hidden)}
+ if(m.u!==S.id&&room.ready&&!room.practice&&!m.sys&&!isMuted(m.u)){if(!room.firstUnread&&(S.room!==room||S.calcOn||$('#chat').hidden||document.hidden))room.firstUnread=m.id;if(document.hidden)document.title='● ウェブチャット';if(S.room!==room||S.calcOn){room.unread=(room.unread||0)+1;drawTabs()}if(m.t>room.openT-5000)notifyMsg(room,m,document.hasFocus()&&!document.hidden&&S.room===room&&!S.calcOn&&!$('#chat').hidden)}
  trim30(room);schedule()}
 /* 部屋のメッセージは30件まで。超えたら古い順に消す */
 function trim30(room){const all=[...room.msgs.values()].sort((x,y)=>x.t-y.t),ch=all.filter(x=>!x.sys),sy=all.filter(x=>x.sys);for(let i=0;i<ch.length-30;i++)room.msgs.delete(ch[i].id);for(let i=0;i<sy.length-12;i++)room.msgs.delete(sy[i].id)}
@@ -2181,7 +2218,7 @@ addEventListener('keydown',e=>{if(e.key!=='Escape')return;for(const d of ['#jnDl
 
 /* ---------- 戻る・リンク ---------- */
 function backToEntry(){closeRoom();show(S.id?'home':'entry',true);drawHome();tutHook('back')}
-$('#cBack').onclick=()=>{const r=S.room;if(r&&!r.practice){drawerOpen()?closeDrawer(true):openDrawer()}else goBackUI()};
+$('#cBack').onclick=()=>{const r=S.room;if((r&&!r.practice)||(!r&&S.calcOn)){drawerOpen()?closeDrawer(true):openDrawer()}else goBackUI()};
 $('#hscrim').addEventListener('click',()=>closeDrawer(true));
 addEventListener('keydown',e=>{if(e.key==='Escape'&&drawerOpen()&&!document.querySelector('.tut:not([hidden])'))closeDrawer(true)});
 /* 戻る: 埋め込み(iframe)ではブラウザ履歴を使わず、画面を直接切り替える */
@@ -2191,7 +2228,7 @@ function pushH(v){if(!useHist)return;try{history.pushState({v},'');hDepth++}catc
 function goBackUI(){if(hDepth>0)history.back();else backToEntry()}
 addEventListener('popstate',()=>{hDepth=Math.max(0,hDepth-1);
  if(!$('#notice').hidden){noticeBack();return}
- if(!$('#chat').hidden&&S.room){if(S.room.practice)backToEntry();else{drawerOpen()?closeDrawer(true):openDrawer();pushH('chat')}return}
+ if(!$('#chat').hidden&&(S.room||S.calcOn)){if(S.room&&S.room.practice)backToEntry();else{drawerOpen()?closeDrawer(true):openDrawer();pushH('chat')}return}
  if(!$('#home').hidden)return;backToEntry()});
 
 /* ---------- 起動 ---------- */
@@ -2317,6 +2354,69 @@ for(const k of ['tc']){
  $('#'+k+'H').addEventListener('blur',colDraw);
  $('#'+k+'X').onclick=()=>{STY[k]='';saveSty();applySz();colDraw()}}
 $('#szReset').onclick=()=>{STY.shape='auto';STY.hpc=false;for(const k in SZ)STY[k]=SZ[k][2];saveSty();applySz();szDraw();autosize()};
+/* ---------- 電卓：部屋名が「電卓」のとき、部屋に入らず電卓を開く（通信なし・eval不使用） ---------- */
+const CALC_NAMES=['電卓','でんたく','calculator','calc'];
+function isCalcN(n){return CALC_NAMES.includes(n)}
+const CA={toks:[],cur:'',done:false,err:false,hist:[]};
+const CA_OPS=['+','−','×','÷'];
+function caFmt(s){if(s===''||s==null)return '0';const neg=s[0]==='-',b=neg?s.slice(1):s,i=b.indexOf('.'),ip=i<0?b:b.slice(0,i),fp=i<0?'':b.slice(i);return (neg?'-':'')+ip.replace(/\B(?=(\d{3})+(?!\d))/g,',')+fp}
+function caNum(x){if(!isFinite(x))return null;let s=String(Number(x.toPrecision(12)));if(/e/i.test(s)){const n=Number(s);s=Math.abs(n)>=1e21||Math.abs(n)<1e-9?n.toExponential(6).replace(/\.?0+e/,'e'):n.toFixed(12).replace(/\.?0+$/,'')}return s}
+function caCalc(t){
+ let a=[t[0]];for(let i=1;i<t.length;i+=2){const op=t[i],v=parseFloat(t[i+1]);
+  if(op==='×'||op==='÷'){const p=parseFloat(a.pop());if(op==='÷'&&v===0)return null;a.push(String(op==='×'?p*v:p/v))}else a.push(op,t[i+1])}
+ let r=parseFloat(a[0]);for(let i=1;i<a.length;i+=2){const v=parseFloat(a[i+1]);r=a[i]==='+'?r+v:r-v}
+ return caNum(r)}
+function caDraw(){
+ const r=$('#calcRes'),shown=CA.err?'エラー':CA.cur!==''?caFmt(CA.cur):(CA.toks.length&&!CA_OPS.includes(CA.toks[CA.toks.length-1])?caFmt(CA.toks[CA.toks.length-1]):'0');
+ r.textContent=shown;r.classList.toggle('err',CA.err);r.classList.toggle('sm',shown.length>12);
+ $('#calcEx').textContent=CA.toks.map(t=>CA_OPS.includes(t)?t:caFmt(t)).join(' ')+(CA.done?' =':'');
+ $('#calcHist').innerHTML=CA.hist.slice(-3).map((h,i)=>`<button data-h="${CA.hist.length>3?CA.hist.length-3+i:i}">${esc(h.e)} = ${esc(caFmt(h.r))}</button>`).join('')}
+function caKey(k){
+ if(CA.err){CA.toks=[];CA.cur='';CA.err=false;CA.done=false;if(k==='AC'||k==='BS'){caDraw();return}}
+ if(k==='AC'){CA.toks=[];CA.cur='';CA.done=false}
+ else if(/^\d$/.test(k)){if(CA.done){CA.cur='';CA.toks=[];CA.done=false}if(CA.cur.replace(/[-.]/g,'').length>=15)return;CA.cur=(CA.cur==='0'||CA.cur==='-0')?CA.cur.replace('0','')+k:CA.cur+k}
+ else if(k==='.'){if(CA.done){CA.cur='';CA.toks=[];CA.done=false}if(!CA.cur.includes('.'))CA.cur=(CA.cur===''?'0':CA.cur==='-'?'-0':CA.cur)+'.'}
+ else if(k==='NEG'){if(CA.cur!==''){CA.cur=CA.cur[0]==='-'?CA.cur.slice(1):'-'+CA.cur}else{const l=CA.toks[CA.toks.length-1];if(CA.toks.length&&!CA_OPS.includes(l)){CA.toks[CA.toks.length-1]=l[0]==='-'?l.slice(1):'-'+l}}}
+ else if(k==='%'){if(CA.cur!==''&&CA.cur!=='-'){const v=caNum(parseFloat(CA.cur)/100);if(v!==null){CA.cur=v;if(CA.done){CA.toks=[];CA.done=false}}}}
+ else if(k==='BS'){if(CA.done){CA.toks=[];CA.done=false;CA.cur=CA.cur.slice(0,-1)}else if(CA.cur!==''){CA.cur=CA.cur.slice(0,-1);if(CA.cur==='-')CA.cur=''}else if(CA.toks.length){const l=CA.toks.pop();if(!CA_OPS.includes(l))CA.cur=l.slice(0,-1)}}
+ else if(CA_OPS.includes(k)){
+  if(CA.done){CA.toks=[];CA.done=false}
+  if(CA.cur!==''&&CA.cur!=='-'){CA.toks.push(CA.cur.replace(/\.$/,''));CA.cur=''}
+  else if(CA.toks.length&&CA_OPS.includes(CA.toks[CA.toks.length-1]))CA.toks.pop();
+  else if(!CA.toks.length){CA.toks.push('0')}
+  CA.done=false;CA.toks.push(k)}
+ else if(k==='='){
+  let t=CA.toks.slice();if(CA.cur!==''&&CA.cur!=='-')t.push(CA.cur.replace(/\.$/,''));if(t.length&&CA_OPS.includes(t[t.length-1]))t.pop();
+  if(!t.length||CA.done)return;
+  if(t.length===1){CA.toks=[];CA.cur=t[0];CA.done=true;caDraw();return}
+  const res=caCalc(t);
+  if(res===null){CA.toks=t;CA.cur='';CA.err=true;CA.done=false}
+  else{CA.hist.push({e:t.map(x=>CA_OPS.includes(x)?x:caFmt(x)).join(' '),r:res});if(CA.hist.length>20)CA.hist.shift();CA.toks=t;CA.cur=res;CA.done=true}
+  if(CA.done){const ex=t.map(x=>CA_OPS.includes(x)?x:caFmt(x)).join(' ');caDraw();$('#calcEx').textContent=ex+' =';return}}
+ caDraw()}
+function applyCalc(){const on=!!S.calcOn;$('#chat').classList.toggle('calcon',on);if(on){const n=$('#rname');n.textContent='電卓';n.classList.remove('rn');$('#offB').hidden=true}else $('#rname').classList.add('rn')}
+const calcTabHtml=()=>`<div class="tab calc${S.calcOn?' on':''}" role="tab" tabindex="0" data-calc aria-selected="${!!S.calcOn}"><span class="tn ell1">電卓</span><button class="tx" data-cx aria-label="電卓を閉じる">✕</button></div>`;
+function openCalc(){
+ S.calcTab=true;S.calcOn=true;
+ ['#memDlg','#bdDlg','#lkDlg','#jnDlg','#rmDlg','#maDlg','#perDlg'].forEach(d=>{const e=$(d);if(e)e.hidden=true});
+ const was=!$('#chat').hidden;
+ show('chat');if(!was)pushH('chat');
+ applyCalc();drawTabs();caDraw()}
+function closeCalcTab(){
+ const wasOn=!!S.calcOn;S.calcTab=false;S.calcOn=false;CA.toks=[];CA.cur='';CA.done=false;CA.err=false;CA.hist=[];applyCalc();
+ if(wasOn){const r=(S.room&&!S.room.dead&&S.rooms.includes(S.room))?S.room:S.rooms[0];if(r)switchTo(r,true);else backToEntry()}
+ else drawTabs();
+ if(!$('#home').hidden)drawHome(true)}
+$('#calcKeys').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b)caKey(b.dataset.k)});
+$('#calcHist').addEventListener('click',e=>{const b=e.target.closest('[data-h]');if(!b)return;const h=CA.hist[+b.dataset.h];if(!h)return;CA.err=false;CA.toks=[];CA.cur=h.r;CA.done=true;caDraw()});
+$('#calcRes').addEventListener('click',()=>{if(CA.err)return;const v=($('#calcRes').textContent||'').replace(/,/g,'');try{navigator.clipboard.writeText(v).then(()=>toast('コピーしました：'+v),()=>{})}catch(e){}});
+addEventListener('keydown',e=>{if(!S.calcOn||$('#chat').hidden||!$('#home').hidden||T.on||document.querySelector('.tut:not([hidden])'))return;
+ if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const tg=e.target,k=e.key;if(tg&&(/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)))return;
+ if((k==='Enter'||k===' ')&&tg&&tg.closest&&tg.closest('button,[role=tab]'))return;
+ const map={'/':'÷','*':'×','-':'−','+':'+','Enter':'=','=':'=','Backspace':'BS','Delete':'AC','%':'%','.':'.',',':'.'};
+ let c=null;if(/^\d$/.test(k))c=k;else if(map[k])c=map[k];else if(k==='c'||k==='C')c='AC';
+ if(c){e.preventDefault();e.stopImmediatePropagation();caKey(c)}},true);
 frDraw();
 if(S.id&&!invite){show('home');drawHome()}
 $('#frList').addEventListener('click',e=>{const d=e.target.closest('[data-frdel]');if(!d)return;delete FR[d.dataset.frdel];saveFr();frDraw();if(S.room){render();drawPbar()}});
